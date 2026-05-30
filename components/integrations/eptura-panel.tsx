@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  RefreshCw, CheckCircle2, Package, ClipboardList,
+  RefreshCw, CheckCircle2, Package, ClipboardList, RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn, timeAgo } from "@/lib/utils";
@@ -72,10 +72,20 @@ export function EpturaPanel() {
             </p>
           </div>
         </div>
-        <Button size="sm" variant={hasSync ? "secondary" : "default"} onClick={handleSync} disabled={isSyncing} className="shrink-0">
-          <RefreshCw className={cn("h-3.5 w-3.5", isSyncing && "animate-spin")} />
-          {isSyncing ? "Syncing…" : hasSync ? "Sync Now" : "Connect & Sync"}
-        </Button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {hasSync && (
+            <Button size="sm" variant="ghost"
+              onClick={() => { setStatus("idle"); setLastSynced(null); setWorkOrders([]); setExpanded(false); }}
+              title="Disconnect & reset sync state">
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset
+            </Button>
+          )}
+          <Button size="sm" variant={hasSync ? "secondary" : "default"} onClick={handleSync} disabled={isSyncing}>
+            <RefreshCw className={cn("h-3.5 w-3.5", isSyncing && "animate-spin")} />
+            {isSyncing ? "Syncing…" : hasSync ? "Sync Now" : "Connect & Sync"}
+          </Button>
+        </div>
       </div>
 
       <AnimatePresence>

@@ -160,6 +160,21 @@ export interface Notification {
   created_at: string;
 }
 
+// ─── Roles & permissions (RBAC) ───────────────────────────────────────────────
+export interface Role {
+  id: string;
+  organization_id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  color: string;
+  is_system: boolean;
+  created_at: string;
+  // virtual
+  permissions?: string[];
+  _member_count?: number;
+}
+
 // ─── Team chat ────────────────────────────────────────────────────────────────
 export interface Channel {
   id: string;

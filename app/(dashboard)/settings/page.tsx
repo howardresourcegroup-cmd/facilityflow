@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Users, Bell, Zap, Shield, ChevronRight } from "lucide-react";
+import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { RolesManager } from "@/components/settings/roles-manager";
 
 const SECTIONS = [
-  { id: "org",      label: "Organization",  icon: Building2 },
-  { id: "team",     label: "Team & Roles",  icon: Users },
-  { id: "notifs",   label: "Notifications", icon: Bell },
+  { id: "org",      label: "Organization",     icon: Building2 },
+  { id: "roles",    label: "Roles & Permissions", icon: KeyRound },
+  { id: "team",     label: "Team",             icon: Users },
+  { id: "notifs",   label: "Notifications",    icon: Bell },
   { id: "integrations", label: "Integrations", icon: Zap },
-  { id: "security", label: "Security",      icon: Shield },
+  { id: "security", label: "Security",         icon: Shield },
 ];
 
 const INTEGRATIONS = [
@@ -93,6 +95,8 @@ export default function SettingsPage() {
               </div>
             </>
           )}
+
+          {activeSection === "roles" && <RolesManager />}
 
           {activeSection === "integrations" && (
             <div>

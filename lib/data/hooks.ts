@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import * as q from "./queries";
+import { fetchRoles, fetchMyPermissions } from "./roles";
 import type {
-  Building, Floor, Space, WorkOrder, Profile, Channel, Message,
+  Building, Floor, Space, WorkOrder, Profile, Channel, Message, Role,
   SpaceStatus, WorkOrderStatus, DashboardStats,
 } from "@/types";
 
@@ -109,6 +110,24 @@ export function useProfiles() {
 export function useCurrentProfile() {
   const { data } = useCachedQuery<Profile | null>("current_profile", q.fetchCurrentProfile, null);
   return data;
+}
+
+// ─── Roles & permissions ──────────────────────────────────────────────────────
+export function useRoles() {
+  const { data: roles, loading, reload } = useCachedQuery<Role[]>("roles", fetchRoles, []);
+  return { roles, loading, reload };
+}
+
+// The current user's effective permissions + a `can()` checker.
+// Fails open to true while loading so the UI doesn't flicker-hide actions;
+// the server (RLS) is the real enforcement boundary.
+export function usePermissions() {
+  const { data: perms, loading } = useCachedQuery<string[]>("my_permissions", fetchMyPermissions, []);
+  const can = useCallback(
+    (permission: string) => loading || perms.length === 0 || perms.includes(permission),
+    [perms, loading]
+  );
+  return { permissions: perms, can, loading };
 }
 
 // ─── Dashboard stats ──────────────────────────────────────────────────────────

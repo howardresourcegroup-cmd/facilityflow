@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RefreshCw, CheckCircle2, AlertTriangle, Zap,
-  Wrench, Sparkles, WifiOff, ExternalLink,
+  Wrench, Sparkles, WifiOff, ExternalLink, RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDataStore, type RoomMasterChange } from "@/lib/store/data-store";
@@ -88,16 +88,32 @@ export function RoomMasterPanel() {
           </div>
         </div>
 
-        <Button
-          size="sm"
-          variant={hasSync ? "secondary" : "default"}
-          onClick={handleSync}
-          disabled={isSyncing}
-          className="shrink-0"
-        >
-          <RefreshCw className={cn("h-3.5 w-3.5", isSyncing && "animate-spin")} />
-          {isSyncing ? "Syncing…" : hasSync ? "Sync Now" : "Connect & Sync"}
-        </Button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {hasSync && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                setRoomMasterSync({ status: "idle", last_synced: null, rooms_synced: 0, changes_applied: 0 });
+                setLastResult(null);
+                setExpanded(false);
+              }}
+              title="Disconnect & reset sync state"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              Reset
+            </Button>
+          )}
+          <Button
+            size="sm"
+            variant={hasSync ? "secondary" : "default"}
+            onClick={handleSync}
+            disabled={isSyncing}
+          >
+            <RefreshCw className={cn("h-3.5 w-3.5", isSyncing && "animate-spin")} />
+            {isSyncing ? "Syncing…" : hasSync ? "Sync Now" : "Connect & Sync"}
+          </Button>
+        </div>
       </div>
 
       {/* Syncing animation */}
