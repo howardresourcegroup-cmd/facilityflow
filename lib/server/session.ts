@@ -38,8 +38,10 @@ export function decodeSession(token: string): SessionPayload | null {
 export function sessionCookieOptions(maxAge = SESSION_MAX_AGE) {
   return {
     httpOnly: true,                 // not readable by JS — prevents XSS session theft
-    secure: true,                   // HTTPS only
-    sameSite: "strict" as const,    // no cross-site requests — prevents CSRF
+    // Secure required in production (HTTPS). Relaxed in local dev so the cookie
+    // is accepted over http://localhost. Cloudflare is always HTTPS in prod.
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,       // CSRF protection while allowing top-level nav
     path: "/",
     maxAge,
   };
