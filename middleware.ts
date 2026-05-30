@@ -1,34 +1,86 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { SESSION_COOKIE, decodeSession } from "@/lib/server/session";
 import { updateSession } from "@/lib/supabase/middleware";
-import { DEMO_SESSION_COOKIE, isDemoMode } from "@/lib/demo-auth";
+
+// ─── Security headers applied to every response ───────────────────────────────
+const SECURITY_HEADERS: Record<string, string> = {
+  // Prevent clickjacking
+  "X-Frame-Options": "DENY",
+  "Content-Security-Policy": "frame-ancestors 'none'",
+
+  // Prevent MIME sniffing
+  "X-Content-Type-Options": "nosniff",
+
+  // Control referrer info
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+
+  // Disable browser features not needed
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+
+  // Enforce HTTPS for 2 years (Cloudflare already enforces this, belt-and-suspenders)
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+
+  // Prevent XSS in older browsers
+  "X-XSS-Protection": "1; mode=block",
+};
+
+function addSecurityHeaders(res: NextResponse): NextResponse {
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+    res.headers.set(key, value);
+  }
+  return res;
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
-  const isApiRoute = pathname.startsWith("/api");
-  const isStatic = pathname.startsWith("/_next") || pathname.includes(".");
+  const isAuthPage  = pathname === "/login" || pathname === "/signup";
+  const isApiAuth   = pathname.startsWith("/api/auth");
+  const isApiPublic = false; // No fully public API routes in production
+  const isStatic    = pathname.startsWith("/_next") || pathname.includes(".");
 
-  if (isApiRoute || isStatic) return NextResponse.next();
+  // Statics don't need auth or headers overhead
+  if (isStatic) return NextResponse.next();
 
-  // Demo mode: use cookie-based session
-  if (isDemoMode()) {
-    const demoSession = request.cookies.get(DEMO_SESSION_COOKIE);
-    if (!demoSession && !isAuthPage) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
-    }
-    if (demoSession && isAuthPage) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/";
-      return NextResponse.redirect(url);
-    }
-    return NextResponse.next();
+  const isDemoMode =
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
+
+  // ── Production: Supabase JWT auth ──────────────────────────────────────────
+  if (!isDemoMode) {
+    const res = await updateSession(request);
+    return addSecurityHeaders(res);
   }
 
-  // Production mode: Supabase auth
-  return updateSession(request);
+  // ── Demo mode: cookie-based session ────────────────────────────────────────
+
+  // Auth endpoints and login page never require an existing session
+  if (isAuthPage || isApiAuth) {
+    const res = NextResponse.next();
+    return addSecurityHeaders(res);
+  }
+
+  const sessionCookie = request.cookies.get(SESSION_COOKIE);
+  const session = sessionCookie ? decodeSession(sessionCookie.value) : null;
+
+  // Not authenticated → redirect to login
+  if (!session) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    const res = NextResponse.redirect(url);
+    return addSecurityHeaders(res);
+  }
+
+  // Authenticated → pass through with security headers
+  // Inject session info as request headers so server components can read it
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-session-user",  session.name);
+  requestHeaders.set("x-session-role",  session.role);
+  requestHeaders.set("x-session-org",   session.org);
+  requestHeaders.set("x-session-orgid", session.orgId);
+
+  const res = NextResponse.next({ request: { headers: requestHeaders } });
+  return addSecurityHeaders(res);
 }
 
 export const config = {

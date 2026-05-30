@@ -4,7 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ClipboardList, AlertTriangle, CheckCircle2, MapPin,
-  Wrench, ChevronRight,
+  Wrench, ChevronRight, RefreshCw,
 } from "lucide-react";
 import type { Floor, Space, SpaceStatus } from "@/types";
 import { cn, SPACE_STATUS_CONFIG, timeAgo } from "@/lib/utils";
@@ -36,6 +36,30 @@ function RoomDetailPanel({
 }) {
   const cfg = SPACE_STATUS_CONFIG[space.status];
   const statuses = Object.keys(SPACE_STATUS_CONFIG) as SpaceStatus[];
+  const [rmPushing, setRmPushing] = useState(false);
+  const [rmPushed, setRmPushed]   = useState(false);
+
+  const isGuestRoom = ["guest_room", "suite", "cabin"].includes(space.type);
+
+  const handleStatusChange = async (status: SpaceStatus) => {
+    onStatusChange?.(status);
+    // Push to RoomMaster for guest rooms
+    if (isGuestRoom) {
+      setRmPushing(true);
+      setRmPushed(false);
+      try {
+        const roomNumber = space.name.replace(/\D/g, "");
+        await fetch("/api/roommaster?action=push", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ room_number: roomNumber, ff_status: status }),
+        });
+        setRmPushed(true);
+      } catch { /* non-fatal */ }
+      finally { setRmPushing(false); }
+    }
+  };
 
   return (
     <motion.div
@@ -87,6 +111,20 @@ function RoomDetailPanel({
         </div>
       </div>
 
+      {/* RoomMaster push confirmation */}
+      {isGuestRoom && rmPushed && (
+        <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg bg-blue-500/10 border border-blue-500/20 px-3 py-2">
+          <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+          <p className="text-xs text-blue-300">Status pushed to RoomMaster</p>
+        </div>
+      )}
+      {isGuestRoom && rmPushing && (
+        <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg bg-zinc-800/50 border border-white/[0.05] px-3 py-2">
+          <RefreshCw className="h-3.5 w-3.5 text-zinc-400 animate-spin shrink-0" />
+          <p className="text-xs text-zinc-400">Syncing to RoomMaster…</p>
+        </div>
+      )}
+
       {/* Change status */}
       <div className="px-4 mt-4">
         <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2">Change Status</p>
@@ -97,7 +135,7 @@ function RoomDetailPanel({
             return (
               <button
                 key={s}
-                onClick={() => onStatusChange?.(s)}
+                onClick={() => handleStatusChange(s)}
                 className={cn(
                   "w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs text-left transition-all",
                   isActive
@@ -129,7 +167,7 @@ function RoomDetailPanel({
             size="sm"
             variant="outline"
             className="w-full"
-            onClick={() => onStatusChange?.("operational")}
+            onClick={() => handleStatusChange("operational")}
           >
             <Wrench className="h-3.5 w-3.5" />
             Mark Resolved

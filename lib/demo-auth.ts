@@ -1,30 +1,8 @@
-// Demo authentication — no Supabase required
-// Used for pitches, demos, and trial accounts
+// Client-safe constants only — NO credentials here.
+// Credentials live server-side in /app/api/auth/login/route.ts
+// and are read from environment variables.
 
-export const DEMO_USERS = [
-  {
-    email: "manager@amicalolafalls.com",
-    password: "FacilityFlow2025",
-    name: "Sarah Mitchell",
-    role: "manager" as const,
-    org: "Amicalola Falls State Park & Lodge",
-  },
-  {
-    email: "demo@facilityflow.app",
-    password: "demo",
-    name: "Demo User",
-    role: "admin" as const,
-    org: "Demo Organization",
-  },
-];
-
-export const DEMO_SESSION_COOKIE = "ff-demo-session";
-
-export function getDemoUser(email: string, password: string) {
-  return DEMO_USERS.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-  ) ?? null;
-}
+export const SESSION_COOKIE_LEGACY = "ff-demo-session"; // kept for migration
 
 export function isDemoMode(): boolean {
   return (

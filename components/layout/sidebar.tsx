@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Building2, ClipboardList, Users,
-  Settings, ChevronLeft, Zap, Package, BarChart3,
+  Settings, ChevronLeft, Zap, Package, BarChart3, LogOut,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
@@ -139,6 +139,24 @@ export function Sidebar() {
             }
             return item;
           })}
+
+          {/* Logout */}
+          <button
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+              window.location.href = "/login";
+            }}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-600 hover:text-red-400 hover:bg-red-500/[0.08] transition-all duration-150"
+          >
+            <LogOut className="h-4 w-4 shrink-0" />
+            <AnimatePresence>
+              {!sidebarCollapsed && (
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="whitespace-nowrap overflow-hidden">
+                  Sign Out
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
 
           {/* User profile */}
           <div className={cn("flex items-center gap-3 rounded-lg px-3 py-2.5 mt-1", sidebarCollapsed && "justify-center px-2")}>

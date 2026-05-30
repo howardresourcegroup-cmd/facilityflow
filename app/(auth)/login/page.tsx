@@ -3,12 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Zap, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Zap, ArrowRight, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "@/lib/supabase/client";
-import { getDemoUser, isDemoMode, DEMO_SESSION_COOKIE } from "@/lib/demo-auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,34 +21,39 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    if (isDemoMode()) {
-      // Demo auth — no Supabase needed
-      const user = getDemoUser(email, password);
-      if (!user) {
-        setError("Invalid credentials. Try manager@amicalolafalls.com / FacilityFlow2025");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (res.status === 429) {
+        const retry = res.headers.get("Retry-After");
+        setError(`Too many attempts. Try again in ${retry ?? "15"} seconds.`);
         setLoading(false);
         return;
       }
-      // Set demo session cookie
-      document.cookie = `${DEMO_SESSION_COOKIE}=${encodeURIComponent(JSON.stringify({ name: user.name, role: user.role, org: user.org }))}; path=/; max-age=86400`;
-      router.push("/");
-      router.refresh();
-      return;
-    }
 
-    // Production: Supabase auth
-    const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-    if (authError) {
-      setError(authError.message);
-      setLoading(false);
-    } else {
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Invalid credentials");
+        setLoading(false);
+        return;
+      }
+
+      // Cookie is set server-side (httpOnly) — just redirect
       router.push("/");
       router.refresh();
+    } catch {
+      setError("Connection error. Please try again.");
+      setLoading(false);
     }
   };
 
-  const loginAsDemo = () => {
+  const fillDemo = () => {
     setEmail("manager@amicalolafalls.com");
     setPassword("FacilityFlow2025");
   };
@@ -60,7 +63,7 @@ export default function LoginPage() {
       {/* Demo banner */}
       <div
         className="glass-card p-4 border-indigo-500/20 bg-indigo-500/5 cursor-pointer hover:bg-indigo-500/10 transition-colors group"
-        onClick={loginAsDemo}
+        onClick={fillDemo}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -79,8 +82,11 @@ export default function LoginPage() {
       {/* Login card */}
       <div className="glass-card p-7">
         <div className="mb-6">
-          <h1 className="text-xl font-semibold text-zinc-100">Sign in</h1>
-          <p className="text-sm text-zinc-500 mt-1">Access your operations center.</p>
+          <div className="flex items-center gap-2 mb-2">
+            <h1 className="text-xl font-semibold text-zinc-100">Sign in</h1>
+            <Shield className="h-4 w-4 text-zinc-600" />
+          </div>
+          <p className="text-sm text-zinc-500">Access your operations center.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,7 +147,6 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* Powered by */}
       <p className="text-center text-[11px] text-zinc-700">
         Works with RoomMaster · Opera · Cloudbeds · Maestro · and more
       </p>
