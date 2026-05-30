@@ -8,6 +8,7 @@ import { ChevronRight, Plus, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FloorGrid } from "@/components/floorplan/floor-grid";
+import { BuildingStack } from "@/components/floorplan/building-stack";
 import { EmptyState } from "@/components/shared/empty-state";
 import { MOCK_BUILDINGS, MOCK_FLOORS } from "@/lib/mock-data";
 import { useDataStore } from "@/lib/store/data-store";
@@ -68,41 +69,52 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
           action={{ label: "Add Floor", onClick: () => {} }}
         />
       ) : (
-        <Tabs value={activeFloorId} onValueChange={setActiveFloorId}>
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <TabsList>
-              {floors.map((f) => {
-                const fSpaces  = spaces.filter((s) => s.floor_id === f.id);
-                const fIssues  = fSpaces.filter((s) => s.status !== "operational").length;
-                return (
-                  <TabsTrigger key={f.id} value={f.id} className="gap-2">
-                    {f.name}
-                    {fIssues > 0 && (
-                      <span className="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full">{fIssues}</span>
-                    )}
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-            <Button size="sm" variant="outline">
-              <Plus className="h-3.5 w-3.5" />
-              Add Space
-            </Button>
-          </div>
+        <div className="grid grid-cols-1 xl:grid-cols-[280px_1fr] gap-6 items-start">
+          {/* Control-panel: building stack overview */}
+          <BuildingStack
+            floors={floors}
+            spaces={spaces.filter((s) => floors.some((f) => f.id === s.floor_id))}
+            activeFloorId={activeFloorId}
+            onSelectFloor={setActiveFloorId}
+          />
 
-          {floors.map((f) => (
-            <TabsContent key={f.id} value={f.id} className="mt-4">
-              <FloorGrid
-                floor={f}
-                spaces={spaces.filter((s) => s.floor_id === f.id)}
-                onStatusChange={handleStatusChange}
-                onCreateWorkOrder={(spaceId) => {
-                  router.push(`/work-orders/new?space=${spaceId}`);
-                }}
-              />
-            </TabsContent>
-          ))}
-        </Tabs>
+          {/* Detailed floor plan */}
+          <Tabs value={activeFloorId} onValueChange={setActiveFloorId} className="min-w-0">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <TabsList>
+                {floors.map((f) => {
+                  const fSpaces  = spaces.filter((s) => s.floor_id === f.id);
+                  const fIssues  = fSpaces.filter((s) => s.status !== "operational").length;
+                  return (
+                    <TabsTrigger key={f.id} value={f.id} className="gap-2">
+                      {f.name}
+                      {fIssues > 0 && (
+                        <span className="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full">{fIssues}</span>
+                      )}
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
+              <Button size="sm" variant="outline">
+                <Plus className="h-3.5 w-3.5" />
+                Add Space
+              </Button>
+            </div>
+
+            {floors.map((f) => (
+              <TabsContent key={f.id} value={f.id} className="mt-4">
+                <FloorGrid
+                  floor={f}
+                  spaces={spaces.filter((s) => s.floor_id === f.id)}
+                  onStatusChange={handleStatusChange}
+                  onCreateWorkOrder={(spaceId) => {
+                    router.push(`/work-orders/new?space=${spaceId}`);
+                  }}
+                />
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
       )}
     </div>
   );

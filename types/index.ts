@@ -160,6 +160,31 @@ export interface Notification {
   created_at: string;
 }
 
+// ─── Team chat ────────────────────────────────────────────────────────────────
+export interface Channel {
+  id: string;
+  organization_id: string;
+  name: string;
+  description: string | null;
+  is_private: boolean;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface Message {
+  id: string;
+  channel_id: string;
+  organization_id: string;
+  author_id: string;
+  body: string;
+  work_order_id: string | null;
+  space_id: string | null;
+  edited: boolean;
+  created_at: string;
+  // virtual
+  author?: Profile;
+}
+
 // UI helper types
 export interface DashboardStats {
   active_issues: number;
