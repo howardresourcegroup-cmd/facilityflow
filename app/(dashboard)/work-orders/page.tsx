@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { WorkOrderCard } from "@/components/work-orders/work-order-card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { cn, WORK_ORDER_STATUS_CONFIG, PRIORITY_CONFIG } from "@/lib/utils";
-import { useWorkOrders } from "@/lib/data/hooks";
+import { useWorkOrders, usePermissions } from "@/lib/data/hooks";
 import type { WorkOrderStatus, WorkOrderPriority } from "@/types";
 
 const STATUSES: WorkOrderStatus[] = ["open", "assigned", "in_progress", "waiting_parts", "completed", "cancelled"];
@@ -16,6 +16,7 @@ const PRIORITIES: WorkOrderPriority[] = ["critical", "high", "medium", "low"];
 
 export default function WorkOrdersPage() {
   const { workOrders, loading } = useWorkOrders();
+  const { can } = usePermissions();
   const [search, setSearch]               = useState("");
   const [statusFilter, setStatusFilter]   = useState<WorkOrderStatus | "all">("all");
   const [priorityFilter, setPriorityFilter] = useState<WorkOrderPriority | "all">("all");
@@ -70,12 +71,14 @@ export default function WorkOrdersPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button asChild>
-            <Link href="/work-orders/new">
-              <Plus className="h-4 w-4" />
-              New Work Order
-            </Link>
-          </Button>
+          {can("work_orders.create") && (
+            <Button asChild>
+              <Link href="/work-orders/new">
+                <Plus className="h-4 w-4" />
+                New Work Order
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 

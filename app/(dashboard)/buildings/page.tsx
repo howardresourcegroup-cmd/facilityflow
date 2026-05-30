@@ -7,10 +7,11 @@ import { BuildingCard } from "@/components/buildings/building-card";
 import { CreateBuildingModal } from "@/components/buildings/create-building-modal";
 import { EmptyState } from "@/components/shared/empty-state";
 import { SkeletonCard } from "@/components/shared/loading-spinner";
-import { useBuildings } from "@/lib/data/hooks";
+import { useBuildings, usePermissions } from "@/lib/data/hooks";
 
 export default function BuildingsPage() {
   const { buildings, loading, reload } = useBuildings();
+  const { can } = usePermissions();
   const [showCreate, setShowCreate] = useState(false);
 
   const stats = {
@@ -34,10 +35,12 @@ export default function BuildingsPage() {
             )}
           </p>
         </div>
-        <Button onClick={() => setShowCreate(true)}>
-          <Plus className="h-4 w-4" />
-          Add Building
-        </Button>
+        {can("buildings.create") && (
+          <Button onClick={() => setShowCreate(true)}>
+            <Plus className="h-4 w-4" />
+            Add Building
+          </Button>
+        )}
       </div>
 
       {/* Grid */}

@@ -12,13 +12,14 @@ import { FloorBuilder } from "@/components/floorplan/floor-builder";
 import { BuildingStack } from "@/components/floorplan/building-stack";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageLoader } from "@/components/shared/loading-spinner";
-import { useBuildingDetail } from "@/lib/data/hooks";
+import { useBuildingDetail, usePermissions } from "@/lib/data/hooks";
 import { Layers } from "lucide-react";
 
 export default function BuildingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace } = useBuildingDetail(id);
+  const { can } = usePermissions();
   const [activeFloorId, setActiveFloorId] = useState("");
   const [editMode, setEditMode] = useState(false);
 
@@ -98,14 +99,16 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
                   );
                 })}
               </TabsList>
-              <Button
-                size="sm"
-                variant={editMode ? "default" : "outline"}
-                onClick={() => setEditMode((e) => !e)}
-              >
-                <PenLine className="h-3.5 w-3.5" />
-                {editMode ? "Editing Layout" : "Edit Layout"}
-              </Button>
+              {can("buildings.edit_layout") && (
+                <Button
+                  size="sm"
+                  variant={editMode ? "default" : "outline"}
+                  onClick={() => setEditMode((e) => !e)}
+                >
+                  <PenLine className="h-3.5 w-3.5" />
+                  {editMode ? "Editing Layout" : "Edit Layout"}
+                </Button>
+              )}
             </div>
 
             {floors.map((f) => (
