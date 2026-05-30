@@ -8,15 +8,28 @@ import type {
   SpaceStatus, WorkOrderStatus, DashboardStats,
 } from "@/types";
 
+// ─── Tiny stale-while-revalidate cache ────────────────────────────────────────
+// Survives client-side navigation (module scope), so revisiting a page shows
+// the last data instantly while a fresh fetch updates it in the background.
+const cache = new Map<string, unknown>();
+
+function useCachedQuery<T>(key: string, fetcher: () => Promise<T>, initial: T) {
+  const [data, setData] = useState<T>((cache.get(key) as T) ?? initial);
+  const [loading, setLoading] = useState(!cache.has(key));
+
+  const reload = useCallback(() => {
+    fetcher().then((d) => { cache.set(key, d); setData(d); setLoading(false); })
+             .catch(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+
+  useEffect(() => { reload(); }, [reload]);
+  return { data, loading, reload, setData };
+}
+
 // ─── Buildings list ───────────────────────────────────────────────────────────
 export function useBuildings() {
-  const [buildings, setBuildings] = useState<Building[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    q.fetchBuildings().then((b) => { setBuildings(b); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
-
+  const { data: buildings, loading } = useCachedQuery<Building[]>("buildings", q.fetchBuildings, []);
   return { buildings, loading };
 }
 
@@ -64,14 +77,7 @@ export function useBuildingDetail(buildingId: string) {
 
 // ─── Work orders ──────────────────────────────────────────────────────────────
 export function useWorkOrders() {
-  const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const reload = useCallback(() => {
-    q.fetchWorkOrders().then((w) => { setWorkOrders(w); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
-
-  useEffect(() => { reload(); }, [reload]);
+  const { data: workOrders, loading, reload } = useCachedQuery<WorkOrder[]>("work_orders", q.fetchWorkOrders, []);
   return { workOrders, loading, reload };
 }
 
@@ -93,32 +99,25 @@ export function useWorkOrder(id: string) {
 
 // ─── Team ─────────────────────────────────────────────────────────────────────
 export function useProfiles() {
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    q.fetchProfiles().then((p) => { setProfiles(p); setLoading(false); }).catch(() => setLoading(false));
-  }, []);
+  const { data: profiles, loading } = useCachedQuery<Profile[]>("profiles", q.fetchProfiles, []);
   return { profiles, loading };
 }
 
 export function useCurrentProfile() {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  useEffect(() => { q.fetchCurrentProfile().then(setProfile).catch(() => {}); }, []);
-  return profile;
+  const { data } = useCachedQuery<Profile | null>("current_profile", q.fetchCurrentProfile, null);
+  return data;
 }
 
 // ─── Dashboard stats ──────────────────────────────────────────────────────────
 export function useDashboardStats() {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  useEffect(() => { q.fetchDashboardStats().then(setStats).catch(() => {}); }, []);
-  return stats;
+  const { data } = useCachedQuery<DashboardStats | null>("dashboard_stats", q.fetchDashboardStats, null);
+  return data;
 }
 
 // ─── Chat (with realtime) ─────────────────────────────────────────────────────
 export function useChannels() {
-  const [channels, setChannels] = useState<Channel[]>([]);
-  useEffect(() => { q.fetchChannels().then(setChannels).catch(() => {}); }, []);
-  return channels;
+  const { data } = useCachedQuery<Channel[]>("channels", q.fetchChannels, []);
+  return data;
 }
 
 export function useMessages(channelId: string | null) {

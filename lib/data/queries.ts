@@ -15,15 +15,13 @@ const sb = () => createClient();
 // ─── Buildings ────────────────────────────────────────────────────────────────
 export async function fetchBuildings(): Promise<Building[]> {
   const supabase = sb();
-  const { data: buildings, error } = await supabase
-    .from("buildings")
-    .select("*")
-    .order("created_at");
+  // Run all three queries in parallel instead of waterfalling
+  const [{ data: buildings, error }, { data: floors }, { data: spaces }] = await Promise.all([
+    supabase.from("buildings").select("*").order("created_at"),
+    supabase.from("floors").select("id, building_id"),
+    supabase.from("spaces").select("id, floor_id, status"),
+  ]);
   if (error) throw error;
-
-  // Decorate with counts (floors, spaces, open issues)
-  const { data: floors } = await supabase.from("floors").select("id, building_id");
-  const { data: spaces } = await supabase.from("spaces").select("id, floor_id, status");
 
   return (buildings ?? []).map((b) => {
     const bFloors = (floors ?? []).filter((f) => f.building_id === b.id);
