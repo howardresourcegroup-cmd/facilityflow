@@ -8,6 +8,7 @@ import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { BuildingHealth } from "@/components/dashboard/building-health";
 import { WorkOrderCard } from "@/components/work-orders/work-order-card";
 import { RoomMasterPanel, IntegrationsPanel } from "@/components/integrations/roommaster-panel";
+import { EpturaPanel } from "@/components/integrations/eptura-panel";
 import { MOCK_STATS, MOCK_ACTIVITY } from "@/lib/mock-data";
 import { useDataStore } from "@/lib/store/data-store";
 
@@ -63,8 +64,9 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* RoomMaster integration */}
+          {/* Integrations */}
           <RoomMasterPanel />
+          <EpturaPanel />
         </div>
 
         {/* Right */}

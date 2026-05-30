@@ -231,12 +231,12 @@ export function RoomMasterPanel() {
 // ─── Other PMS integrations (coming soon) ─────────────────────────────────────
 export function IntegrationsPanel() {
   const OTHER_INTEGRATIONS = [
+    { name: "Eptura Asset",logo: "Ep", desc: "CMMS — work orders + assets", status: "available" },
     { name: "Opera PMS",   logo: "Op", desc: "Oracle Hospitality",         status: "available" },
     { name: "Cloudbeds",   logo: "Cb", desc: "All-in-one PMS",             status: "available" },
     { name: "Maestro",     logo: "Ma", desc: "Maestro PMS",                status: "available" },
     { name: "OnQ",         logo: "OQ", desc: "Hilton OnQ / LightSpeed",    status: "available" },
     { name: "Mews",        logo: "Mw", desc: "Mews PMS",                   status: "coming_soon" },
-    { name: "Agilysys",    logo: "Ag", desc: "PMS + F&B + Spa",            status: "coming_soon" },
   ];
 
   return (
