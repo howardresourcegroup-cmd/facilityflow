@@ -5,22 +5,26 @@ import { motion } from "framer-motion";
 import { Hash, Send, Lock, ShieldCheck, Users } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useChatStore } from "@/lib/store/chat-store";
+import { useChannels, useMessages, useProfiles, useCurrentProfile } from "@/lib/data/hooks";
 import { cn, getInitials, timeAgo } from "@/lib/utils";
-import { MOCK_PROFILES } from "@/lib/mock-data";
-
-// Current demo user = Sarah Mitchell (manager)
-const CURRENT_USER_ID = "m1";
 
 export default function MessagesPage() {
-  const { channels, messages, activeChannelId, setActiveChannel, sendMessage } = useChatStore();
+  const channels = useChannels();
+  const { profiles } = useProfiles();
+  const me = useCurrentProfile();
+  const [activeChannelId, setActiveChannelId] = useState<string | null>(null);
+  const { messages, send } = useMessages(activeChannelId);
   const [draft, setDraft] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const activeChannel = channels.find((c) => c.id === activeChannelId) ?? channels[0];
-  const channelMessages = messages
-    .filter((m) => m.channel_id === activeChannelId)
-    .sort((a, b) => +new Date(a.created_at) - +new Date(b.created_at));
+  // Default to the first channel once loaded
+  useEffect(() => {
+    if (!activeChannelId && channels.length) setActiveChannelId(channels[0].id);
+  }, [channels, activeChannelId]);
+
+  const activeChannel = channels.find((c) => c.id === activeChannelId);
+  const channelMessages = [...messages].sort((a, b) => +new Date(a.created_at) - +new Date(b.created_at));
+  const CURRENT_USER_ID = me?.id;
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -29,11 +33,11 @@ export default function MessagesPage() {
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!draft.trim()) return;
-    sendMessage(draft, CURRENT_USER_ID);
+    send(draft);
     setDraft("");
   };
 
-  const onlineCount = MOCK_PROFILES.filter((p) => p.is_available).length + 1;
+  const onlineCount = profiles.filter((p) => p.is_available).length;
 
   return (
     <div className="space-y-4">
@@ -67,7 +71,7 @@ export default function MessagesPage() {
               return (
                 <button
                   key={ch.id}
-                  onClick={() => setActiveChannel(ch.id)}
+                  onClick={() => setActiveChannelId(ch.id)}
                   className={cn(
                     "w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-left transition-all",
                     isActive ? "bg-indigo-500/15 text-indigo-300" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.05]"

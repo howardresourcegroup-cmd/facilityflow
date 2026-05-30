@@ -10,11 +10,15 @@ import { WorkOrderCard } from "@/components/work-orders/work-order-card";
 import { RoomMasterPanel, IntegrationsPanel } from "@/components/integrations/roommaster-panel";
 import { EpturaPanel } from "@/components/integrations/eptura-panel";
 import { MOCK_STATS, MOCK_ACTIVITY } from "@/lib/mock-data";
-import { useDataStore } from "@/lib/store/data-store";
+import { useWorkOrders, useDashboardStats, useCurrentProfile } from "@/lib/data/hooks";
 
 export default function DashboardPage() {
-  const { workOrders } = useDataStore();
+  const { workOrders } = useWorkOrders();
+  const stats = useDashboardStats();
+  const profile = useCurrentProfile();
   const now = new Date();
+
+  const firstName = profile?.full_name?.split(" ")[0] ?? "there";
 
   const urgentOrders = workOrders
     .filter((w) => w.status !== "completed" && w.status !== "cancelled" &&
@@ -27,7 +31,7 @@ export default function DashboardPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-100">
-            {getGreeting()}, Sarah
+            {getGreeting()}, {firstName}
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
             {format(now, "EEEE, MMMM d, yyyy")} · Amicalola Falls State Park &amp; Lodge
@@ -42,7 +46,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <StatsGrid stats={MOCK_STATS} />
+      <StatsGrid stats={stats ?? MOCK_STATS} />
 
       {/* Main grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

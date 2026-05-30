@@ -10,8 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useDataStore } from "@/lib/store/data-store";
-import { MOCK_PROFILES } from "@/lib/mock-data";
+import { createWorkOrder } from "@/lib/data/queries";
+import { useProfiles, useCurrentProfile } from "@/lib/data/hooks";
 import type { WorkOrderPriority } from "@/types";
 
 const CATEGORIES = [
@@ -21,50 +21,44 @@ const CATEGORIES = [
 
 export default function NewWorkOrderPage() {
   const router = useRouter();
-  const { addWorkOrder } = useDataStore();
+  const { profiles } = useProfiles();
+  const me = useCurrentProfile();
   const [form, setForm] = useState({
     title: "", description: "", priority: "medium" as WorkOrderPriority,
     category: "General", location: "", assigned_to: "",
   });
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   const set = (k: keyof typeof form) => (v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.title.trim()) return;
+    if (!form.title.trim() || !me) return;
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 600));
+    setError("");
 
-    const assignee = MOCK_PROFILES.find((p) =>
-      p.full_name.toLowerCase().includes(form.assigned_to.toLowerCase())
+    const assignee = profiles.find((p) =>
+      form.assigned_to && p.full_name.toLowerCase().includes(form.assigned_to.toLowerCase())
     );
 
-    addWorkOrder({
-      id: `wo-${Date.now()}`,
-      organization_id: "org-amicolola",
-      space_id: null,
-      asset_id: null,
-      created_by: "m1",
-      assigned_to: assignee?.id ?? null,
-      title: form.title.trim(),
-      description: form.description.trim() || null,
-      status: assignee ? "assigned" : "open",
-      priority: form.priority,
-      category: form.category.toLowerCase().replace(/ \/ /g, "_").replace(/ /g, "_"),
-      photos: [],
-      due_date: null,
-      completed_at: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      assignee,
-      creator: MOCK_PROFILES[5],
-      _comment_count: 0,
-    });
-
-    setSaving(false);
-    router.push("/work-orders");
+    try {
+      await createWorkOrder({
+        title: form.title.trim(),
+        description: form.description.trim() || null,
+        priority: form.priority,
+        category: form.category.toLowerCase().replace(/ \/ /g, "_").replace(/ /g, "_"),
+        space_id: null,
+        assigned_to: assignee?.id ?? null,
+        organization_id: me.organization_id!,
+        created_by: me.id,
+      });
+      router.push("/work-orders");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create work order");
+      setSaving(false);
+    }
   };
 
   const pColor: Record<WorkOrderPriority, string> = {
@@ -152,9 +146,13 @@ export default function NewWorkOrderPage() {
               list="tech-list"
             />
             <datalist id="tech-list">
-              {MOCK_PROFILES.map((p) => <option key={p.id} value={p.full_name} />)}
+              {profiles.map((p) => <option key={p.id} value={p.full_name} />)}
             </datalist>
           </div>
+
+          {error && (
+            <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>
+          )}
 
           <div className="flex items-center gap-3 pt-2">
             <Button type="submit" disabled={saving || !form.title.trim()} size="lg">

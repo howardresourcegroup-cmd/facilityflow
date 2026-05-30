@@ -6,17 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
-import { MOCK_PROFILES, MOCK_WORK_ORDERS } from "@/lib/mock-data";
+import { useProfiles, useWorkOrders } from "@/lib/data/hooks";
 import { cn, getInitials } from "@/lib/utils";
-import type { Profile } from "@/types";
+import type { Profile, WorkOrder } from "@/types";
 
-const technicians = MOCK_PROFILES.filter((p) => p.role === "technician" || p.role === "manager");
-
-function TechCard({ tech, index }: { tech: Profile; index: number }) {
-  const assignedOrders = MOCK_WORK_ORDERS.filter(
+function TechCard({ tech, index, workOrders }: { tech: Profile; index: number; workOrders: WorkOrder[] }) {
+  const assignedOrders = workOrders.filter(
     (w) => w.assigned_to === tech.id && w.status !== "completed" && w.status !== "cancelled"
   );
-  const completedToday = MOCK_WORK_ORDERS.filter(
+  const completedToday = workOrders.filter(
     (w) => w.assigned_to === tech.id && w.status === "completed"
   ).length;
 
@@ -98,6 +96,9 @@ function TechCard({ tech, index }: { tech: Profile; index: number }) {
 }
 
 export default function TechniciansPage() {
+  const { profiles } = useProfiles();
+  const { workOrders } = useWorkOrders();
+  const technicians = profiles.filter((p) => p.role === "technician" || p.role === "manager");
   const available = technicians.filter((t) => t.is_available).length;
   const busy = technicians.filter((t) => !t.is_available).length;
 
@@ -128,7 +129,7 @@ export default function TechniciansPage() {
       <div className="grid grid-cols-3 gap-4">
         {[
           { label: "Total Technicians", value: technicians.length, icon: Users, color: "text-indigo-400", bg: "bg-indigo-500/15" },
-          { label: "Resolved Today", value: MOCK_WORK_ORDERS.filter((w) => w.status === "completed").length, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/15" },
+          { label: "Resolved Today", value: workOrders.filter((w) => w.status === "completed").length, icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/15" },
           { label: "Avg. Response", value: "28 min", icon: Clock, color: "text-amber-400", bg: "bg-amber-500/15" },
         ].map(({ label, value, icon: Icon, color, bg }) => (
           <div key={label} className="glass-card p-4 flex items-center gap-3">
@@ -154,7 +155,7 @@ export default function TechniciansPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {technicians.map((t, i) => (
-            <TechCard key={t.id} tech={t} index={i} />
+            <TechCard key={t.id} tech={t} index={i} workOrders={workOrders} />
           ))}
         </div>
       )}

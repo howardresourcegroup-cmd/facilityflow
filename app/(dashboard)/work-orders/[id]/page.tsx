@@ -13,8 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { WorkOrderStatusBadge, PriorityBadge } from "@/components/shared/status-badge";
-import { useDataStore } from "@/lib/store/data-store";
-import { AMICOLOLA_WORK_ORDERS } from "@/lib/mock-data";
+import { useWorkOrder } from "@/lib/data/hooks";
+import { PageLoader } from "@/components/shared/loading-spinner";
 import { cn, WORK_ORDER_STATUS_CONFIG, getInitials, formatDateTime, timeAgo } from "@/lib/utils";
 import type { WorkOrderStatus } from "@/types";
 
@@ -22,9 +22,7 @@ const STATUS_FLOW: WorkOrderStatus[] = ["open", "assigned", "in_progress", "wait
 
 export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { workOrders, updateWorkOrderStatus } = useDataStore();
-
-  const order = workOrders.find((w) => w.id === id) ?? AMICOLOLA_WORK_ORDERS[0];
+  const { order, loading, setStatus } = useWorkOrder(id);
 
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<{ id: string; content: string; author: string; at: string }[]>([]);
@@ -44,6 +42,9 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
     setComment("");
     setSubmitting(false);
   };
+
+  if (loading) return <PageLoader />;
+  if (!order) return <div className="text-sm text-zinc-500 py-12 text-center">Work order not found.</div>;
 
   const currentStep = STATUS_FLOW.indexOf(order.status);
 
@@ -89,7 +90,7 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
                 return (
                   <div key={s} className="flex items-center flex-1 last:flex-none">
                     <button
-                      onClick={() => updateWorkOrderStatus(order.id, s)}
+                      onClick={() => setStatus(s)}
                       className={cn("flex flex-col items-center gap-1.5 group transition-all", done ? "opacity-100" : "opacity-40 hover:opacity-60")}
                     >
                       <div className={cn(
@@ -205,7 +206,7 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
           <div className="glass-card p-4 space-y-2">
             <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Quick Actions</p>
             {order.status !== "completed" && order.status !== "cancelled" && (
-              <Button size="sm" variant="success" className="w-full" onClick={() => updateWorkOrderStatus(order.id, "completed")}>
+              <Button size="sm" variant="success" className="w-full" onClick={() => setStatus("completed")}>
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 Mark Completed
               </Button>
