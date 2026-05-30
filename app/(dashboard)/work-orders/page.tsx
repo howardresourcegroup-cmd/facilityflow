@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Plus, ClipboardList, Filter, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,15 @@ export default function WorkOrdersPage() {
   const [search, setSearch]               = useState("");
   const [statusFilter, setStatusFilter]   = useState<WorkOrderStatus | "all">("all");
   const [priorityFilter, setPriorityFilter] = useState<WorkOrderPriority | "all">("all");
+
+  // Honor deep-links from the dashboard stat cards (?priority= / ?status=)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get("priority");
+    const s = params.get("status");
+    if (p && (PRIORITIES as string[]).includes(p)) setPriorityFilter(p as WorkOrderPriority);
+    if (s && (STATUSES as string[]).includes(s)) setStatusFilter(s as WorkOrderStatus);
+  }, []);
 
   const filtered = useMemo(() => {
     return workOrders.filter((w) => {

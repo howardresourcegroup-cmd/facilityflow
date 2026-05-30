@@ -66,6 +66,43 @@ export async function updateSpaceStatus(spaceId: string, status: SpaceStatus): P
   if (error) throw error;
 }
 
+export async function createSpace(input: {
+  floor_id: string;
+  name: string;
+  type: string;
+  position_x: number;
+  position_y: number;
+  width: number;
+  height: number;
+}): Promise<Space> {
+  const { data, error } = await sb()
+    .from("spaces")
+    .insert({ ...input, status: "operational" })
+    .select("*").single();
+  if (error) throw error;
+  return data as Space;
+}
+
+export async function deleteSpace(spaceId: string): Promise<void> {
+  const { error } = await sb().from("spaces").delete().eq("id", spaceId);
+  if (error) throw error;
+}
+
+export async function createFloor(input: {
+  building_id: string;
+  name: string;
+  level: number;
+  grid_cols?: number;
+  grid_rows?: number;
+}): Promise<Floor> {
+  const { data, error } = await sb()
+    .from("floors")
+    .insert({ grid_cols: 14, grid_rows: 8, ...input })
+    .select("*").single();
+  if (error) throw error;
+  return data as Floor;
+}
+
 // ─── Work orders ──────────────────────────────────────────────────────────────
 const WORK_ORDER_SELECT = `
   *,

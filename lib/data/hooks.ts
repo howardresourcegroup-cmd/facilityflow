@@ -72,7 +72,10 @@ export function useBuildingDetail(buildingId: string) {
     try { await q.updateSpaceStatus(spaceId, status); } catch { /* realtime will reconcile */ }
   }, []);
 
-  return { building, floors, spaces, loading, setSpaceStatus };
+  const addSpace = useCallback((space: Space) => setSpaces((prev) => [...prev, space]), []);
+  const removeSpace = useCallback((id: string) => setSpaces((prev) => prev.filter((s) => s.id !== id)), []);
+
+  return { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace };
 }
 
 // ─── Work orders ──────────────────────────────────────────────────────────────

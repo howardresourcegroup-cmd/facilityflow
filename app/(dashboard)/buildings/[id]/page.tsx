@@ -4,10 +4,11 @@ export const runtime = "edge";
 import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Plus, Building2 } from "lucide-react";
+import { ChevronRight, Plus, Building2, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FloorGrid } from "@/components/floorplan/floor-grid";
+import { FloorBuilder } from "@/components/floorplan/floor-builder";
 import { BuildingStack } from "@/components/floorplan/building-stack";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageLoader } from "@/components/shared/loading-spinner";
@@ -17,8 +18,9 @@ import { Layers } from "lucide-react";
 export default function BuildingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { building, floors, spaces, loading, setSpaceStatus } = useBuildingDetail(id);
+  const { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace } = useBuildingDetail(id);
   const [activeFloorId, setActiveFloorId] = useState("");
+  const [editMode, setEditMode] = useState(false);
 
   // Default to the first floor once loaded
   useEffect(() => {
@@ -96,22 +98,36 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
                   );
                 })}
               </TabsList>
-              <Button size="sm" variant="outline">
-                <Plus className="h-3.5 w-3.5" />
-                Add Space
+              <Button
+                size="sm"
+                variant={editMode ? "default" : "outline"}
+                onClick={() => setEditMode((e) => !e)}
+              >
+                <PenLine className="h-3.5 w-3.5" />
+                {editMode ? "Editing Layout" : "Edit Layout"}
               </Button>
             </div>
 
             {floors.map((f) => (
               <TabsContent key={f.id} value={f.id} className="mt-4">
-                <FloorGrid
-                  floor={f}
-                  spaces={spaces.filter((s) => s.floor_id === f.id)}
-                  onStatusChange={handleStatusChange}
-                  onCreateWorkOrder={(spaceId) => {
-                    router.push(`/work-orders/new?space=${spaceId}`);
-                  }}
-                />
+                {editMode ? (
+                  <FloorBuilder
+                    floor={f}
+                    spaces={spaces.filter((s) => s.floor_id === f.id)}
+                    onAdd={addSpace}
+                    onRemove={removeSpace}
+                    onDone={() => setEditMode(false)}
+                  />
+                ) : (
+                  <FloorGrid
+                    floor={f}
+                    spaces={spaces.filter((s) => s.floor_id === f.id)}
+                    onStatusChange={handleStatusChange}
+                    onCreateWorkOrder={(spaceId) => {
+                      router.push(`/work-orders/new?space=${spaceId}`);
+                    }}
+                  />
+                )}
               </TabsContent>
             ))}
           </Tabs>
