@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { TrendingDown, TrendingUp, Clock, CheckCircle2, AlertTriangle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,24 +8,30 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from "recharts";
+import { useWorkOrders } from "@/lib/data/hooks";
+import type { WorkOrder } from "@/types";
 
-const MONTHLY_DATA = [
-  { month: "Dec", opened: 28, closed: 31, critical: 3 },
-  { month: "Jan", opened: 35, closed: 30, critical: 5 },
-  { month: "Feb", opened: 22, closed: 28, critical: 2 },
-  { month: "Mar", opened: 41, closed: 35, critical: 6 },
-  { month: "Apr", opened: 30, closed: 38, critical: 4 },
-  { month: "May", opened: 18, closed: 22, critical: 1 },
-];
+const CAT_COLORS = ["#6366f1", "#06b6d4", "#f59e0b", "#8b5cf6", "#10b981", "#ef4444", "#52525b"];
 
-const CATEGORY_DATA = [
-  { name: "HVAC",         value: 28, color: "#6366f1" },
-  { name: "Housekeeping", value: 45, color: "#06b6d4" },
-  { name: "Plumbing",     value: 18, color: "#f59e0b" },
-  { name: "Electrical",   value: 12, color: "#8b5cf6" },
-  { name: "Grounds",      value: 9,  color: "#10b981" },
-  { name: "Other",        value: 15, color: "#52525b" },
-];
+// Build last-6-months opened/closed/critical from real work orders
+function buildMonthly(orders: WorkOrder[]) {
+  const months: { key: string; month: string; opened: number; closed: number; critical: number }[] = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({ key: `${d.getFullYear()}-${d.getMonth()}`, month: d.toLocaleString("en-US", { month: "short" }), opened: 0, closed: 0, critical: 0 });
+  }
+  const idx = (date: string) => {
+    const d = new Date(date);
+    return months.findIndex((m) => m.key === `${d.getFullYear()}-${d.getMonth()}`);
+  };
+  for (const o of orders) {
+    const oi = idx(o.created_at);
+    if (oi >= 0) { months[oi].opened++; if (o.priority === "critical") months[oi].critical++; }
+    if (o.completed_at) { const ci = idx(o.completed_at); if (ci >= 0) months[ci].closed++; }
+  }
+  return months;
+}
 
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{value: number; name: string; color: string}>; label?: string }) => {
   if (!active || !payload?.length) return null;
@@ -43,6 +50,42 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
 };
 
 export default function ReportsPage() {
+  const { workOrders } = useWorkOrders();
+
+  const { monthly, categories, kpis } = useMemo(() => {
+    const monthly = buildMonthly(workOrders);
+
+    // Category breakdown
+    const catMap = new Map<string, number>();
+    for (const o of workOrders) {
+      const c = (o.category || "other").replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
+      catMap.set(c, (catMap.get(c) ?? 0) + 1);
+    }
+    const categories = [...catMap.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value], i) => ({ name, value, color: CAT_COLORS[i % CAT_COLORS.length] }));
+
+    // KPIs
+    const completed = workOrders.filter((o) => o.completed_at);
+    const resolutionHrs = completed.map((o) => (+new Date(o.completed_at!) - +new Date(o.created_at)) / 3.6e6);
+    const avgRes = resolutionHrs.length ? resolutionHrs.reduce((a, b) => a + b, 0) / resolutionHrs.length : 0;
+    const now = new Date();
+    const criticalThisMonth = workOrders.filter((o) =>
+      o.priority === "critical" && new Date(o.created_at).getMonth() === now.getMonth() && new Date(o.created_at).getFullYear() === now.getFullYear()
+    ).length;
+    const active = workOrders.filter((o) => o.status !== "completed" && o.status !== "cancelled").length;
+    const completionRate = workOrders.length ? Math.round((completed.length / workOrders.length) * 100) : 0;
+
+    const kpis = [
+      { label: "Avg. Resolution Time", value: avgRes > 0 ? `${avgRes.toFixed(1)}h` : "—", icon: Clock,        color: "text-indigo-400",  bg: "bg-indigo-500/15" },
+      { label: "Completion Rate",      value: `${completionRate}%`,                       icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/15" },
+      { label: "Open Work Orders",     value: String(active),                             icon: TrendingDown, color: "text-cyan-400",    bg: "bg-cyan-500/15" },
+      { label: "Critical This Month",  value: String(criticalThisMonth),                  icon: AlertTriangle,color: "text-amber-400",   bg: "bg-amber-500/15" },
+    ];
+
+    return { monthly, categories, kpis };
+  }, [workOrders]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -56,14 +99,9 @@ export default function ReportsPage() {
         </Button>
       </div>
 
-      {/* KPIs */}
+      {/* KPIs — computed from real work orders */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: "Avg. Resolution Time", value: "3.8h",   trend: -12, icon: Clock,         color: "text-indigo-400",  bg: "bg-indigo-500/15" },
-          { label: "On-Time Completion",   value: "91%",    trend: +5,  icon: CheckCircle2,  color: "text-emerald-400", bg: "bg-emerald-500/15" },
-          { label: "Repeat Issues",        value: "4",      trend: -30, icon: TrendingDown,  color: "text-cyan-400",    bg: "bg-cyan-500/15" },
-          { label: "Critical This Month",  value: "1",      trend: -80, icon: AlertTriangle, color: "text-amber-400",   bg: "bg-amber-500/15" },
-        ].map(({ label, value, trend, icon: Icon, color, bg }, i) => (
+        {kpis.map(({ label, value, icon: Icon, color, bg }, i) => (
           <motion.div key={label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
             className="glass-card p-4"
           >
@@ -74,10 +112,6 @@ export default function ReportsPage() {
               </div>
             </div>
             <p className="text-2xl font-bold text-zinc-100 tabular-nums">{value}</p>
-            <p className={`text-xs mt-1 flex items-center gap-1 ${trend < 0 ? "text-emerald-400" : "text-red-400"}`}>
-              {trend < 0 ? <TrendingDown className="h-3 w-3" /> : <TrendingUp className="h-3 w-3" />}
-              {Math.abs(trend)}% vs last month
-            </p>
           </motion.div>
         ))}
       </div>
@@ -88,7 +122,7 @@ export default function ReportsPage() {
           <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">Work Order Volume</p>
           <p className="text-base font-semibold text-zinc-200 mb-5">Last 6 Months</p>
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={MONTHLY_DATA} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+            <BarChart data={monthly} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
               <XAxis dataKey="month" tick={{ fill: "#52525b", fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: "#52525b", fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -111,8 +145,8 @@ export default function ReportsPage() {
           <div className="flex justify-center">
             <ResponsiveContainer width={180} height={180}>
               <PieChart>
-                <Pie data={CATEGORY_DATA} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2}>
-                  {CATEGORY_DATA.map((entry) => (
+                <Pie data={categories} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2}>
+                  {categories.map((entry) => (
                     <Cell key={entry.name} fill={entry.color} />
                   ))}
                 </Pie>
@@ -120,7 +154,7 @@ export default function ReportsPage() {
             </ResponsiveContainer>
           </div>
           <div className="space-y-2 mt-2">
-            {CATEGORY_DATA.map((c) => (
+            {categories.map((c) => (
               <div key={c.name} className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-zinc-400">
                   <span className="h-2 w-2 rounded-full" style={{ background: c.color }} />

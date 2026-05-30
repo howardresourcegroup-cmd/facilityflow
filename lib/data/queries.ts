@@ -6,8 +6,8 @@
 
 import { createClient } from "@/lib/supabase/client";
 import type {
-  Building, Floor, Space, WorkOrder, Profile, Channel, Message,
-  SpaceStatus, WorkOrderStatus, WorkOrderPriority, DashboardStats,
+  Building, Floor, Space, WorkOrder, Profile, Channel, Message, Asset,
+  SpaceStatus, WorkOrderStatus, WorkOrderPriority, AssetStatus, DashboardStats,
 } from "@/types";
 
 const sb = () => createClient();
@@ -166,6 +166,40 @@ export async function updateWorkOrderStatus(id: string, status: WorkOrderStatus)
   const patch: Record<string, unknown> = { status };
   if (status === "completed") patch.completed_at = new Date().toISOString();
   const { error } = await sb().from("work_orders").update(patch).eq("id", id);
+  if (error) throw error;
+}
+
+// ─── Assets ───────────────────────────────────────────────────────────────────
+export async function fetchAssets(): Promise<Asset[]> {
+  const { data, error } = await sb()
+    .from("assets")
+    .select("*, space:spaces(name)")
+    .order("name");
+  if (error) throw error;
+  return (data ?? []) as unknown as Asset[];
+}
+
+export async function createAsset(input: {
+  name: string;
+  type: string | null;
+  model: string | null;
+  serial_number: string | null;
+  status: AssetStatus;
+  next_maintenance_at: string | null;
+}): Promise<Asset> {
+  const supabase = sb();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: me } = await supabase.from("profiles").select("organization_id").eq("id", user!.id).single();
+  const { data, error } = await supabase
+    .from("assets")
+    .insert({ ...input, organization_id: me?.organization_id })
+    .select("*").single();
+  if (error) throw error;
+  return data as Asset;
+}
+
+export async function deleteAsset(id: string): Promise<void> {
+  const { error } = await sb().from("assets").delete().eq("id", id);
   if (error) throw error;
 }
 

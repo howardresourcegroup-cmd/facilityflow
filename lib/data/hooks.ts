@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import * as q from "./queries";
 import { fetchRoles, fetchMyPermissions } from "./roles";
 import type {
-  Building, Floor, Space, WorkOrder, Profile, Channel, Message, Role,
+  Building, Floor, Space, WorkOrder, Profile, Channel, Message, Role, Asset,
   SpaceStatus, WorkOrderStatus, DashboardStats,
 } from "@/types";
 
@@ -105,6 +105,12 @@ export function useWorkOrder(id: string) {
 export function useProfiles() {
   const { data: profiles, loading } = useCachedQuery<Profile[]>("profiles", q.fetchProfiles, []);
   return { profiles, loading };
+}
+
+// ─── Assets ───────────────────────────────────────────────────────────────────
+export function useAssets() {
+  const { data: assets, loading, reload } = useCachedQuery<Asset[]>("assets", q.fetchAssets, []);
+  return { assets, loading, reload };
 }
 
 export function useCurrentProfile() {
