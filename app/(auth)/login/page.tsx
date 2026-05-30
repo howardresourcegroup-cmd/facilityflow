@@ -7,6 +7,11 @@ import { Eye, EyeOff, Zap, ArrowRight, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { createClient } from "@/lib/supabase/client";
+
+const SUPABASE_CONFIGURED =
+  !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  !process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your-project-id");
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,6 +26,21 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
+    // ── Production: real Supabase auth ──────────────────────────────────────
+    if (SUPABASE_CONFIGURED) {
+      const supabase = createClient();
+      const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      if (authError) {
+        setError(authError.message);
+        setLoading(false);
+        return;
+      }
+      router.push("/");
+      router.refresh();
+      return;
+    }
+
+    // ── Demo fallback (no Supabase configured) ──────────────────────────────
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -28,23 +48,13 @@ export default function LoginPage() {
         credentials: "same-origin",
         body: JSON.stringify({ email, password }),
       });
-
       if (res.status === 429) {
-        const retry = res.headers.get("Retry-After");
-        setError(`Too many attempts. Try again in ${retry ?? "15"} seconds.`);
+        setError(`Too many attempts. Try again in ${res.headers.get("Retry-After") ?? "15"}s.`);
         setLoading(false);
         return;
       }
-
       const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error ?? "Invalid credentials");
-        setLoading(false);
-        return;
-      }
-
-      // Cookie is set server-side (httpOnly) — just redirect
+      if (!res.ok) { setError(data.error ?? "Invalid credentials"); setLoading(false); return; }
       router.push("/");
       router.refresh();
     } catch {

@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { BuildingCard } from "@/components/buildings/building-card";
 import { CreateBuildingModal } from "@/components/buildings/create-building-modal";
 import { EmptyState } from "@/components/shared/empty-state";
-import { MOCK_BUILDINGS } from "@/lib/mock-data";
-import type { Building } from "@/types";
+import { SkeletonCard } from "@/components/shared/loading-spinner";
+import { useBuildings } from "@/lib/data/hooks";
 
 export default function BuildingsPage() {
-  const [buildings, setBuildings] = useState<Building[]>(MOCK_BUILDINGS);
+  const { buildings, loading } = useBuildings();
   const [showCreate, setShowCreate] = useState(false);
 
   const stats = {
@@ -41,7 +41,11 @@ export default function BuildingsPage() {
       </div>
 
       {/* Grid */}
-      {buildings.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      ) : buildings.length === 0 ? (
         <EmptyState
           icon={Building2}
           title="No buildings yet"
@@ -56,28 +60,7 @@ export default function BuildingsPage() {
         </div>
       )}
 
-      <CreateBuildingModal
-        open={showCreate}
-        onClose={() => setShowCreate(false)}
-        onCreate={(data) => {
-          const newBuilding: Building = {
-            id: `b-${Date.now()}`,
-            organization_id: "org1",
-            name: data.name,
-            address: data.address,
-            city: data.city,
-            state: data.state,
-            type: data.type,
-            image_url: null,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            _floor_count: 0,
-            _space_count: 0,
-            _issue_count: 0,
-          };
-          setBuildings((prev) => [...prev, newBuilding]);
-        }}
-      />
+      <CreateBuildingModal open={showCreate} onClose={() => setShowCreate(false)} />
     </div>
   );
 }

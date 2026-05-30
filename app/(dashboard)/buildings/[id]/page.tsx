@@ -1,7 +1,7 @@
 "use client";
 export const runtime = "edge";
 
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Plus, Building2 } from "lucide-react";
@@ -10,27 +10,28 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FloorGrid } from "@/components/floorplan/floor-grid";
 import { BuildingStack } from "@/components/floorplan/building-stack";
 import { EmptyState } from "@/components/shared/empty-state";
-import { MOCK_BUILDINGS, MOCK_FLOORS } from "@/lib/mock-data";
-import { useDataStore } from "@/lib/store/data-store";
-import { useState } from "react";
+import { PageLoader } from "@/components/shared/loading-spinner";
+import { useBuildingDetail } from "@/lib/data/hooks";
 import { Layers } from "lucide-react";
-import type { SpaceStatus } from "@/types";
 
 export default function BuildingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { spaces, updateSpaceStatus } = useDataStore();
+  const { building, floors, spaces, loading, setSpaceStatus } = useBuildingDetail(id);
+  const [activeFloorId, setActiveFloorId] = useState("");
 
-  const building = MOCK_BUILDINGS.find((b) => b.id === id) ?? MOCK_BUILDINGS[0];
-  const floors   = MOCK_FLOORS.filter((f) => f.building_id === building.id);
-  const [activeFloorId, setActiveFloorId] = useState(floors[0]?.id ?? "");
+  // Default to the first floor once loaded
+  useEffect(() => {
+    if (!activeFloorId && floors.length) setActiveFloorId(floors[0].id);
+  }, [floors, activeFloorId]);
 
-  const buildingSpaces = spaces.filter((s) => floors.some((f) => f.id === s.floor_id));
+  if (loading) return <PageLoader />;
+  if (!building) return <EmptyState icon={Building2} title="Building not found" description="This building may have been removed." />;
+
+  const buildingSpaces = spaces;
   const totalIssues    = buildingSpaces.filter((s) => s.status !== "operational").length;
 
-  const handleStatusChange = (spaceId: string, status: SpaceStatus) => {
-    updateSpaceStatus(spaceId, status);
-  };
+  const handleStatusChange = setSpaceStatus;
 
   return (
     <div className="space-y-6">
