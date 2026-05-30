@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { RolesManager } from "@/components/settings/roles-manager";
+import { fetchOrganization, updateOrganization } from "@/lib/data/queries";
 
 const SECTIONS = [
   { id: "org",      label: "Organization",     icon: Building2 },
@@ -29,7 +30,22 @@ const INTEGRATIONS = [
 
 export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState("org");
-  const [org, setOrg] = useState({ name: "Amicalola Falls State Park & Lodge", slug: "amicalola-falls", timezone: "America/New_York" });
+  const [org, setOrg] = useState({ name: "", slug: "", timezone: "America/New_York" });
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    fetchOrganization().then((o) => {
+      if (o) setOrg({ name: o.name, slug: o.slug, timezone: (o.settings as { timezone?: string })?.timezone ?? "America/New_York" });
+    }).catch(() => {});
+  }, []);
+
+  const saveOrg = async () => {
+    setSaving(true); setSaved(false);
+    try { await updateOrganization({ name: org.name }); setSaved(true); setTimeout(() => setSaved(false), 2000); }
+    catch { /* ignore */ }
+    setSaving(false);
+  };
 
   return (
     <div className="space-y-6">
@@ -78,7 +94,9 @@ export default function SettingsPage() {
                     <Input value={org.timezone} onChange={(e) => setOrg((o) => ({ ...o, timezone: e.target.value }))} />
                   </div>
                   <div className="pt-2">
-                    <Button>Save Changes</Button>
+                    <Button onClick={saveOrg} disabled={saving}>
+                      {saved ? <><Check className="h-4 w-4" />Saved</> : saving ? "Saving…" : "Save Changes"}
+                    </Button>
                   </div>
                 </div>
               </div>

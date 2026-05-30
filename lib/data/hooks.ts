@@ -75,8 +75,9 @@ export function useBuildingDetail(buildingId: string) {
 
   const addSpace = useCallback((space: Space) => setSpaces((prev) => [...prev, space]), []);
   const removeSpace = useCallback((id: string) => setSpaces((prev) => prev.filter((s) => s.id !== id)), []);
+  const addFloor = useCallback((floor: Floor) => setFloors((prev) => [...prev, floor]), []);
 
-  return { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace };
+  return { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace, addFloor };
 }
 
 // ─── Work orders ──────────────────────────────────────────────────────────────

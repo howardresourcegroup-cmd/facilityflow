@@ -1,7 +1,7 @@
 "use client";
 export const runtime = "edge";
 
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -12,34 +12,51 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { WorkOrderStatusBadge, PriorityBadge } from "@/components/shared/status-badge";
-import { useWorkOrder } from "@/lib/data/hooks";
+import { useWorkOrder, useProfiles, usePermissions } from "@/lib/data/hooks";
+import { fetchComments, addComment, assignWorkOrder } from "@/lib/data/queries";
 import { PageLoader } from "@/components/shared/loading-spinner";
 import { cn, WORK_ORDER_STATUS_CONFIG, getInitials, formatDateTime, timeAgo } from "@/lib/utils";
 import type { WorkOrderStatus } from "@/types";
 
 const STATUS_FLOW: WorkOrderStatus[] = ["open", "assigned", "in_progress", "waiting_parts", "completed"];
 
+interface CommentRow { id: string; content: string; created_at: string; author?: { full_name: string } }
+
 export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { order, loading, setStatus } = useWorkOrder(id);
+  const { profiles } = useProfiles();
+  const { can } = usePermissions();
 
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState<{ id: string; content: string; author: string; at: string }[]>([]);
+  const [comments, setComments] = useState<CommentRow[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [assigneeOverride, setAssigneeOverride] = useState<{ id: string; full_name: string; role: string } | null | undefined>(undefined);
 
-  const addComment = async (e: React.FormEvent) => {
+  const handleAssign = async (profileId: string) => {
+    const p = profiles.find((x) => x.id === profileId);
+    setAssigneeOverride(p ? { id: p.id, full_name: p.full_name, role: p.role } : null);
+    try { await assignWorkOrder(id, profileId || null); } catch { /* ignore */ }
+  };
+
+  // Load persisted comments
+  useEffect(() => {
+    fetchComments(id).then((c) => setComments(c as CommentRow[])).catch(() => {});
+  }, [id]);
+
+  const addCommentHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!comment.trim()) return;
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 400));
-    setComments((prev) => [...prev, {
-      id: String(Date.now()),
-      content: comment,
-      author: "Sarah Mitchell",
-      at: new Date().toISOString(),
-    }]);
-    setComment("");
+    try {
+      const saved = await addComment(id, comment.trim());
+      setComments((prev) => [...prev, saved as CommentRow]);
+      setComment("");
+    } catch { /* ignore */ }
     setSubmitting(false);
   };
 
@@ -124,12 +141,12 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
               {comments.map((c) => (
                 <motion.div key={c.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex gap-3">
                   <Avatar className="h-7 w-7 shrink-0">
-                    <AvatarFallback className="text-[10px]">{getInitials(c.author)}</AvatarFallback>
+                    <AvatarFallback className="text-[10px]">{getInitials(c.author?.full_name ?? "?")}</AvatarFallback>
                   </Avatar>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-medium text-zinc-300">{c.author}</span>
-                      <span className="text-xs text-zinc-600">{timeAgo(c.at)}</span>
+                      <span className="text-xs font-medium text-zinc-300">{c.author?.full_name ?? "Unknown"}</span>
+                      <span className="text-xs text-zinc-600">{timeAgo(c.created_at)}</span>
                     </div>
                     <p className="text-sm text-zinc-400">{c.content}</p>
                   </div>
@@ -137,7 +154,7 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
               ))}
             </div>
             <Separator />
-            <form onSubmit={addComment} className="space-y-3">
+            <form onSubmit={addCommentHandler} className="space-y-3">
               <Textarea
                 placeholder="Add an update, photo note, or observation…"
                 value={comment}
@@ -188,33 +205,42 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
 
           <div className="glass-card p-4 space-y-3">
             <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Assignee</p>
-            {order.assignee ? (
-              <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9">
-                  <AvatarFallback>{getInitials(order.assignee.full_name)}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-medium text-zinc-200">{order.assignee.full_name}</p>
-                  <p className="text-xs text-zinc-500 capitalize">{order.assignee.role}</p>
+            {(() => {
+              const assignee = assigneeOverride !== undefined ? assigneeOverride : order.assignee;
+              return assignee ? (
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback>{getInitials(assignee.full_name)}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-zinc-200 truncate">{assignee.full_name}</p>
+                    <p className="text-xs text-zinc-500 capitalize">{assignee.role}</p>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <Button size="sm" variant="secondary" className="w-full">Assign Technician</Button>
+              ) : (
+                <p className="text-xs text-zinc-600">Unassigned</p>
+              );
+            })()}
+            {can("work_orders.assign") && (
+              <Select onValueChange={handleAssign}>
+                <SelectTrigger className="h-8 text-xs"><SelectValue placeholder="Assign technician…" /></SelectTrigger>
+                <SelectContent>
+                  {profiles.filter((p) => p.role !== "viewer").map((p) => (
+                    <SelectItem key={p.id} value={p.id}>{p.full_name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
           </div>
 
           <div className="glass-card p-4 space-y-2">
             <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Quick Actions</p>
-            {order.status !== "completed" && order.status !== "cancelled" && (
+            {order.status !== "completed" && order.status !== "cancelled" && can("work_orders.complete") && (
               <Button size="sm" variant="success" className="w-full" onClick={() => setStatus("completed")}>
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 Mark Completed
               </Button>
             )}
-            <Button size="sm" variant="secondary" className="w-full">
-              <User className="h-3.5 w-3.5" />
-              Reassign
-            </Button>
           </div>
         </div>
       </div>

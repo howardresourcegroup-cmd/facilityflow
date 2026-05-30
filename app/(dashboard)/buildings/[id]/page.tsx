@@ -13,15 +13,29 @@ import { BuildingStack } from "@/components/floorplan/building-stack";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageLoader } from "@/components/shared/loading-spinner";
 import { useBuildingDetail, usePermissions } from "@/lib/data/hooks";
+import { createFloor } from "@/lib/data/queries";
 import { Layers } from "lucide-react";
 
 export default function BuildingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace } = useBuildingDetail(id);
+  const { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace, addFloor } = useBuildingDetail(id);
   const { can } = usePermissions();
   const [activeFloorId, setActiveFloorId] = useState("");
   const [editMode, setEditMode] = useState(false);
+  const [addingFloor, setAddingFloor] = useState(false);
+
+  const handleAddFloor = async () => {
+    const name = prompt("Floor name?", `Floor ${floors.length + 1}`);
+    if (!name?.trim()) return;
+    setAddingFloor(true);
+    try {
+      const floor = await createFloor({ building_id: id, name: name.trim(), level: floors.length + 1 });
+      addFloor(floor);
+      setActiveFloorId(floor.id);
+    } catch { /* ignore */ }
+    setAddingFloor(false);
+  };
 
   // Default to the first floor once loaded
   useEffect(() => {
@@ -59,10 +73,12 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
             </p>
           </div>
         </div>
-        <Button size="sm" variant="secondary">
-          <Plus className="h-4 w-4" />
-          Add Floor
-        </Button>
+        {can("buildings.edit") && (
+          <Button size="sm" variant="secondary" onClick={handleAddFloor} disabled={addingFloor}>
+            <Plus className="h-4 w-4" />
+            {addingFloor ? "Adding…" : "Add Floor"}
+          </Button>
+        )}
       </div>
 
       {floors.length === 0 ? (
@@ -70,7 +86,7 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
           icon={Layers}
           title="No floors configured"
           description="Add floors to start mapping spaces."
-          action={{ label: "Add Floor", onClick: () => {} }}
+          action={can("buildings.edit") ? { label: "Add Floor", onClick: handleAddFloor } : undefined}
         />
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-[280px_1fr] gap-6 items-start">

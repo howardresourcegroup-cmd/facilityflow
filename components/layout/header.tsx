@@ -12,9 +12,10 @@ import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { useCurrentProfile, useWorkOrders } from "@/lib/data/hooks";
+import { useCurrentProfile, useWorkOrders, useBuildings, useProfiles } from "@/lib/data/hooks";
 import { createClient } from "@/lib/supabase/client";
 import { getInitials, cn, timeAgo } from "@/lib/utils";
+import { ClipboardList, Building2 } from "lucide-react";
 
 const PAGE_META: Record<string, { title: string; action?: { label: string; href: string } }> = {
   "/": { title: "Operations Dashboard" },
@@ -32,7 +33,21 @@ export function Header() {
   const router = useRouter();
   const profile = useCurrentProfile();
   const { workOrders } = useWorkOrders();
+  const { buildings } = useBuildings();
+  const { profiles } = useProfiles();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  // Global search across work orders, buildings, and people
+  const results = (() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [] as { href: string; label: string; kind: string; icon: React.ElementType }[];
+    const out: { href: string; label: string; kind: string; icon: React.ElementType }[] = [];
+    for (const w of workOrders) if (w.title.toLowerCase().includes(q)) out.push({ href: `/work-orders/${w.id}`, label: w.title, kind: "Order", icon: ClipboardList });
+    for (const b of buildings) if (b.name.toLowerCase().includes(q)) out.push({ href: `/buildings/${b.id}`, label: b.name, kind: "Building", icon: Building2 });
+    for (const p of profiles) if (p.full_name.toLowerCase().includes(q)) out.push({ href: `/technicians`, label: p.full_name, kind: "Person", icon: User });
+    return out.slice(0, 8);
+  })();
 
   // Derive notifications from the most recent active, high-signal work orders
   const notifications = workOrders
@@ -68,17 +83,34 @@ export function Header() {
         {searchOpen ? (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 240, opacity: 1 }}
+            animate={{ width: 280, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden"
+            className="relative"
           >
             <Input
               autoFocus
-              placeholder="Search rooms, orders, people…"
+              placeholder="Search orders, buildings, people…"
               className="h-8 text-xs"
-              onBlur={() => setSearchOpen(false)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
             />
+            {query.trim().length > 0 && (
+              <div className="absolute top-9 left-0 right-0 rounded-xl border border-white/[0.08] bg-[#141425] shadow-2xl p-1.5 max-h-80 overflow-y-auto z-50">
+                {results.length === 0 ? (
+                  <p className="text-xs text-zinc-600 px-3 py-3 text-center">No matches</p>
+                ) : results.map((r) => (
+                  <Link key={r.href} href={r.href} onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => { setSearchOpen(false); setQuery(""); }}
+                    className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-white/[0.06] transition-colors">
+                    <r.icon className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+                    <span className="text-xs text-zinc-300 truncate flex-1">{r.label}</span>
+                    <span className="text-[10px] text-zinc-600 shrink-0">{r.kind}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
           </motion.div>
         ) : (
           <motion.button

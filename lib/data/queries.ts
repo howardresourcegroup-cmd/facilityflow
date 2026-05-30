@@ -42,6 +42,24 @@ export async function fetchBuilding(id: string): Promise<Building | null> {
   return data as Building;
 }
 
+export async function fetchOrganization() {
+  const supabase = sb();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data: me } = await supabase.from("profiles").select("organization_id").eq("id", user.id).single();
+  if (!me?.organization_id) return null;
+  const { data } = await supabase.from("organizations").select("*").eq("id", me.organization_id).single();
+  return data;
+}
+
+export async function updateOrganization(patch: { name?: string }) {
+  const supabase = sb();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: me } = await supabase.from("profiles").select("organization_id").eq("id", user!.id).single();
+  const { error } = await supabase.from("organizations").update(patch).eq("id", me!.organization_id);
+  if (error) throw error;
+}
+
 export async function createBuilding(input: {
   name: string;
   address: string;
@@ -167,6 +185,38 @@ export async function updateWorkOrderStatus(id: string, status: WorkOrderStatus)
   if (status === "completed") patch.completed_at = new Date().toISOString();
   const { error } = await sb().from("work_orders").update(patch).eq("id", id);
   if (error) throw error;
+}
+
+export async function assignWorkOrder(id: string, assignedTo: string | null): Promise<void> {
+  const { error } = await sb()
+    .from("work_orders")
+    .update({ assigned_to: assignedTo, status: assignedTo ? "assigned" : "open" })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+// ─── Work order comments ──────────────────────────────────────────────────────
+export async function fetchComments(workOrderId: string) {
+  const { data, error } = await sb()
+    .from("work_order_comments")
+    .select("*, author:profiles(id, full_name, role, avatar_url)")
+    .eq("work_order_id", workOrderId)
+    .order("created_at");
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function addComment(workOrderId: string, content: string) {
+  const supabase = sb();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+  const { data, error } = await supabase
+    .from("work_order_comments")
+    .insert({ work_order_id: workOrderId, author_id: user.id, content })
+    .select("*, author:profiles(id, full_name, role, avatar_url)")
+    .single();
+  if (error) throw error;
+  return data;
 }
 
 // ─── Assets ───────────────────────────────────────────────────────────────────
