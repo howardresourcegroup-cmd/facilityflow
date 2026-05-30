@@ -3,5 +3,8 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
+[build]
+command = "npx @cloudflare/next-on-pages@1"
+
 [vars]
 NEXT_PUBLIC_APP_URL = "https://facilityflow.pages.dev"
