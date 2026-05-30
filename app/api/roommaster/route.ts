@@ -1,15 +1,8 @@
 export const runtime = "edge";
 
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE, decodeSession } from "@/lib/server/session";
+import { getAuthedUser } from "@/lib/server/auth";
 import type { SpaceStatus } from "@/types";
-
-// ─── Auth guard ───────────────────────────────────────────────────────────────
-function requireSession(req: NextRequest) {
-  const cookie = req.cookies.get(SESSION_COOKIE);
-  if (!cookie) return null;
-  return decodeSession(cookie.value);
-}
 
 // ─── RoomMaster status mapping ─────────────────────────────────────────────
 const RM_STATUS_MAP: Record<string, { ff_status: SpaceStatus; create_wo: boolean }> = {
@@ -61,7 +54,7 @@ const MOCK_RM_ROOMS = [
 
 // GET — pull current room statuses from RoomMaster
 export async function GET(request: NextRequest) {
-  if (!requireSession(request)) {
+  if (!(await getAuthedUser(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -102,7 +95,7 @@ ${rooms.map((r) => `    <Room number="${r.room_number}" status="${r.pms_status_c
 
 // POST — full sync pull OR push a status change back to RoomMaster
 export async function POST(request: NextRequest) {
-  if (!requireSession(request)) {
+  if (!(await getAuthedUser(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
