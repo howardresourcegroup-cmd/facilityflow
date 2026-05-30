@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.625rem;
+  --background: 8 8 17;
+  --foreground: 248 250 252;
+  --card: 15 15 26;
+  --card-foreground: 248 250 252;
+  --border: 255 255 255 / 0.06;
+  --input: 255 255 255 / 0.06;
+  --primary: 99 102 241;
+  --primary-foreground: 255 255 255;
+  --muted: 255 255 255 / 0.05;
+  --muted-foreground: 148 163 184;
+  --accent: 99 102 241 / 0.12;
+  --accent-foreground: 165 180 252;
+  --ring: 99 102 241;
+}
+
+* {
+  box-sizing: border-box;
+  border-color: rgb(var(--border));
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: rgb(8, 8, 17);
+  color: rgb(248, 250, 252);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Glass card */
+@layer components {
+  .glass-card {
+    @apply bg-[#0f0f1a] border border-white/[0.06] rounded-xl backdrop-blur-sm;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-200 hover:border-white/[0.1] hover:bg-[#141425];
+  }
+
+  .stat-card {
+    @apply glass-card p-5 flex flex-col gap-3;
+  }
+
+  .btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg
+           transition-all duration-150 active:scale-[0.98] inline-flex items-center gap-2
+           text-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-white/[0.06] hover:bg-white/[0.1] text-zinc-200 font-medium px-4 py-2 rounded-lg
+           transition-all duration-150 active:scale-[0.98] border border-white/[0.08]
+           inline-flex items-center gap-2 text-sm;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 px-3 py-2 rounded-lg
+           transition-all duration-150 inline-flex items-center gap-2 text-sm;
+  }
+
+  .input-base {
+    @apply bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-sm
+           text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2
+           focus:ring-indigo-500/40 focus:border-indigo-500/50 transition-all;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+           text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06]
+           transition-all duration-150 cursor-pointer;
+  }
+
+  .nav-item-active {
+    @apply nav-item bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/20 hover:text-indigo-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border;
+  }
+
+  .section-header {
+    @apply flex items-center justify-between mb-5;
+  }
+
+  .page-title {
+    @apply text-xl font-semibold text-zinc-100;
+  }
+
+  .label-text {
+    @apply text-xs font-medium text-zinc-400 uppercase tracking-wider;
+  }
+}
+
+/* Dot grid background for floorplan */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(99,102,241,0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glow effects */
+.glow-indigo {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15), 0 0 40px rgba(99, 102, 241, 0.05);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.glow-red {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+/* Page transitions */
+.page-enter {
+  animation: fade-in 0.2s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Shimmer loading */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.02) 25%,
+    rgba(255,255,255,0.05) 50%,
+    rgba(255,255,255,0.02) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}

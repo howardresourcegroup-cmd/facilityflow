@@ -1,0 +1,153 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import { Plus, ClipboardList, Filter, Search, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { WorkOrderCard } from "@/components/work-orders/work-order-card";
+import { EmptyState } from "@/components/shared/empty-state";
+import { cn, WORK_ORDER_STATUS_CONFIG, PRIORITY_CONFIG } from "@/lib/utils";
+import { useDataStore } from "@/lib/store/data-store";
+import type { WorkOrderStatus, WorkOrderPriority } from "@/types";
+
+const STATUSES: WorkOrderStatus[] = ["open", "assigned", "in_progress", "waiting_parts", "completed", "cancelled"];
+const PRIORITIES: WorkOrderPriority[] = ["critical", "high", "medium", "low"];
+
+export default function WorkOrdersPage() {
+  const { workOrders, resetToDefaults } = useDataStore();
+  const [search, setSearch]               = useState("");
+  const [statusFilter, setStatusFilter]   = useState<WorkOrderStatus | "all">("all");
+  const [priorityFilter, setPriorityFilter] = useState<WorkOrderPriority | "all">("all");
+
+  const filtered = useMemo(() => {
+    return workOrders.filter((w) => {
+      const matchSearch   = !search || w.title.toLowerCase().includes(search.toLowerCase());
+      const matchStatus   = statusFilter === "all" || w.status === statusFilter;
+      const matchPriority = priorityFilter === "all" || w.priority === priorityFilter;
+      return matchSearch && matchStatus && matchPriority;
+    });
+  }, [workOrders, search, statusFilter, priorityFilter]);
+
+  const counts = useMemo(() => ({
+    open:        workOrders.filter((w) => w.status === "open").length,
+    in_progress: workOrders.filter((w) => w.status === "in_progress").length,
+    critical:    workOrders.filter((w) => w.priority === "critical" && w.status !== "completed").length,
+  }), [workOrders]);
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-100">Work Orders</h1>
+          <div className="flex items-center gap-3 mt-1.5 text-xs">
+            <span className="text-zinc-500">{workOrders.length} total</span>
+            {counts.open > 0 && (
+              <span className="bg-zinc-700/50 text-zinc-400 border border-zinc-600/40 px-2 py-0.5 rounded-md">
+                {counts.open} open
+              </span>
+            )}
+            {counts.in_progress > 0 && (
+              <span className="bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 px-2 py-0.5 rounded-md">
+                {counts.in_progress} in progress
+              </span>
+            )}
+            {counts.critical > 0 && (
+              <span className="bg-red-500/15 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-md animate-pulse-slow">
+                {counts.critical} critical
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={resetToDefaults} title="Reset demo data">
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+          <Button asChild>
+            <Link href="/work-orders/new">
+              <Plus className="h-4 w-4" />
+              New Work Order
+            </Link>
+          </Button>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+          <Input
+            placeholder="Search by title or location…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+
+        <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.06] rounded-xl p-1 flex-wrap">
+          <button
+            onClick={() => setStatusFilter("all")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+              statusFilter === "all" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            All
+          </button>
+          {STATUSES.map((s) => {
+            const cfg = WORK_ORDER_STATUS_CONFIG[s];
+            return (
+              <button
+                key={s}
+                onClick={() => setStatusFilter(statusFilter === s ? "all" : s)}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                  statusFilter === s ? cn("border", cfg.bg, cfg.border, cfg.color) : "text-zinc-500 hover:text-zinc-300"
+                )}
+              >
+                {cfg.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Filter className="h-3.5 w-3.5 text-zinc-600" />
+        <span className="text-xs text-zinc-600">Priority:</span>
+        {PRIORITIES.map((p) => {
+          const cfg = PRIORITY_CONFIG[p];
+          return (
+            <button
+              key={p}
+              onClick={() => setPriorityFilter(priorityFilter === p ? "all" : p)}
+              className={cn(
+                "badge transition-colors cursor-pointer",
+                priorityFilter === p
+                  ? cn(cfg.bg, cfg.border, cfg.color)
+                  : "bg-white/[0.03] border-white/[0.06] text-zinc-600 hover:text-zinc-400"
+              )}
+            >
+              {cfg.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {filtered.length === 0 ? (
+        <EmptyState
+          icon={ClipboardList}
+          title="No work orders found"
+          description={search ? "Try adjusting your search or filters." : "Create your first work order to get started."}
+        />
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((order, i) => (
+            <WorkOrderCard key={order.id} order={order} index={i} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
