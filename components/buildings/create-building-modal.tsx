@@ -11,11 +11,12 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { createBuilding } from "@/lib/data/queries";
 
 interface CreateBuildingModalProps {
   open: boolean;
   onClose: () => void;
-  onCreate?: (data: BuildingFormData) => void;
+  onCreated?: () => void;
 }
 
 export interface BuildingFormData {
@@ -37,11 +38,12 @@ const BUILDING_TYPES = [
   { value: "other",     label: "Other" },
 ];
 
-export function CreateBuildingModal({ open, onClose, onCreate }: CreateBuildingModalProps) {
+export function CreateBuildingModal({ open, onClose, onCreated }: CreateBuildingModalProps) {
   const [form, setForm] = useState<BuildingFormData>({
     name: "", address: "", city: "", state: "", type: "office",
   });
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   const set = (k: keyof BuildingFormData) => (v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
@@ -50,11 +52,16 @@ export function CreateBuildingModal({ open, onClose, onCreate }: CreateBuildingM
     e.preventDefault();
     if (!form.name.trim()) return;
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 800));
-    onCreate?.(form);
+    setError("");
+    try {
+      await createBuilding(form);
+      onCreated?.();
+      onClose();
+      setForm({ name: "", address: "", city: "", state: "", type: "office" });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create building");
+    }
     setSaving(false);
-    onClose();
-    setForm({ name: "", address: "", city: "", state: "", type: "office" });
   };
 
   return (
@@ -131,6 +138,10 @@ export function CreateBuildingModal({ open, onClose, onCreate }: CreateBuildingM
               </div>
             </div>
           </div>
+
+          {error && (
+            <p className="mx-6 mb-1 text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>

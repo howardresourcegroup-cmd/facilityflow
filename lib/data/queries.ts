@@ -42,6 +42,25 @@ export async function fetchBuilding(id: string): Promise<Building | null> {
   return data as Building;
 }
 
+export async function createBuilding(input: {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  type: string;
+}): Promise<Building> {
+  const supabase = sb();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+  const { data: me } = await supabase.from("profiles").select("organization_id").eq("id", user.id).single();
+  const { data, error } = await supabase
+    .from("buildings")
+    .insert({ ...input, organization_id: me?.organization_id })
+    .select("*").single();
+  if (error) throw error;
+  return data as Building;
+}
+
 export async function fetchFloors(buildingId: string): Promise<Floor[]> {
   const { data, error } = await sb()
     .from("floors").select("*").eq("building_id", buildingId).order("level");

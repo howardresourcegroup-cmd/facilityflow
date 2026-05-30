@@ -10,7 +10,7 @@ import { SkeletonCard } from "@/components/shared/loading-spinner";
 import { useBuildings } from "@/lib/data/hooks";
 
 export default function BuildingsPage() {
-  const { buildings, loading } = useBuildings();
+  const { buildings, loading, reload } = useBuildings();
   const [showCreate, setShowCreate] = useState(false);
 
   const stats = {
@@ -60,7 +60,7 @@ export default function BuildingsPage() {
         </div>
       )}
 
-      <CreateBuildingModal open={showCreate} onClose={() => setShowCreate(false)} />
+      <CreateBuildingModal open={showCreate} onClose={() => setShowCreate(false)} onCreated={reload} />
     </div>
   );
 }

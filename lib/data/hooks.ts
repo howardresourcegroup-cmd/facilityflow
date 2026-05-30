@@ -29,8 +29,8 @@ function useCachedQuery<T>(key: string, fetcher: () => Promise<T>, initial: T) {
 
 // ─── Buildings list ───────────────────────────────────────────────────────────
 export function useBuildings() {
-  const { data: buildings, loading } = useCachedQuery<Building[]>("buildings", q.fetchBuildings, []);
-  return { buildings, loading };
+  const { data: buildings, loading, reload } = useCachedQuery<Building[]>("buildings", q.fetchBuildings, []);
+  return { buildings, loading, reload };
 }
 
 // ─── Building detail (floors + spaces, with live status updates) ──────────────
