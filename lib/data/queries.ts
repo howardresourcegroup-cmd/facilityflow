@@ -195,6 +195,20 @@ export async function assignWorkOrder(id: string, assignedTo: string | null): Pr
   if (error) throw error;
 }
 
+// ─── Work order photos (Supabase Storage) ─────────────────────────────────────
+export async function uploadWorkOrderPhoto(workOrderId: string, file: File, currentPhotos: string[]): Promise<string[]> {
+  const supabase = sb();
+  const ext = file.name.split(".").pop() ?? "jpg";
+  const path = `${workOrderId}/${Date.now()}.${ext}`;
+  const { error: upErr } = await supabase.storage.from("work-order-photos").upload(path, file, { upsert: false });
+  if (upErr) throw upErr;
+  const { data: pub } = supabase.storage.from("work-order-photos").getPublicUrl(path);
+  const photos = [...currentPhotos, pub.publicUrl];
+  const { error } = await supabase.from("work_orders").update({ photos }).eq("id", workOrderId);
+  if (error) throw error;
+  return photos;
+}
+
 // ─── Work order comments ──────────────────────────────────────────────────────
 export async function fetchComments(workOrderId: string) {
   const { data, error } = await sb()

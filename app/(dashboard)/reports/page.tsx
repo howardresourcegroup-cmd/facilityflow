@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { TrendingDown, TrendingUp, Clock, CheckCircle2, AlertTriangle, Download } from "lucide-react";
+import { TrendingDown, Clock, CheckCircle2, AlertTriangle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,

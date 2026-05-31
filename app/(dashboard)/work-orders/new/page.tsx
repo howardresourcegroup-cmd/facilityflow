@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,12 @@ export default function NewWorkOrderPage() {
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  // Pre-fill assignee from ?assignee= (e.g. the "Assign Task" button on Technicians)
+  useEffect(() => {
+    const a = new URLSearchParams(window.location.search).get("assignee");
+    if (a) setForm((f) => ({ ...f, assigned_to: a }));
+  }, []);
 
   const set = (k: keyof typeof form) => (v: string) =>
     setForm((f) => ({ ...f, [k]: v }));

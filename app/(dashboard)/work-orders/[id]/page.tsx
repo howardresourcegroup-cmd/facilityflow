@@ -16,8 +16,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { WorkOrderStatusBadge, PriorityBadge } from "@/components/shared/status-badge";
+import { useRef } from "react";
 import { useWorkOrder, useProfiles, usePermissions } from "@/lib/data/hooks";
-import { fetchComments, addComment, assignWorkOrder } from "@/lib/data/queries";
+import { fetchComments, addComment, assignWorkOrder, uploadWorkOrderPhoto } from "@/lib/data/queries";
 import { PageLoader } from "@/components/shared/loading-spinner";
 import { cn, WORK_ORDER_STATUS_CONFIG, getInitials, formatDateTime, timeAgo } from "@/lib/utils";
 import type { WorkOrderStatus } from "@/types";
@@ -36,6 +37,21 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
   const [comments, setComments] = useState<CommentRow[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [assigneeOverride, setAssigneeOverride] = useState<{ id: string; full_name: string; role: string } | null | undefined>(undefined);
+  const [photos, setPhotos] = useState<string[] | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const onPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const next = await uploadWorkOrderPhoto(id, file, photos ?? order?.photos ?? []);
+      setPhotos(next);
+    } catch { /* ignore */ }
+    setUploading(false);
+    if (fileRef.current) fileRef.current.value = "";
+  };
 
   const handleAssign = async (profileId: string) => {
     const p = profiles.find((x) => x.id === profileId);
@@ -94,6 +110,19 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
             {order.description && (
               <p className="text-sm text-zinc-400 leading-relaxed">{order.description}</p>
             )}
+            {(() => {
+              const pics = photos ?? order.photos ?? [];
+              return pics.length > 0 ? (
+                <div className="grid grid-cols-4 gap-2 pt-1">
+                  {pics.map((url) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <a key={url} href={url} target="_blank" rel="noreferrer" className="block aspect-square rounded-lg overflow-hidden border border-white/[0.08] hover:border-white/[0.2] transition-colors">
+                      <img src={url} alt="Work order photo" className="h-full w-full object-cover" />
+                    </a>
+                  ))}
+                </div>
+              ) : null;
+            })()}
           </div>
 
           {/* Progress */}
@@ -162,10 +191,12 @@ export default function WorkOrderDetailPage({ params }: { params: Promise<{ id: 
                 rows={3}
               />
               <div className="flex items-center justify-between">
-                <button type="button" className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-400 transition-colors">
+                <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                  className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-400 transition-colors disabled:opacity-50">
                   <Paperclip className="h-3.5 w-3.5" />
-                  Attach photo
+                  {uploading ? "Uploading…" : "Attach photo"}
                 </button>
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onPhoto} />
                 <Button type="submit" size="sm" disabled={submitting || !comment.trim()}>
                   <Send className="h-3.5 w-3.5" />
                   {submitting ? "Posting…" : "Post Update"}

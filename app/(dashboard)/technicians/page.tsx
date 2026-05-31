@@ -1,12 +1,21 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Users, Plus, Phone, Wrench, CheckCircle2, Clock } from "lucide-react";
+import { Users, Plus, Phone, Wrench, CheckCircle2, Clock, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { EmptyState } from "@/components/shared/empty-state";
-import { useProfiles, useWorkOrders } from "@/lib/data/hooks";
+import { useProfiles, useWorkOrders, usePermissions, useRoles } from "@/lib/data/hooks";
 import { cn, getInitials } from "@/lib/utils";
 import type { Profile, WorkOrder } from "@/types";
 
@@ -83,12 +92,14 @@ function TechCard({ tech, index, workOrders }: { tech: Profile; index: number; w
 
       {/* Actions */}
       <div className="flex gap-2 pt-1">
-        <Button size="sm" variant="secondary" className="flex-1 text-xs">
-          <Wrench className="h-3 w-3" />
-          Assign Task
+        <Button size="sm" variant="secondary" className="flex-1 text-xs" asChild>
+          <Link href={`/work-orders/new?assignee=${encodeURIComponent(tech.full_name)}`}>
+            <Wrench className="h-3 w-3" />
+            Assign Task
+          </Link>
         </Button>
-        <Button size="sm" variant="ghost" className="text-xs">
-          View All
+        <Button size="sm" variant="ghost" className="text-xs" asChild>
+          <Link href="/work-orders">View All</Link>
         </Button>
       </div>
     </motion.div>
@@ -98,6 +109,8 @@ function TechCard({ tech, index, workOrders }: { tech: Profile; index: number; w
 export default function TechniciansPage() {
   const { profiles } = useProfiles();
   const { workOrders } = useWorkOrders();
+  const { can } = usePermissions();
+  const [showInvite, setShowInvite] = useState(false);
   const technicians = profiles.filter((p) => p.role === "technician" || p.role === "manager");
   const available = technicians.filter((t) => t.is_available).length;
   const busy = technicians.filter((t) => !t.is_available).length;
@@ -119,10 +132,12 @@ export default function TechniciansPage() {
             </span>
           </div>
         </div>
-        <Button>
-          <Plus className="h-4 w-4" />
-          Add Technician
-        </Button>
+        {can("team.manage") && (
+          <Button onClick={() => setShowInvite(true)}>
+            <Plus className="h-4 w-4" />
+            Add Technician
+          </Button>
+        )}
       </div>
 
       {/* Summary bar */}
@@ -150,7 +165,7 @@ export default function TechniciansPage() {
           icon={Users}
           title="No technicians yet"
           description="Invite your maintenance team to start assigning and tracking work orders."
-          action={{ label: "Add Technician", onClick: () => {} }}
+          action={can("team.manage") ? { label: "Add Technician", onClick: () => setShowInvite(true) } : undefined}
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -159,6 +174,89 @@ export default function TechniciansPage() {
           ))}
         </div>
       )}
+
+      <InviteModal open={showInvite} onClose={() => setShowInvite(false)} />
     </div>
+  );
+}
+
+function InviteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { roles } = useRoles();
+  const [form, setForm] = useState({ name: "", email: "", role: "maintenance" });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [result, setResult] = useState<{ email: string; temp_password: string } | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.email.trim()) return;
+    setSaving(true); setError("");
+    try {
+      const res = await fetch("/api/team/invite", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error ?? "Invite failed"); setSaving(false); return; }
+      setResult({ email: data.email, temp_password: data.temp_password });
+    } catch { setError("Connection error"); }
+    setSaving(false);
+  };
+
+  const reset = () => { setResult(null); setForm({ name: "", email: "", role: "maintenance" }); setError(""); onClose(); };
+
+  return (
+    <Dialog open={open} onOpenChange={reset}>
+      <DialogContent className="max-w-md">
+        <DialogHeader><DialogTitle>{result ? "Teammate added" : "Invite Teammate"}</DialogTitle></DialogHeader>
+        {result ? (
+          <div className="px-6 pb-2 space-y-3">
+            <p className="text-sm text-zinc-400">
+              <span className="text-zinc-200">{result.email}</span> can now sign in. Share these temporary credentials —
+              they should change the password after first login.
+            </p>
+            <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] p-3 space-y-1.5 font-mono text-xs">
+              <div className="flex justify-between"><span className="text-zinc-500">email</span><span className="text-zinc-200">{result.email}</span></div>
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-500">password</span>
+                <span className="flex items-center gap-2 text-zinc-200">
+                  {result.temp_password}
+                  <button onClick={() => navigator.clipboard.writeText(result.temp_password)} className="text-zinc-500 hover:text-zinc-300"><Copy className="h-3 w-3" /></button>
+                </span>
+              </div>
+            </div>
+            <DialogFooter><Button onClick={reset}>Done</Button></DialogFooter>
+          </div>
+        ) : (
+          <form onSubmit={submit}>
+            <div className="px-6 pb-2 space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs text-zinc-400">Full Name</label>
+                <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Alex Rivera" autoFocus />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-zinc-400">Email *</label>
+                <Input type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="alex@property.com" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-zinc-400">Role</label>
+                <Select value={form.role} onValueChange={(v) => setForm((f) => ({ ...f, role: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {roles.filter((r) => r.slug !== "admin").map((r) => <SelectItem key={r.id} value={r.slug}>{r.name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              {error && <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>}
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="ghost" onClick={reset}>Cancel</Button>
+              <Button type="submit" disabled={saving || !form.email.trim()}>{saving ? "Inviting…" : "Send Invite"}</Button>
+            </DialogFooter>
+          </form>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
