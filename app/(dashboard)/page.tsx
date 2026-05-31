@@ -9,6 +9,7 @@ import { BuildingHealth } from "@/components/dashboard/building-health";
 import { WorkOrderCard } from "@/components/work-orders/work-order-card";
 import { RoomMasterPanel, IntegrationsPanel } from "@/components/integrations/roommaster-panel";
 import { EpturaPanel } from "@/components/integrations/eptura-panel";
+import { GettingStarted } from "@/components/dashboard/getting-started";
 import { MOCK_STATS, MOCK_ACTIVITY } from "@/lib/mock-data";
 import { useWorkOrders, useDashboardStats, useCurrentProfile } from "@/lib/data/hooks";
 
@@ -75,6 +76,7 @@ export default function DashboardPage() {
 
         {/* Right */}
         <div className="space-y-5">
+          <GettingStarted />
           <div className="h-[320px]">
             <ActivityFeed items={MOCK_ACTIVITY.slice(0, 6)} />
           </div>

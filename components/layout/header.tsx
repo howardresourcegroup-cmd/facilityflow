@@ -26,6 +26,7 @@ const PAGE_META: Record<string, { title: string; action?: { label: string; href:
   "/assets": { title: "Assets" },
   "/reports": { title: "Reports" },
   "/settings": { title: "Settings" },
+  "/help": { title: "Help & Guides" },
 };
 
 export function Header() {

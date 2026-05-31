@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Building2, ClipboardList, Users,
-  Settings, ChevronLeft, Zap, Package, BarChart3, LogOut, MessageSquare,
+  Settings, ChevronLeft, Zap, Package, BarChart3, LogOut, MessageSquare, HelpCircle,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
@@ -23,6 +23,7 @@ const NAV_ITEMS = [
 ];
 
 const BOTTOM_ITEMS = [
+  { href: "/help", icon: HelpCircle, label: "Help & Guides" },
   { href: "/settings", icon: Settings, label: "Settings" },
 ];
 

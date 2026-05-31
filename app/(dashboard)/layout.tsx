@@ -1,10 +1,12 @@
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { OnboardingGuard } from "@/components/onboarding-guard";
+import { WelcomeModal } from "@/components/welcome-modal";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <OnboardingGuard>
+      <WelcomeModal />
       <div className="flex h-screen overflow-hidden bg-[#080811]">
         <Sidebar />
         <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
