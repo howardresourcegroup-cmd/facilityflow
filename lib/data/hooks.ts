@@ -6,7 +6,7 @@ import * as q from "./queries";
 import { fetchRoles, fetchMyPermissions } from "./roles";
 import type {
   Building, Floor, Space, WorkOrder, Profile, Channel, Message, Role, Asset,
-  SpaceStatus, WorkOrderStatus, DashboardStats,
+  SpaceStatus, HousekeepingStatus, WorkOrderStatus, DashboardStats,
 } from "@/types";
 
 // ─── Tiny stale-while-revalidate cache ────────────────────────────────────────
@@ -112,6 +112,37 @@ export function useProfiles() {
 export function useAssets() {
   const { data: assets, loading, reload } = useCachedQuery<Asset[]>("assets", q.fetchAssets, []);
   return { assets, loading, reload };
+}
+
+// ─── Housekeeping board (live) ────────────────────────────────────────────────
+export function useHousekeeping() {
+  const [rooms, setRooms] = useState<Space[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    q.fetchHousekeepingRooms().then((r) => { setRooms(r); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
+
+  // Live: reflect status changes from housekeeping/managers on other devices
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel("housekeeping")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "spaces" },
+        (payload) => {
+          const u = payload.new as Space;
+          setRooms((prev) => prev.map((s) => (s.id === u.id ? { ...s, ...u } : s)));
+        })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
+
+  const setStatus = useCallback(async (spaceId: string, status: HousekeepingStatus) => {
+    setRooms((prev) => prev.map((s) => (s.id === spaceId ? { ...s, housekeeping_status: status } : s))); // optimistic
+    try { await q.updateHousekeepingStatus(spaceId, status); } catch { /* realtime reconciles */ }
+  }, []);
+
+  return { rooms, loading, setStatus };
 }
 
 export function useCurrentProfile() {

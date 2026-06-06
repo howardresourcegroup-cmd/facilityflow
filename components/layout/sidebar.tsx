@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Building2, ClipboardList, Users,
-  Settings, ChevronLeft, Zap, Package, BarChart3, LogOut, MessageSquare, HelpCircle,
+  Settings, ChevronLeft, Zap, Package, BarChart3, LogOut, MessageSquare, HelpCircle, BedDouble,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { href: "/", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/buildings", icon: Building2, label: "Buildings" },
   { href: "/work-orders", icon: ClipboardList, label: "Work Orders" },
+  { href: "/housekeeping", icon: BedDouble, label: "Housekeeping" },
   { href: "/messages", icon: MessageSquare, label: "Team Chat" },
   { href: "/technicians", icon: Users, label: "Technicians" },
   { href: "/assets", icon: Package, label: "Assets" },

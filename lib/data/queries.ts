@@ -7,7 +7,7 @@
 import { createClient } from "@/lib/supabase/client";
 import type {
   Building, Floor, Space, WorkOrder, Profile, Channel, Message, Asset,
-  SpaceStatus, WorkOrderStatus, WorkOrderPriority, AssetStatus, DashboardStats,
+  SpaceStatus, HousekeepingStatus, WorkOrderStatus, WorkOrderPriority, AssetStatus, DashboardStats,
 } from "@/types";
 
 const sb = () => createClient();
@@ -100,6 +100,22 @@ export async function fetchSpacesForBuilding(buildingId: string): Promise<Space[
 
 export async function updateSpaceStatus(spaceId: string, status: SpaceStatus): Promise<void> {
   const { error } = await sb().from("spaces").update({ status }).eq("id", spaceId);
+  if (error) throw error;
+}
+
+// ─── Housekeeping ─────────────────────────────────────────────────────────────
+export async function fetchHousekeepingRooms(): Promise<Space[]> {
+  const { data, error } = await sb()
+    .from("spaces")
+    .select("*, floor:floors(name, building:buildings(name))")
+    .in("type", ["guest_room", "suite", "cabin"])
+    .order("name");
+  if (error) throw error;
+  return (data ?? []) as unknown as Space[];
+}
+
+export async function updateHousekeepingStatus(spaceId: string, status: HousekeepingStatus): Promise<void> {
+  const { error } = await sb().from("spaces").update({ housekeeping_status: status }).eq("id", spaceId);
   if (error) throw error;
 }
 

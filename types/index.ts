@@ -6,6 +6,13 @@ export type SpaceStatus =
   | "inspection_due"
   | "emergency";
 
+export type HousekeepingStatus =
+  | "dirty"
+  | "in_progress"
+  | "cleaned"
+  | "ready"
+  | "out_of_service";
+
 export type WorkOrderStatus =
   | "open"
   | "assigned"
@@ -83,6 +90,7 @@ export interface Space {
   height: number;
   qr_code: string | null;
   notes: string | null;
+  housekeeping_status?: HousekeepingStatus;
   created_at: string;
   updated_at: string;
   // virtual

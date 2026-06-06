@@ -21,6 +21,7 @@ const PAGE_META: Record<string, { title: string; action?: { label: string; href:
   "/": { title: "Operations Dashboard" },
   "/buildings": { title: "Buildings", action: { label: "Add Building", href: "/buildings?new=1" } },
   "/work-orders": { title: "Work Orders", action: { label: "New Work Order", href: "/work-orders/new" } },
+  "/housekeeping": { title: "Housekeeping Board" },
   "/messages": { title: "Team Chat" },
   "/technicians": { title: "Technicians" },
   "/assets": { title: "Assets" },
