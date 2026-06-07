@@ -3,7 +3,7 @@ import type { Building, Floor, Space, WorkOrder, Profile, ActivityItem, Dashboar
 // ─── Organization ─────────────────────────────────────────────────────────────
 export const DEMO_ORG = {
   id: "org-amicolola",
-  name: "Amicalola Falls State Park & Lodge",
+  name: "Grandview Resort & Lodge",
   slug: "amicalola-falls",
   plan: "pro" as const,
 };
@@ -22,24 +22,24 @@ export const MOCK_PROFILES: Profile[] = [
 export const MOCK_BUILDINGS: Building[] = [
   {
     id: "b1", organization_id: "org-amicolola",
-    name: "Amicalola Falls Lodge",
-    address: "418 Amicalola Falls State Park Rd", city: "Dawsonville", state: "GA",
+    name: "Grandview Lodge",
+    address: "1 Lakeshore Drive", city: "Lake Haven", state: "GA",
     type: "hotel", image_url: null,
     created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z",
     _floor_count: 3, _space_count: 57, _issue_count: 7,
   },
   {
     id: "b2", organization_id: "org-amicolola",
-    name: "Mountain View Cabins",
-    address: "418 Amicalola Falls State Park Rd", city: "Dawsonville", state: "GA",
+    name: "Pine Ridge Cabins",
+    address: "1 Lakeshore Drive", city: "Lake Haven", state: "GA",
     type: "hotel", image_url: null,
     created_at: "2024-01-02T00:00:00Z", updated_at: "2024-01-02T00:00:00Z",
     _floor_count: 1, _space_count: 14, _issue_count: 2,
   },
   {
     id: "b3", organization_id: "org-amicolola",
-    name: "Guest Services & Recreation",
-    address: "418 Amicalola Falls State Park Rd", city: "Dawsonville", state: "GA",
+    name: "Recreation Center",
+    address: "1 Lakeshore Drive", city: "Lake Haven", state: "GA",
     type: "hotel", image_url: null,
     created_at: "2024-01-03T00:00:00Z", updated_at: "2024-01-03T00:00:00Z",
     _floor_count: 1, _space_count: 18, _issue_count: 1,
@@ -109,7 +109,7 @@ export const AMICOLOLA_SPACES: Space[] = [
   { id: "s-fitness",floor_id: "f3", name: "Fitness Center",        type: "fitness",   status: "operational", position_x: 8, position_y: 3, width: 3, height: 2, qr_code: null, notes: null, created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
   { id: "s-spa",   floor_id: "f3", name: "Appalachian Spa",        type: "spa",       status: "operational", position_x: 11, position_y: 3, width: 4, height: 2, qr_code: null, notes: null, created_at: "2024-01-01T00:00:00Z", updated_at: "2024-01-01T00:00:00Z" },
 
-  // ── Mountain View Cabins ──────────────────────────────────────────────────
+  // ── Pine Ridge Cabins ──────────────────────────────────────────────────
   { id: "s-c1", floor_id: "f4", name: "Cabin 1 — Bear Creek",  type: "cabin", status: "operational",      position_x: 1, position_y: 1, width: 2, height: 2, qr_code: null, notes: null, created_at: "2024-01-02T00:00:00Z", updated_at: "2024-01-02T00:00:00Z" },
   { id: "s-c2", floor_id: "f4", name: "Cabin 2 — Deer Run",    type: "cabin", status: "cleaning_required",position_x: 4, position_y: 1, width: 2, height: 2, qr_code: null, notes: null, created_at: "2024-01-02T00:00:00Z", updated_at: "2024-01-02T00:00:00Z" },
   { id: "s-c3", floor_id: "f4", name: "Cabin 3 — Eagle Ridge", type: "cabin", status: "operational",      position_x: 7, position_y: 1, width: 2, height: 2, qr_code: null, notes: null, created_at: "2024-01-02T00:00:00Z", updated_at: "2024-01-02T00:00:00Z" },
@@ -122,7 +122,7 @@ export const AMICOLOLA_SPACES: Space[] = [
   // ── Guest Services ────────────────────────────────────────────────────────
   { id: "s-pool",    floor_id: "f5", name: "Outdoor Pool",      type: "pool",        status: "operational",      position_x: 1, position_y: 1, width: 3, height: 3, qr_code: null, notes: null, created_at: "2024-01-03T00:00:00Z", updated_at: "2024-01-03T00:00:00Z" },
   { id: "s-trailhd", floor_id: "f5", name: "Trail Head Office", type: "office",      status: "operational",      position_x: 4, position_y: 1, width: 2, height: 2, qr_code: null, notes: null, created_at: "2024-01-03T00:00:00Z", updated_at: "2024-01-03T00:00:00Z" },
-  { id: "s-attrail", floor_id: "f5", name: "AT Approach Trail", type: "trail",       status: "inspection_due",   position_x: 6, position_y: 1, width: 2, height: 2, qr_code: null, notes: "Seasonal inspection before heavy traffic season", created_at: "2024-01-03T00:00:00Z", updated_at: "2024-01-03T00:00:00Z" },
+  { id: "s-attrail", floor_id: "f5", name: "Pine Ridge Trail", type: "trail",       status: "inspection_due",   position_x: 6, position_y: 1, width: 2, height: 2, qr_code: null, notes: "Seasonal inspection before heavy traffic season", created_at: "2024-01-03T00:00:00Z", updated_at: "2024-01-03T00:00:00Z" },
   { id: "s-visitctr",floor_id: "f5", name: "Visitor Center",    type: "lobby",       status: "operational",      position_x: 8, position_y: 1, width: 2, height: 2, qr_code: null, notes: null, created_at: "2024-01-03T00:00:00Z", updated_at: "2024-01-03T00:00:00Z" },
   { id: "s-picnic",  floor_id: "f5", name: "Picnic Pavilion",   type: "outdoor",     status: "operational",      position_x: 10, position_y: 1, width: 2, height: 2, qr_code: null, notes: null, created_at: "2024-01-03T00:00:00Z", updated_at: "2024-01-03T00:00:00Z" },
 ];
@@ -187,7 +187,7 @@ export const AMICOLOLA_WORK_ORDERS: WorkOrder[] = [
   {
     id: "wo-6", organization_id: "org-amicolola", space_id: "s-attrail", asset_id: null,
     created_by: "m1", assigned_to: "t5",
-    title: "Pre-Season Trail Inspection — AT Approach Trail",
+    title: "Pre-Season Trail Inspection — Pine Ridge Trail",
     description: "Annual spring inspection before peak hiking season. Check all signage, water bars, blowdowns, and footbridge stability over the creek.",
     status: "open", priority: "medium", category: "grounds",
     photos: [], due_date: new Date(Date.now() + 7 * 86400000).toISOString(), completed_at: null,

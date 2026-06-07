@@ -91,7 +91,7 @@ export default function ReportsPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-100">Reports</h1>
-          <p className="text-sm text-zinc-500 mt-1">Operations analytics for Amicalola Falls State Park &amp; Lodge</p>
+          <p className="text-sm text-zinc-500 mt-1">Operations analytics for Grandview Resort &amp; Lodge</p>
         </div>
         <Button variant="secondary">
           <Download className="h-4 w-4" />

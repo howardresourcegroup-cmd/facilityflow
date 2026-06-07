@@ -64,8 +64,8 @@ export default function LoginPage() {
   };
 
   const fillDemo = () => {
-    setEmail("manager@amicalolafalls.com");
-    setPassword("Roomward2025");
+    setEmail("manager@grandviewdemo.com");
+    setPassword("RoomwardDemo2026");
   };
 
   return (
@@ -81,8 +81,8 @@ export default function LoginPage() {
               <Zap className="h-4 w-4 text-indigo-400" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-indigo-300">Live Demo — Amicalola Falls Lodge</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">Coral Hospitality · Dawsonville, GA</p>
+              <p className="text-xs font-semibold text-indigo-300">Live Demo — Grandview Lodge</p>
+              <p className="text-[11px] text-zinc-500 mt-0.5">Demo Resort Group · Lake Haven, GA</p>
             </div>
           </div>
           <ArrowRight className="h-4 w-4 text-indigo-500 group-hover:translate-x-1 transition-transform" />

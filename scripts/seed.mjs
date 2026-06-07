@@ -1,5 +1,5 @@
 // FacilityFlow — Supabase seed script
-// Seeds the Amicalola Falls demo org with real, database-backed data.
+// Seeds the Grandview Falls demo org with real, database-backed data.
 //
 // Run locally (your service_role key stays on your machine):
 //   1. Add to .env.local:
@@ -24,23 +24,23 @@ if (!URL || !KEY) {
 const db = createClient(URL, KEY, { auth: { autoRefreshToken: false, persistSession: false } });
 
 const ORG_ID = "00000000-0000-0000-0000-0000000000a1";
-const DEMO_PASSWORD = process.env.DEMO_PASSWORD || "FacilityFlow2025";
+const DEMO_PASSWORD = process.env.DEMO_PASSWORD || "RoomwardDemo2026";
 
 // ─── Team ─────────────────────────────────────────────────────────────────────
 const TEAM = [
-  { email: "manager@amicalolafalls.com", name: "Sarah Mitchell", role: "manager",    phone: "706-265-0200", available: true,  login: true },
-  { email: "marcus@amicalolafalls.com",  name: "Marcus Webb",    role: "technician", phone: "706-265-0101", available: false, login: false },
-  { email: "priya@amicalolafalls.com",   name: "Priya Patel",    role: "technician", phone: "706-265-0102", available: true,  login: false },
-  { email: "james@amicalolafalls.com",   name: "James Okafor",   role: "technician", phone: "706-265-0103", available: true,  login: false },
-  { email: "sofia@amicalolafalls.com",   name: "Sofia Reyes",    role: "technician", phone: "706-265-0104", available: false, login: false },
-  { email: "chen@amicalolafalls.com",    name: "Chen Wei",       role: "technician", phone: "706-265-0105", available: true,  login: false },
+  { email: "manager@grandviewdemo.com", name: "Sarah Mitchell", role: "manager",    phone: "706-265-0200", available: true,  login: true },
+  { email: "marcus@grandviewdemo.com",  name: "Marcus Webb",    role: "technician", phone: "706-265-0101", available: false, login: false },
+  { email: "priya@grandviewdemo.com",   name: "Priya Patel",    role: "technician", phone: "706-265-0102", available: true,  login: false },
+  { email: "james@grandviewdemo.com",   name: "James Okafor",   role: "technician", phone: "706-265-0103", available: true,  login: false },
+  { email: "sofia@grandviewdemo.com",   name: "Sofia Reyes",    role: "technician", phone: "706-265-0104", available: false, login: false },
+  { email: "chen@grandviewdemo.com",    name: "Chen Wei",       role: "technician", phone: "706-265-0105", available: true,  login: false },
 ];
 
 // ─── Buildings & floors ───────────────────────────────────────────────────────
 const BUILDINGS = [
-  { key: "b1", name: "Amicalola Falls Lodge",       type: "hotel", address: "418 Amicalola Falls State Park Rd", city: "Dawsonville", state: "GA" },
-  { key: "b2", name: "Mountain View Cabins",        type: "hotel", address: "418 Amicalola Falls State Park Rd", city: "Dawsonville", state: "GA" },
-  { key: "b3", name: "Guest Services & Recreation", type: "hotel", address: "418 Amicalola Falls State Park Rd", city: "Dawsonville", state: "GA" },
+  { key: "b1", name: "Grandview Lodge",       type: "hotel", address: "1 Lakeshore Drive", city: "Lake Haven", state: "GA" },
+  { key: "b2", name: "Pine Ridge Cabins",        type: "hotel", address: "1 Lakeshore Drive", city: "Lake Haven", state: "GA" },
+  { key: "b3", name: "Recreation Center", type: "hotel", address: "1 Lakeshore Drive", city: "Lake Haven", state: "GA" },
 ];
 const FLOORS = [
   { key: "f1", building: "b1", name: "Ground Floor", level: 1, cols: 14, rows: 7 },
@@ -88,7 +88,7 @@ const SPACES = [
   S("s-c8","f4","Cabin 8 — Kudzu Knoll","cabin","offline",10,4,2,2,"Storm damage — awaiting insurance adjuster"),
   // Guest services
   S("s-pool","f5","Outdoor Pool","pool","operational",1,1,3,3),
-  S("s-attrail","f5","AT Approach Trail","trail","inspection_due",6,1,2,2,"Seasonal inspection before peak season"),
+  S("s-attrail","f5","Pine Ridge Trail","trail","inspection_due",6,1,2,2,"Seasonal inspection before peak season"),
   S("s-visitctr","f5","Visitor Center","lobby","operational",8,1,2,2),
 ];
 
@@ -96,13 +96,13 @@ const SPACES = [
 const WO = (title, space, status, priority, category, creator, assignee, desc) =>
   ({ title, space, status, priority, category, creator, assignee, desc });
 const WORK_ORDERS = [
-  WO("Burst Pipe — Room 306","s-306","in_progress","critical","plumbing","manager@amicalolafalls.com","marcus@amicalolafalls.com","Guest reported water on bathroom floor. Pipe under sink failed. Water shut off. Guest relocated to 308."),
-  WO("AC Not Cooling — Room 204","s-204","assigned","high","hvac","manager@amicalolafalls.com","priya@amicalolafalls.com","Guest reports room not reaching set temperature. Thermostat at 78°F despite 68°F setting."),
-  WO("HVAC Unit 2 Fault Code","s-mechanical","in_progress","high","hvac","james@amicalolafalls.com","james@amicalolafalls.com","BAS showing fault code E-14 on HVAC unit 2. Cycling on and off. May need capacitor."),
-  WO("Deck Boards Rotting — Cabin 5","s-c5","waiting_parts","high","carpentry","manager@amicalolafalls.com","sofia@amicalolafalls.com","Multiple deck boards rotted, two cracked through. Trip hazard. Cabin blocked until repaired."),
-  WO("Monthly Health Inspection — Kitchen","s-kitchen","open","medium","inspection","manager@amicalolafalls.com",null,"Monthly food service inspection due this week. All equipment and surfaces inspection-ready."),
-  WO("Pre-Season Trail Inspection","s-attrail","open","medium","grounds","manager@amicalolafalls.com","chen@amicalolafalls.com","Annual spring inspection before peak season. Check signage, water bars, footbridge."),
-  WO("ATM Out of Cash","s-atm","waiting_parts","low","other","chen@amicalolafalls.com","chen@amicalolafalls.com","ATM empty. Armored car service called — ETA 48 hours."),
+  WO("Burst Pipe — Room 306","s-306","in_progress","critical","plumbing","manager@grandviewdemo.com","marcus@grandviewdemo.com","Guest reported water on bathroom floor. Pipe under sink failed. Water shut off. Guest relocated to 308."),
+  WO("AC Not Cooling — Room 204","s-204","assigned","high","hvac","manager@grandviewdemo.com","priya@grandviewdemo.com","Guest reports room not reaching set temperature. Thermostat at 78°F despite 68°F setting."),
+  WO("HVAC Unit 2 Fault Code","s-mechanical","in_progress","high","hvac","james@grandviewdemo.com","james@grandviewdemo.com","BAS showing fault code E-14 on HVAC unit 2. Cycling on and off. May need capacitor."),
+  WO("Deck Boards Rotting — Cabin 5","s-c5","waiting_parts","high","carpentry","manager@grandviewdemo.com","sofia@grandviewdemo.com","Multiple deck boards rotted, two cracked through. Trip hazard. Cabin blocked until repaired."),
+  WO("Monthly Health Inspection — Kitchen","s-kitchen","open","medium","inspection","manager@grandviewdemo.com",null,"Monthly food service inspection due this week. All equipment and surfaces inspection-ready."),
+  WO("Pre-Season Trail Inspection","s-attrail","open","medium","grounds","manager@grandviewdemo.com","chen@grandviewdemo.com","Annual spring inspection before peak season. Check signage, water bars, footbridge."),
+  WO("ATM Out of Cash","s-atm","waiting_parts","low","other","chen@grandviewdemo.com","chen@grandviewdemo.com","ATM empty. Armored car service called — ETA 48 hours."),
 ];
 
 // ─── Channels & messages ──────────────────────────────────────────────────────
@@ -114,12 +114,12 @@ const CHANNELS = [
 ];
 const M = (channel, author, body, minsAgo) => ({ channel, author, body, minsAgo });
 const MESSAGES = [
-  M("general","manager@amicalolafalls.com","Morning team — heads up, Room 306 has a burst pipe. Marcus is on it. Front desk, please hold 308 for the guest relocation.",95),
-  M("general","marcus@amicalolafalls.com","On it. Water's shut off to the room. Assessing drywall damage now.",88),
-  M("general","priya@amicalolafalls.com","I can cover Marcus's 11am AC check in 204 if needed.",80),
-  M("general","manager@amicalolafalls.com","Perfect, thanks Priya.",78),
-  M("maintenance","james@amicalolafalls.com","HVAC unit 2 throwing fault code E-14 again. Ordered a replacement capacitor, ETA tomorrow.",60),
-  M("housekeeping","manager@amicalolafalls.com","Rooms 202, 206, and 303 flagged dirty in RoomMaster — turnover crew please confirm when done.",40),
+  M("general","manager@grandviewdemo.com","Morning team — heads up, Room 306 has a burst pipe. Marcus is on it. Front desk, please hold 308 for the guest relocation.",95),
+  M("general","marcus@grandviewdemo.com","On it. Water's shut off to the room. Assessing drywall damage now.",88),
+  M("general","priya@grandviewdemo.com","I can cover Marcus's 11am AC check in 204 if needed.",80),
+  M("general","manager@grandviewdemo.com","Perfect, thanks Priya.",78),
+  M("maintenance","james@grandviewdemo.com","HVAC unit 2 throwing fault code E-14 again. Ordered a replacement capacitor, ETA tomorrow.",60),
+  M("housekeeping","manager@grandviewdemo.com","Rooms 202, 206, and 303 flagged dirty in RoomMaster — turnover crew please confirm when done.",40),
 ];
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -128,7 +128,7 @@ async function main() {
   console.log(`\n⚡ FacilityFlow seed → ${URL}\n`);
 
   // 1. Org
-  await db.from("organizations").upsert({ id: ORG_ID, name: "Amicalola Falls State Park & Lodge", slug: "amicalola-falls", plan: "pro" });
+  await db.from("organizations").upsert({ id: ORG_ID, name: "Grandview Resort & Lodge", slug: "amicalola-falls", plan: "pro" });
   console.log("✓ Organization");
 
   // 2. Users + profiles

@@ -17,7 +17,7 @@ export async function GET() {
     userId: "demo-manager",
     name:   process.env.DEMO_NAME  ?? "Sarah Mitchell",
     role:   "manager",
-    org:    process.env.DEMO_ORG   ?? "Amicalola Falls State Park & Lodge",
+    org:    process.env.DEMO_ORG   ?? "Grandview Resort & Lodge",
     orgId:  "org-amicolola",
     iat:    Date.now(),
   });

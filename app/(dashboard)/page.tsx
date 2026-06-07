@@ -37,7 +37,7 @@ export default function DashboardPage() {
             {getGreeting()}, {firstName}
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
-            {format(now, "EEEE, MMMM d, yyyy")} · Amicalola Falls State Park &amp; Lodge
+            {format(now, "EEEE, MMMM d, yyyy")} · Grandview Falls State Park &amp; Lodge
           </p>
         </div>
         <div className="text-right hidden sm:block">
