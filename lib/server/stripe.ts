@@ -67,13 +67,17 @@ export async function createIncompleteSubscription(customerId: string, orgId: st
       "items[0][price]": process.env.STRIPE_PRICE_ID!,
       payment_behavior: "default_incomplete",
       "payment_settings[save_default_payment_method]": "on_subscription",
-      "expand[0]": "latest_invoice.payment_intent",
+      // Newer Stripe API exposes the client secret on the invoice's confirmation_secret;
+      // older versions used latest_invoice.payment_intent. Expand both for compatibility.
+      "expand[0]": "latest_invoice.confirmation_secret",
+      "expand[1]": "latest_invoice.payment_intent",
       "metadata[organization_id]": orgId,
     }),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error?.message ?? "Subscription create failed");
-  const clientSecret = data.latest_invoice?.payment_intent?.client_secret;
+  const inv = data.latest_invoice;
+  const clientSecret = inv?.confirmation_secret?.client_secret ?? inv?.payment_intent?.client_secret;
   if (!clientSecret) throw new Error("No client secret returned");
   return { subscriptionId: data.id, clientSecret };
 }
