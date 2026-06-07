@@ -51,7 +51,7 @@ export function MaintenanceDashboard({ profile }: { profile: Profile }) {
         </div>
         {active.length === 0 ? (
           <div className="glass-card p-8 text-center text-sm text-zinc-500">
-            <CircleCheck className="h-6 w-6 text-emerald-400 mx-auto mb-2" /> You're all caught up.
+            <CircleCheck className="h-6 w-6 text-emerald-400 mx-auto mb-2" /> You&apos;re all caught up.
           </div>
         ) : (
           <div className="space-y-2">
