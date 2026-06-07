@@ -152,7 +152,7 @@ function PaymentForm({ onClose }: { onClose: () => void }) {
     <form onSubmit={submit} className="space-y-4">
       <PaymentElement options={{
         // Card shown & expanded by default; other methods collapse into rows below
-        layout: { type: "accordion", defaultCollapsed: false, radios: true, spacedAccordionItems: false },
+        layout: { type: "accordion", defaultCollapsed: false },
       }} />
       {error && <p className="text-xs text-red-400">{error}</p>}
       <Button type="submit" className="w-full" disabled={!stripe || submitting}>
