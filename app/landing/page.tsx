@@ -102,7 +102,11 @@ export default function LandingPage() {
             <span className="text-4xl font-bold">$149</span>
             <span className="text-zinc-500">/mo per property</span>
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Pro $249/mo for 25+ users · $100 off with Managed IT</p>
+          <p className="text-xs text-zinc-500 mt-1">Pro $249/mo for 25+ users</p>
+          <a href="https://howardresourcegroup.com/business.html#hotel-stack" target="_blank" rel="noopener"
+            className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 mt-1.5">
+            Save $100/mo with a Managed IT plan <ArrowRight className="h-3 w-3" />
+          </a>
           <ul className="space-y-2 mt-5 text-left">
             {["Every feature included", "Unlimited rooms & spaces", "All integrations", "14-day free trial, no card"].map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-zinc-300">

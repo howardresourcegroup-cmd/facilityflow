@@ -87,6 +87,10 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
                 </li>
               ))}
             </ul>
+            <a href="https://howardresourcegroup.com/business.html#hotel-stack" target="_blank" rel="noopener"
+              className="inline-flex items-center gap-1 text-[11px] text-indigo-400 hover:text-indigo-300 mt-4">
+              Save $100/mo with a Managed IT plan →
+            </a>
           </div>
 
           {/* Right: payment */}
