@@ -9,18 +9,20 @@ import {
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
+import { usePermissions } from "@/lib/data/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 
+// Each nav item requires a permission — users only see the tabs for their role.
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/buildings", icon: Building2, label: "Buildings" },
-  { href: "/work-orders", icon: ClipboardList, label: "Work Orders" },
-  { href: "/housekeeping", icon: BedDouble, label: "Housekeeping" },
-  { href: "/messages", icon: MessageSquare, label: "Team Chat" },
-  { href: "/technicians", icon: Users, label: "Technicians" },
-  { href: "/assets", icon: Package, label: "Assets" },
-  { href: "/reports", icon: BarChart3, label: "Reports" },
+  { href: "/", icon: LayoutDashboard, label: "Dashboard", perm: "dashboard.view" },
+  { href: "/buildings", icon: Building2, label: "Buildings", perm: "buildings.view" },
+  { href: "/work-orders", icon: ClipboardList, label: "Work Orders", perm: "work_orders.view" },
+  { href: "/housekeeping", icon: BedDouble, label: "Housekeeping", perm: "buildings.view" },
+  { href: "/messages", icon: MessageSquare, label: "Team Chat", perm: "chat.participate" },
+  { href: "/technicians", icon: Users, label: "Technicians", perm: "team.view" },
+  { href: "/assets", icon: Package, label: "Assets", perm: "assets.view" },
+  { href: "/reports", icon: BarChart3, label: "Reports", perm: "reports.view" },
 ];
 
 const BOTTOM_ITEMS = [
@@ -31,6 +33,10 @@ const BOTTOM_ITEMS = [
 export function Sidebar() {
   const pathname = usePathname();
   const { sidebarCollapsed, toggleSidebar, profile } = useAppStore();
+  const { can, loading: permsLoading } = usePermissions();
+
+  // Show only the tabs this role can access (until perms load, show all to avoid flicker)
+  const navItems = NAV_ITEMS.filter((i) => permsLoading || can(i.perm));
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -64,7 +70,7 @@ export function Sidebar() {
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
-          {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
+          {navItems.map(({ href, icon: Icon, label }) => {
             const active = isActive(href);
             const item = (
               <Link

@@ -11,12 +11,14 @@ import { RoomMasterPanel, IntegrationsPanel } from "@/components/integrations/ro
 import { EpturaPanel } from "@/components/integrations/eptura-panel";
 import { GettingStarted } from "@/components/dashboard/getting-started";
 import { MOCK_STATS, MOCK_ACTIVITY } from "@/lib/mock-data";
-import { useWorkOrders, useDashboardStats, useCurrentProfile } from "@/lib/data/hooks";
+import { useWorkOrders, useDashboardStats, useCurrentProfile, usePermissions } from "@/lib/data/hooks";
 
 export default function DashboardPage() {
   const { workOrders } = useWorkOrders();
   const stats = useDashboardStats();
   const profile = useCurrentProfile();
+  const { can } = usePermissions();
+  const showIntegrations = can("integrations.manage");
   const now = new Date();
 
   const firstName = profile?.full_name?.split(" ")[0] ?? "there";
@@ -69,9 +71,9 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Integrations */}
-          <RoomMasterPanel />
-          <EpturaPanel />
+          {/* Integrations — managers/admins only */}
+          {showIntegrations && <RoomMasterPanel />}
+          {showIntegrations && <EpturaPanel />}
         </div>
 
         {/* Right */}
@@ -81,7 +83,7 @@ export default function DashboardPage() {
             <ActivityFeed items={MOCK_ACTIVITY.slice(0, 6)} />
           </div>
           <BuildingHealth />
-          <IntegrationsPanel />
+          {showIntegrations && <IntegrationsPanel />}
         </div>
       </div>
     </div>
