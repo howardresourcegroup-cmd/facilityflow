@@ -98,12 +98,12 @@ export default function LandingPage() {
       {/* Pricing */}
       <section className="relative z-10 max-w-md mx-auto px-6 pb-24">
         <div className="glass-card p-7 text-center border-indigo-500/20">
-          <p className="text-sm font-semibold text-indigo-300">Roomward Pro</p>
+          <p className="text-sm font-semibold text-indigo-300">Roomward Standard</p>
           <div className="flex items-baseline justify-center gap-1 mt-3">
-            <span className="text-4xl font-bold">$299</span>
+            <span className="text-4xl font-bold">$149</span>
             <span className="text-zinc-500">/mo per property</span>
           </div>
-          <p className="text-xs text-zinc-500 mt-1">$399/mo for 25+ users · from $199/mo bundled with Managed IT</p>
+          <p className="text-xs text-zinc-500 mt-1">Pro $249/mo for 25+ users · $100 off with Managed IT</p>
           <ul className="space-y-2 mt-5 text-left">
             {["Every feature included", "Unlimited rooms & spaces", "All integrations", "14-day free trial, no card"].map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-zinc-300">

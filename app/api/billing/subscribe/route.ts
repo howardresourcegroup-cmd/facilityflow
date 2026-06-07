@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Auto-tier: 25+ users → large price ($399), otherwise standard ($299).
+    // Auto-tier: 25+ users → Pro ($249), otherwise Standard ($149).
     const { count } = await admin.from("profiles")
       .select("id", { count: "exact", head: true })
       .eq("organization_id", me.organization_id);
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       clientSecret,
       publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
       tier: isLarge ? "large" : "standard",
-      amount: isLarge ? 399 : 299,
+      amount: isLarge ? 249 : 149,
       userCount,
     });
   } catch (e) {

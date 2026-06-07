@@ -40,7 +40,7 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [plan, setPlan] = useState<{ amount: number; tier: string; userCount: number }>({ amount: 299, tier: "standard", userCount: 0 });
+  const [plan, setPlan] = useState<{ amount: number; tier: string; userCount: number }>({ amount: 149, tier: "standard", userCount: 0 });
 
   useEffect(() => {
     if (!open || clientSecret) return;
@@ -66,7 +66,9 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
           <div className="bg-gradient-to-br from-indigo-500/[0.12] to-transparent p-6 sm:border-r border-white/[0.06]">
             <div className="flex items-center gap-2 mb-1">
               <Sparkles className="h-4 w-4 text-indigo-400" />
-              <span className="text-sm font-semibold text-zinc-100">Roomward Pro</span>
+              <span className="text-sm font-semibold text-zinc-100">
+                {plan.tier === "large" ? "Roomward Pro" : "Roomward Standard"}
+              </span>
             </div>
             <div className="flex items-baseline gap-1 mt-3">
               <span className="text-3xl font-bold text-zinc-100">${plan.amount}</span>
@@ -74,7 +76,7 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
             </div>
             <p className="text-xs text-zinc-500 mt-1">
               {plan.tier === "large"
-                ? `Large property rate · ${plan.userCount} users · billed monthly`
+                ? `Pro tier · ${plan.userCount} users · billed monthly`
                 : "Billed monthly · cancel anytime"}
             </p>
             <ul className="mt-5 space-y-2.5">
