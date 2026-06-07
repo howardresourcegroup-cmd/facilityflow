@@ -35,8 +35,16 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    // Auto-tier: 25+ users → large price ($399), otherwise standard ($299).
+    const { count } = await admin.from("profiles")
+      .select("id", { count: "exact", head: true })
+      .eq("organization_id", me.organization_id);
+    const userCount = count ?? 0;
+    const isLarge = userCount > 25 && !!process.env.STRIPE_PRICE_ID_LARGE;
+    const priceId = isLarge ? process.env.STRIPE_PRICE_ID_LARGE! : process.env.STRIPE_PRICE_ID!;
+
     const customerId = await createOrGetCustomer(user.email ?? "", me.organization_id, org?.stripe_customer_id);
-    const { subscriptionId, clientSecret } = await createIncompleteSubscription(customerId, me.organization_id);
+    const { subscriptionId, clientSecret } = await createIncompleteSubscription(customerId, me.organization_id, priceId);
 
     await admin.from("organizations").update({
       stripe_customer_id: customerId,
@@ -46,6 +54,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       clientSecret,
       publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+      tier: isLarge ? "large" : "standard",
+      amount: isLarge ? 399 : 299,
+      userCount,
     });
   } catch (e) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Subscription failed" }, { status: 500 });

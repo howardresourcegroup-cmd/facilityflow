@@ -58,13 +58,13 @@ export async function createOrGetCustomer(email: string, orgId: string, existing
   return data.id as string;
 }
 
-export async function createIncompleteSubscription(customerId: string, orgId: string): Promise<{ subscriptionId: string; clientSecret: string }> {
+export async function createIncompleteSubscription(customerId: string, orgId: string, priceId: string): Promise<{ subscriptionId: string; clientSecret: string }> {
   const res = await fetch(`${STRIPE_API}/subscriptions`, {
     method: "POST",
     headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`, "Content-Type": "application/x-www-form-urlencoded" },
     body: form({
       customer: customerId,
-      "items[0][price]": process.env.STRIPE_PRICE_ID!,
+      "items[0][price]": priceId,
       payment_behavior: "default_incomplete",
       "payment_settings[save_default_payment_method]": "on_subscription",
       // Newer Stripe API exposes the client secret on the invoice's confirmation_secret;
