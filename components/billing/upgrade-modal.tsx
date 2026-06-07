@@ -16,18 +16,24 @@ const PLAN_FEATURES = [
   "Realtime updates across your team",
 ];
 
-// Dark-theme appearance to match the app
+// Dark-theme appearance to match the app. CSS variables don't cross into Stripe's
+// iframe, so we name Inter directly and load it via the `fonts` option below.
 const appearance = {
   theme: "night" as const,
   variables: {
     colorPrimary: "#6366f1",
     colorBackground: "#0f0f1a",
     colorText: "#e4e4e7",
+    colorTextSecondary: "#a1a1aa",
     colorDanger: "#ef4444",
     borderRadius: "10px",
-    fontFamily: "var(--font-inter), system-ui, sans-serif",
+    fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+    fontSizeBase: "14px",
   },
 };
+
+// Load Inter into the Stripe iframe so its font matches the app
+const fontsOption = [{ cssSrc: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" }];
 
 export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -52,10 +58,10 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.1fr]">
+      <DialogContent className="max-w-lg p-0 max-h-[90vh] overflow-y-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.1fr] rounded-xl overflow-hidden">
           {/* Left: plan */}
-          <div className="bg-gradient-to-br from-indigo-500/[0.12] to-transparent p-6 border-r border-white/[0.06]">
+          <div className="bg-gradient-to-br from-indigo-500/[0.12] to-transparent p-6 sm:border-r border-white/[0.06]">
             <div className="flex items-center gap-2 mb-1">
               <Sparkles className="h-4 w-4 text-indigo-400" />
               <span className="text-sm font-semibold text-zinc-100">Roomward Pro</span>
@@ -94,7 +100,7 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
             )}
 
             {clientSecret && stripePromise && !error && (
-              <Elements stripe={stripePromise} options={{ clientSecret, appearance }}>
+              <Elements stripe={stripePromise} options={{ clientSecret, appearance, fonts: fontsOption }}>
                 <PaymentForm onClose={onClose} />
               </Elements>
             )}
