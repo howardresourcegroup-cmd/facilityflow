@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check } from "lucide-react";
+import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check, CreditCard, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,9 +9,12 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { RolesManager } from "@/components/settings/roles-manager";
 import { fetchOrganization, updateOrganization } from "@/lib/data/queries";
+import { useBilling } from "@/lib/data/hooks";
+import { UpgradeModal } from "@/components/billing/upgrade-modal";
 
 const SECTIONS = [
   { id: "org",      label: "Organization",     icon: Building2 },
+  { id: "billing",  label: "Billing & Plan",   icon: CreditCard },
   { id: "roles",    label: "Roles & Permissions", icon: KeyRound },
   { id: "team",     label: "Team",             icon: Users },
   { id: "notifs",   label: "Notifications",    icon: Bell },
@@ -33,6 +36,8 @@ export default function SettingsPage() {
   const [org, setOrg] = useState({ name: "", slug: "", timezone: "America/New_York" });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const billing = useBilling();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     fetchOrganization().then((o) => {
@@ -112,6 +117,37 @@ export default function SettingsPage() {
                 </div>
               </div>
             </>
+          )}
+
+          {activeSection === "billing" && (
+            <div>
+              <h2 className="text-base font-semibold text-zinc-200 mb-4">Billing &amp; Plan</h2>
+              {billing.isActive ? (
+                <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-emerald-400" />
+                    <p className="text-sm font-semibold text-emerald-300">Roomward Pro — active</p>
+                  </div>
+                  <p className="text-xs text-zinc-500 mt-1">Your subscription is active. Thanks for being a customer.</p>
+                </div>
+              ) : (
+                <div className="rounded-xl bg-indigo-500/10 border border-indigo-500/20 p-5">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-indigo-300">
+                        {billing.isExpired ? "Trial ended" : `Free trial — ${billing.daysLeft} ${billing.daysLeft === 1 ? "day" : "days"} left`}
+                      </p>
+                      <p className="text-xs text-zinc-500 mt-1">Roomward Pro · $199/mo per property · cancel anytime.</p>
+                    </div>
+                    <Button onClick={() => setShowUpgrade(true)}>
+                      <Sparkles className="h-4 w-4" />
+                      Upgrade now
+                    </Button>
+                  </div>
+                </div>
+              )}
+              <UpgradeModal open={showUpgrade} onClose={() => { setShowUpgrade(false); billing.reload(); }} />
+            </div>
           )}
 
           {activeSection === "roles" && <RolesManager />}

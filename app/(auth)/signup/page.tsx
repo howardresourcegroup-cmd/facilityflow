@@ -88,8 +88,8 @@ export default function SignupPage() {
   return (
     <div className="glass-card p-7">
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-zinc-100">Create your account</h1>
-        <p className="text-sm text-zinc-500 mt-1">Get your team&apos;s operations center up in minutes.</p>
+        <h1 className="text-xl font-semibold text-zinc-100">Start your free trial</h1>
+        <p className="text-sm text-zinc-500 mt-1">14 days free · no credit card required.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -120,7 +120,7 @@ export default function SignupPage() {
         )}
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Creating account…" : "Create Account"}
+          {loading ? "Creating account…" : "Start Free Trial"}
         </Button>
       </form>
 

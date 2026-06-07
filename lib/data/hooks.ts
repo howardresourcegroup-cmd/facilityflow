@@ -168,6 +168,31 @@ export function usePermissions() {
   return { permissions: perms, can, loading };
 }
 
+// ─── Billing / trial state ────────────────────────────────────────────────────
+export interface BillingState {
+  status: "trial" | "active" | "past_due" | "canceled";
+  trialEndsAt: string | null;
+  daysLeft: number;
+  isActive: boolean;
+  isTrialing: boolean;
+  isExpired: boolean;
+  loading: boolean;
+}
+
+export function useBilling(): BillingState & { reload: () => void } {
+  const { data, loading, reload } = useCachedQuery<{ subscription_status?: string; trial_ends_at?: string } | null>(
+    "billing", q.fetchOrganization, null
+  );
+  const status = (data?.subscription_status ?? "trial") as BillingState["status"];
+  const trialEndsAt = data?.trial_ends_at ?? null;
+  const msLeft = trialEndsAt ? +new Date(trialEndsAt) - Date.now() : 0;
+  const daysLeft = Math.max(0, Math.ceil(msLeft / 86400000));
+  const isActive = status === "active";
+  const isTrialing = status === "trial" && msLeft > 0;
+  const isExpired = status === "trial" && msLeft <= 0;
+  return { status, trialEndsAt, daysLeft, isActive, isTrialing, isExpired, loading, reload };
+}
+
 // ─── Dashboard stats ──────────────────────────────────────────────────────────
 export function useDashboardStats() {
   const { data } = useCachedQuery<DashboardStats | null>("dashboard_stats", q.fetchDashboardStats, null);

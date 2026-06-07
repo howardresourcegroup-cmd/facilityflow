@@ -152,7 +152,7 @@ export default function LoginPage() {
         <p className="mt-5 text-center text-xs text-zinc-500">
           No account?{" "}
           <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 transition-colors">
-            Get started free
+            Start a free trial
           </Link>
         </p>
       </div>

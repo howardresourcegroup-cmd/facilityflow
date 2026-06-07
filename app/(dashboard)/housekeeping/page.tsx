@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, BedDouble, CircleCheck, Wrench, Ban, ArrowRight } from "lucide-react";
+import { Sparkles, BedDouble, CircleCheck, Ban, ArrowRight } from "lucide-react";
 import { useHousekeeping, usePermissions, useCurrentProfile } from "@/lib/data/hooks";
 import { PageLoader } from "@/components/shared/loading-spinner";
 import { cn } from "@/lib/utils";
