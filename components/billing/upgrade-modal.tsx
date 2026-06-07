@@ -67,10 +67,10 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
               <span className="text-sm font-semibold text-zinc-100">Roomward Pro</span>
             </div>
             <div className="flex items-baseline gap-1 mt-3">
-              <span className="text-3xl font-bold text-zinc-100">$199</span>
+              <span className="text-3xl font-bold text-zinc-100">$299</span>
               <span className="text-sm text-zinc-500">/mo per property</span>
             </div>
-            <p className="text-xs text-zinc-500 mt-1">Billed monthly. Cancel anytime.</p>
+            <p className="text-xs text-zinc-500 mt-1">Billed monthly · cancel anytime · $399/mo for 25+ users</p>
             <ul className="mt-5 space-y-2.5">
               {PLAN_FEATURES.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-xs text-zinc-300">

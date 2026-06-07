@@ -100,12 +100,12 @@ export default function LandingPage() {
         <div className="glass-card p-7 text-center border-indigo-500/20">
           <p className="text-sm font-semibold text-indigo-300">Roomward Pro</p>
           <div className="flex items-baseline justify-center gap-1 mt-3">
-            <span className="text-4xl font-bold">$199</span>
+            <span className="text-4xl font-bold">$299</span>
             <span className="text-zinc-500">/mo per property</span>
           </div>
-          <p className="text-xs text-zinc-500 mt-1">Billed monthly · cancel anytime</p>
+          <p className="text-xs text-zinc-500 mt-1">$399/mo for 25+ users · from $199/mo bundled with Managed IT</p>
           <ul className="space-y-2 mt-5 text-left">
-            {["Everything included — no tiers", "Unlimited team members & rooms", "All integrations", "14-day free trial, no card"].map((f) => (
+            {["Every feature included", "Unlimited rooms & spaces", "All integrations", "14-day free trial, no card"].map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-zinc-300">
                 <Check className="h-4 w-4 text-emerald-400 shrink-0" /> {f}
               </li>
