@@ -8,10 +8,29 @@ const inter = Inter({
   display: "swap",
 });
 
+const DESCRIPTION = "Roomward is the operations layer for hotels and facilities — where your team and your spaces stay in sync. Live floor plans, work orders, housekeeping, and your PMS, in one place.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://roomward.app"),
   title: { default: "Roomward — operations for your spaces", template: "%s · Roomward" },
-  description: "Roomward is the operations layer for hotels and facilities — where your team and your spaces stay in sync. Live floor plans, work orders, housekeeping, and your PMS, in one place.",
+  description: DESCRIPTION,
+  applicationName: "Roomward",
+  keywords: ["hotel operations software", "housekeeping management", "facilities management", "work order software", "PMS integration", "RoomMaster", "hotel maintenance", "floor plan software"],
   icons: { icon: "/favicon.svg" },
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "https://roomward.app",
+    siteName: "Roomward",
+    title: "Roomward — operations for your spaces",
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Roomward — operations for your spaces",
+    description: DESCRIPTION,
+  },
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
