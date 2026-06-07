@@ -27,13 +27,15 @@ const ORG_ID = "00000000-0000-0000-0000-0000000000a1";
 const DEMO_PASSWORD = process.env.DEMO_PASSWORD || "RoomwardDemo2026";
 
 // ─── Team ─────────────────────────────────────────────────────────────────────
+// `role` = legacy text (drives coarse RLS: only manager/admin manage).
+// `roleSlug` = which configured role to link (drives role-tailored dashboards).
 const TEAM = [
-  { email: "manager@grandviewdemo.com", name: "Sarah Mitchell", role: "manager",    phone: "706-265-0200", available: true,  login: true },
-  { email: "marcus@grandviewdemo.com",  name: "Marcus Webb",    role: "technician", phone: "706-265-0101", available: false, login: false },
-  { email: "priya@grandviewdemo.com",   name: "Priya Patel",    role: "technician", phone: "706-265-0102", available: true,  login: false },
-  { email: "james@grandviewdemo.com",   name: "James Okafor",   role: "technician", phone: "706-265-0103", available: true,  login: false },
-  { email: "sofia@grandviewdemo.com",   name: "Sofia Reyes",    role: "technician", phone: "706-265-0104", available: false, login: false },
-  { email: "chen@grandviewdemo.com",    name: "Chen Wei",       role: "technician", phone: "706-265-0105", available: true,  login: false },
+  { email: "manager@grandviewdemo.com", name: "Sarah Mitchell", role: "manager",    roleSlug: "manager",      phone: "706-265-0200", available: true,  login: true },
+  { email: "marcus@grandviewdemo.com",  name: "Marcus Webb",    role: "technician", roleSlug: "maintenance",  phone: "706-265-0101", available: false, login: false },
+  { email: "priya@grandviewdemo.com",   name: "Priya Patel",    role: "technician", roleSlug: "maintenance",  phone: "706-265-0102", available: true,  login: false },
+  { email: "james@grandviewdemo.com",   name: "James Okafor",   role: "technician", roleSlug: "maintenance",  phone: "706-265-0103", available: true,  login: false },
+  { email: "sofia@grandviewdemo.com",   name: "Sofia Reyes",    role: "technician", roleSlug: "housekeeping", phone: "706-265-0104", available: false, login: false },
+  { email: "chen@grandviewdemo.com",    name: "Chen Wei",       role: "technician", roleSlug: "front_desk",   phone: "706-265-0105", available: true,  login: false },
 ];
 
 // ─── Buildings & floors ───────────────────────────────────────────────────────
@@ -131,7 +133,11 @@ async function main() {
   await db.from("organizations").upsert({ id: ORG_ID, name: "Grandview Resort & Lodge", slug: "amicalola-falls", plan: "pro" });
   console.log("✓ Organization");
 
-  // 2. Users + profiles
+  // 2. Roles (created by migration 003) → slug→id map for assigning role_id
+  const { data: orgRoles } = await db.from("roles").select("id, slug").eq("organization_id", ORG_ID);
+  const roleId = Object.fromEntries((orgRoles ?? []).map((r) => [r.slug, r.id]));
+
+  // 3. Users + profiles
   const userIds = {}; // email -> uuid
   const { data: existing } = await db.auth.admin.listUsers({ perPage: 1000 });
   for (const t of TEAM) {
@@ -147,7 +153,7 @@ async function main() {
     userIds[t.email] = user.id;
     await db.from("profiles").upsert({
       id: user.id, organization_id: ORG_ID, full_name: t.name,
-      role: t.role, phone: t.phone, is_available: t.available,
+      role: t.role, role_id: roleId[t.roleSlug] ?? null, phone: t.phone, is_available: t.available,
     });
   }
   console.log(`✓ ${Object.keys(userIds).length} team members (login: ${TEAM[0].email} / ${DEMO_PASSWORD})`);

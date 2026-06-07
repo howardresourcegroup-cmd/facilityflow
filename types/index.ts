@@ -43,6 +43,8 @@ export interface Profile {
   full_name: string;
   avatar_url: string | null;
   role: UserRole;
+  role_id?: string | null;
+  role_slug?: string;   // virtual — resolved role slug (admin/manager/maintenance/housekeeping/front_desk/viewer/custom)
   phone: string | null;
   is_available: boolean;
   created_at: string;

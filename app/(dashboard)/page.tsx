@@ -10,6 +10,7 @@ import { WorkOrderCard } from "@/components/work-orders/work-order-card";
 import { RoomMasterPanel, IntegrationsPanel } from "@/components/integrations/roommaster-panel";
 import { EpturaPanel } from "@/components/integrations/eptura-panel";
 import { GettingStarted } from "@/components/dashboard/getting-started";
+import { MaintenanceDashboard, HousekeepingDashboard, FrontDeskDashboard } from "@/components/dashboard/role-dashboards";
 import { MOCK_STATS, MOCK_ACTIVITY } from "@/lib/mock-data";
 import { useWorkOrders, useDashboardStats, useCurrentProfile, usePermissions } from "@/lib/data/hooks";
 
@@ -20,6 +21,12 @@ export default function DashboardPage() {
   const { can } = usePermissions();
   const showIntegrations = can("integrations.manage");
   const now = new Date();
+
+  // Role-tailored home view — each role lands on what matters to them.
+  // Managers/admins/viewers (and custom roles) get the full operations dashboard below.
+  if (profile?.role_slug === "maintenance") return <MaintenanceDashboard profile={profile} />;
+  if (profile?.role_slug === "housekeeping") return <HousekeepingDashboard profile={profile} />;
+  if (profile?.role_slug === "front_desk") return <FrontDeskDashboard profile={profile} />;
 
   const firstName = profile?.full_name?.split(" ")[0] ?? "there";
 

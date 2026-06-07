@@ -294,8 +294,14 @@ export async function fetchCurrentProfile(): Promise<Profile | null> {
   const supabase = sb();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
-  const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  return (data ?? null) as Profile | null;
+  const { data } = await supabase
+    .from("profiles")
+    .select("*, role_def:roles(slug, name)")
+    .eq("id", user.id).single();
+  if (!data) return null;
+  // Flatten the joined role slug (reliable, unlike the legacy text role)
+  const roleDef = (data as { role_def?: { slug?: string } }).role_def;
+  return { ...data, role_slug: roleDef?.slug ?? data.role } as Profile;
 }
 
 // ─── Chat ─────────────────────────────────────────────────────────────────────
