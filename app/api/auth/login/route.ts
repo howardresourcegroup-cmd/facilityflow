@@ -9,7 +9,7 @@ import {
 // ─── Credentials live in env vars — NEVER in the client bundle ────────────────
 // Set these as secrets in Cloudflare Pages dashboard:
 //   DEMO_EMAIL    = manager@amicalolafalls.com
-//   DEMO_PASSWORD = (set a strong password, not FacilityFlow2025 in production)
+//   DEMO_PASSWORD = (set a strong password, not Roomward2025 in production)
 //
 // Multiple users: DEMO_USER_2_EMAIL / DEMO_USER_2_PASSWORD etc.
 // When Supabase is configured, this entire route is bypassed in favour of
@@ -19,7 +19,7 @@ function getCredentials() {
   const users = [
     {
       email:    (process.env.DEMO_EMAIL    ?? "manager@amicalolafalls.com").toLowerCase(),
-      password: process.env.DEMO_PASSWORD  ?? "FacilityFlow2025",
+      password: process.env.DEMO_PASSWORD  ?? "Roomward2025",
       name:     process.env.DEMO_NAME      ?? "Sarah Mitchell",
       role:     "manager",
       org:      process.env.DEMO_ORG       ?? "Amicalola Falls State Park & Lodge",

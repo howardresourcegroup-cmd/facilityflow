@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthedUser } from "@/lib/server/auth";
 import type { WorkOrderStatus, WorkOrderPriority } from "@/types";
 
-// ─── Eptura Asset (CMMS) ↔ FacilityFlow mapping ───────────────────────────────
+// ─── Eptura Asset (CMMS) ↔ Roomward mapping ───────────────────────────────
 // Eptura Asset (formerly ManagerPlus / Hippo CMMS) work-order statuses.
-// Bidirectional: pull Eptura work orders in, push FacilityFlow updates out.
+// Bidirectional: pull Eptura work orders in, push Roomward updates out.
 
 const EPTURA_TO_FF_STATUS: Record<string, WorkOrderStatus> = {
   "New":          "open",
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-// POST — sync (pull) or push a FacilityFlow work-order update back to Eptura
+// POST — sync (pull) or push a Roomward work-order update back to Eptura
 export async function POST(request: NextRequest) {
   if (!(await getAuthedUser(request))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -107,8 +107,8 @@ export async function POST(request: NextRequest) {
   const action = searchParams.get("action") ?? "sync";
   const body = await request.json().catch(() => ({}));
 
-  // ── Push: FacilityFlow → Eptura ───────────────────────────────────────────
-  // Called when a work order's status changes in FacilityFlow.
+  // ── Push: Roomward → Eptura ───────────────────────────────────────────
+  // Called when a work order's status changes in Roomward.
   // In production:
   //   PATCH https://api.eptura.com/v1/workorders/{id}
   //   Authorization: Bearer <EPTURA_API_TOKEN>

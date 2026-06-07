@@ -71,7 +71,7 @@ export function Header() {
 
   const meta = Object.entries(PAGE_META).find(([key]) =>
     key === "/" ? pathname === "/" : pathname.startsWith(key)
-  )?.[1] ?? { title: "FacilityFlow" };
+  )?.[1] ?? { title: "Roomward" };
 
   return (
     <header className="h-14 flex items-center gap-4 px-5 border-b border-white/[0.05] bg-[#080811]/80 backdrop-blur-md sticky top-0 z-10 flex-shrink-0">

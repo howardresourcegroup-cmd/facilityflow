@@ -17,7 +17,7 @@ const RM_STATUS_MAP: Record<string, { ff_status: SpaceStatus; create_wo: boolean
   "9": { ff_status: "needs_maintenance", create_wo: true  }, // Maintenance
 };
 
-// FacilityFlow status → RoomMaster status code
+// Roomward status → RoomMaster status code
 const FF_TO_RM: Record<SpaceStatus, string> = {
   operational:       "1", // Clean
   cleaning_required: "2", // Dirty
@@ -104,8 +104,8 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json().catch(() => ({}));
 
-  // ── Push: FacilityFlow → RoomMaster ───────────────────────────────────────
-  // Called when a technician changes a room's status in FacilityFlow.
+  // ── Push: Roomward → RoomMaster ───────────────────────────────────────
+  // Called when a technician changes a room's status in Roomward.
   // In production: replace the mock response with a real HTTP call to
   // RoomMaster's API endpoint:
   //   POST https://<property>.roommaster.com/api/rooms/{room}/status

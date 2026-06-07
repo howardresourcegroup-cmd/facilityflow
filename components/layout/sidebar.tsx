@@ -56,7 +56,7 @@ export function Sidebar() {
                 transition={{ duration: 0.15 }}
                 className="text-sm font-bold text-zinc-100 tracking-tight whitespace-nowrap overflow-hidden"
               >
-                FacilityFlow
+                Roomward
               </motion.span>
             )}
           </AnimatePresence>

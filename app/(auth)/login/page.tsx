@@ -65,7 +65,7 @@ export default function LoginPage() {
 
   const fillDemo = () => {
     setEmail("manager@amicalolafalls.com");
-    setPassword("FacilityFlow2025");
+    setPassword("Roomward2025");
   };
 
   return (

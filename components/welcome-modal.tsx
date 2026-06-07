@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const STORE_KEY = "ff-welcome-seen";
 
 const SLIDES = [
-  { icon: Zap, color: "text-indigo-400", bg: "bg-indigo-500/15", title: "Welcome to FacilityFlow", body: "Your operational command center for physical spaces. Here's a 30-second tour of what you can do." },
+  { icon: Zap, color: "text-indigo-400", bg: "bg-indigo-500/15", title: "Welcome to Roomward", body: "Your operational command center for physical spaces. Here's a 30-second tour of what you can do." },
   { icon: LayoutGrid, color: "text-cyan-400", bg: "bg-cyan-500/15", title: "Map your buildings", body: "Draw top-down floor plans, color-code every room's status, and see your whole portfolio's health at a glance." },
   { icon: ClipboardList, color: "text-amber-400", bg: "bg-amber-500/15", title: "Track every issue", body: "Create work orders, assign technicians, attach photos, and move jobs from open to done — all in real time." },
   { icon: KeyRound, color: "text-violet-400", bg: "bg-violet-500/15", title: "Control who does what", body: "Configurable roles and permissions mean front desk, housekeeping, and maintenance each see exactly what they need." },

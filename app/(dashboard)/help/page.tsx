@@ -35,7 +35,7 @@ export default function HelpPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold text-zinc-100">Help &amp; Guides</h1>
-            <p className="text-sm text-zinc-500">Everything you need to run FacilityFlow.</p>
+            <p className="text-sm text-zinc-500">Everything you need to run Roomward.</p>
           </div>
         </div>
         <div className="relative mt-4">

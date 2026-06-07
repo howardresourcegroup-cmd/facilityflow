@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: { default: "FacilityFlow", template: "%s · FacilityFlow" },
-  description: "Real-time operational visibility for maintenance and facilities teams.",
+  title: { default: "Roomward — operations for your spaces", template: "%s · Roomward" },
+  description: "Roomward is the operations layer for hotels and facilities — where your team and your spaces stay in sync. Live floor plans, work orders, housekeeping, and your PMS, in one place.",
   icons: { icon: "/favicon.svg" },
 };
 
