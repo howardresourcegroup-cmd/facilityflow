@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Building2, ClipboardList, Users,
-  Settings, ChevronLeft, Zap, Package, BarChart3, LogOut, MessageSquare, HelpCircle, BedDouble,
+  Settings, ChevronLeft, Package, BarChart3, LogOut, MessageSquare, HelpCircle, BedDouble,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
 import { usePermissions } from "@/lib/data/hooks";
+import { LogoMark } from "@/components/brand/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 
@@ -50,9 +51,7 @@ export function Sidebar() {
       >
         {/* Logo */}
         <div className="flex h-14 items-center gap-3 px-4 border-b border-white/[0.05]">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-600 shadow-lg shadow-indigo-500/25">
-            <Zap className="h-4 w-4 text-white" />
-          </div>
+          <LogoMark className="h-8 w-8 shrink-0 rounded-lg shadow-lg shadow-indigo-500/25" />
           <AnimatePresence>
             {!sidebarCollapsed && (
               <motion.span

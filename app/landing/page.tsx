@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Zap, LayoutGrid, ClipboardList, BedDouble, KeyRound, MessageSquare,
+  LayoutGrid, ClipboardList, BedDouble, KeyRound, MessageSquare,
   ArrowRight, Check, Building2, RefreshCw,
 } from "lucide-react";
+import { LogoMark } from "@/components/brand/logo";
 
 const FEATURES = [
   { icon: LayoutGrid, title: "Live floor plans", body: "Map any property top-down. Every room color-coded by status, updating in real time." },
@@ -27,9 +28,7 @@ export default function LandingPage() {
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between max-w-6xl mx-auto px-6 py-5">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 shadow-lg shadow-indigo-500/30">
-            <Zap className="h-4 w-4 text-white" />
-          </div>
+          <LogoMark className="h-8 w-8 rounded-lg shadow-lg shadow-indigo-500/30" />
           <span className="text-lg font-bold">Roomward</span>
         </div>
         <div className="flex items-center gap-3">
@@ -121,7 +120,7 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-white/[0.05]">
         <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600">
           <div className="flex items-center gap-2">
-            <Zap className="h-3.5 w-3.5 text-indigo-500" />
+            <LogoMark className="h-4 w-4 rounded" />
             <span>© 2026 Roomward · by Howard Resource Group</span>
           </div>
           <div className="flex items-center gap-4">

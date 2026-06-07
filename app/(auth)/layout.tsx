@@ -1,4 +1,4 @@
-import { Zap } from "lucide-react";
+import { LogoMark } from "@/components/brand/logo";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -10,9 +10,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* Logo */}
       <div className="mb-8 flex items-center gap-2.5 relative z-10">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 shadow-lg shadow-indigo-500/30">
-          <Zap className="h-4.5 w-4.5 text-white" />
-        </div>
+        <LogoMark className="h-9 w-9 rounded-xl shadow-lg shadow-indigo-500/30" />
         <span className="text-lg font-bold text-zinc-100">Roomward</span>
       </div>
 
