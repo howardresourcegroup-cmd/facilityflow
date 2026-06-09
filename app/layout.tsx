@@ -12,10 +12,10 @@ const DESCRIPTION = "Roomward is the operations layer for hotels and facilities 
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://roomward.app"),
-  title: { default: "Roomward — operations for your spaces", template: "%s · Roomward" },
+  title: { default: "Roomward — Hotel Operations & Maintenance Software", template: "%s · Roomward" },
   description: DESCRIPTION,
   applicationName: "Roomward",
-  keywords: ["hotel operations software", "housekeeping management", "facilities management", "work order software", "PMS integration", "RoomMaster", "hotel maintenance", "floor plan software"],
+  keywords: ["hotel operations software", "hotel maintenance software", "housekeeping management software", "facilities management software", "maintenance management software", "work order software", "CMMS software", "hotel management software", "RoomMaster integration", "PMS integration"],
   icons: { icon: "/favicon.svg" },
   alternates: { canonical: "/" },
   openGraph: {
