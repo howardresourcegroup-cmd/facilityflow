@@ -1,7 +1,7 @@
 "use client";
 export const runtime = "edge";
 
-import { use, useState, useEffect } from "react";
+import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Plus, Building2, PenLine } from "lucide-react";
@@ -20,6 +20,7 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
   const { id } = use(params);
   const router = useRouter();
   const { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace, addFloor, patchSpace, patchFloor } = useBuildingDetail(id);
+  const addManySpaces = useCallback((newSpaces: import("@/types").Space[]) => newSpaces.forEach(addSpace), [addSpace]);
   const { can } = usePermissions();
   const [activeFloorId, setActiveFloorId] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -134,6 +135,7 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
                     floor={f}
                     spaces={spaces.filter((s) => s.floor_id === f.id)}
                     onAdd={addSpace}
+                    onAddMany={addManySpaces}
                     onRemove={removeSpace}
                     onPatch={patchSpace}
                     onPatchFloor={(patch) => patchFloor(f.id, patch)}

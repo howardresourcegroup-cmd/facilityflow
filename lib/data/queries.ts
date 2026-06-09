@@ -196,6 +196,19 @@ export async function deleteSpace(spaceId: string): Promise<void> {
   if (error) throw error;
 }
 
+export async function bulkCreateSpaces(rooms: {
+  floor_id: string; name: string; type: string;
+  position_x: number; position_y: number; width: number; height: number;
+}[]): Promise<Space[]> {
+  if (!rooms.length) return [];
+  const { data, error } = await sb()
+    .from("spaces")
+    .insert(rooms.map(r => ({ ...r, status: "operational" })))
+    .select("*");
+  if (error) throw error;
+  return (data ?? []) as Space[];
+}
+
 export async function updateSpace(spaceId: string, patch: {
   name?: string; type?: string;
   position_x?: number; position_y?: number; width?: number; height?: number;
