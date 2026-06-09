@@ -172,6 +172,19 @@ async function main() {
 
   if (wipe) { console.log("\n✓ Wiped demo org. Done."); return; }
 
+  // Demo starts EMPTY of operational data so every visitor experiences building setup.
+  // Keep Team Chat channels so that feature isn't bare. Set EMPTY_DEMO=false to seed the
+  // full Grandview property instead (useful for a live pitch / full showcase).
+  const EMPTY_DEMO = process.env.EMPTY_DEMO !== "false";
+  if (EMPTY_DEMO) {
+    for (const c of CHANNELS) {
+      await db.from("channels").insert({ organization_id: ORG_ID, name: c.name, description: c.desc });
+    }
+    console.log(`✓ ${CHANNELS.length} chat channels (no buildings/rooms — visitors build the first property)`);
+    console.log("\n✅ Demo seeded EMPTY: org + team + roles + channels. Log in and you'll be walked through setup.");
+    return;
+  }
+
   // 3. Buildings
   const bMap = {};
   for (const b of BUILDINGS) {

@@ -79,6 +79,49 @@ export async function createBuilding(input: {
   return data as Building;
 }
 
+// Smart setup: create a building + floors + auto-generated guest rooms in one shot.
+// Rooms are typed as guest_room, given a starting housekeeping status, and grid-positioned
+// for the floor plan — so they flow into the floor plan, housekeeping board, and work orders
+// off this single definition. This is the "define once, works everywhere" entry point.
+export async function setupBuilding(input: {
+  name: string;
+  type: string;
+  address: string;
+  city: string;
+  state: string;
+  floorCount: number;
+  roomsPerFloor: number;
+}): Promise<Building> {
+  const supabase = sb();
+  const building = await createBuilding({
+    name: input.name, type: input.type, address: input.address, city: input.city, state: input.state,
+  });
+
+  const perRow = 7; // rooms per row on the floor-plan grid
+  for (let f = 0; f < input.floorCount; f++) {
+    const level = f + 1;
+    const floor = await createFloor({
+      building_id: building.id, name: `Floor ${level}`, level,
+      grid_cols: 16, grid_rows: Math.max(8, Math.ceil(input.roomsPerFloor / perRow) * 2 + 2),
+    });
+    const rooms = Array.from({ length: input.roomsPerFloor }, (_, r) => ({
+      floor_id: floor.id,
+      name: `Room ${level * 100 + (r + 1)}`,
+      type: "guest_room",
+      status: "operational" as const,
+      housekeeping_status: "ready" as const,
+      position_x: (r % perRow) * 2 + 1,
+      position_y: Math.floor(r / perRow) * 2 + 1,
+      width: 2, height: 2,
+    }));
+    if (rooms.length) {
+      const { error } = await supabase.from("spaces").insert(rooms);
+      if (error) throw error;
+    }
+  }
+  return building;
+}
+
 export async function fetchFloors(buildingId: string): Promise<Floor[]> {
   const { data, error } = await sb()
     .from("floors").select("*").eq("building_id", buildingId).order("level");

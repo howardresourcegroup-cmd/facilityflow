@@ -1,6 +1,7 @@
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { OnboardingGuard } from "@/components/onboarding-guard";
+import { BuildingSetupGuard } from "@/components/buildings/building-setup-guard";
 import { WelcomeModal } from "@/components/welcome-modal";
 import { TrialBanner } from "@/components/billing/trial-banner";
 
@@ -14,8 +15,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <TrialBanner />
           <Header />
           <main className="flex-1 overflow-y-auto">
-            <div className="page-enter p-6 max-w-[1600px] mx-auto">
-              {children}
+            <div className="page-enter p-6 max-w-[1600px] mx-auto h-full">
+              <BuildingSetupGuard>{children}</BuildingSetupGuard>
             </div>
           </main>
         </div>
