@@ -3,14 +3,15 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Building2, Layers, DoorClosed, Filter } from "lucide-react";
+import { Building2, Layers, DoorClosed, Filter, LayoutGrid, Rows3 } from "lucide-react";
 import { useBuildings, useBuildingDetail } from "@/lib/data/hooks";
 import { OccupancyBadge } from "@/components/rooms/occupancy-badge";
 import { PageLoader } from "@/components/shared/loading-spinner";
 import { SPACE_STATUS_CONFIG, cn } from "@/lib/utils";
-import type { Space, Occupancy, HousekeepingStatus } from "@/types";
+import type { Space, Occupancy, HousekeepingStatus, Floor } from "@/types";
 
 type Mode = "status" | "housekeeping" | "occupancy";
+type ViewMode = "floor" | "overview";
 
 const HK_COLOR: Record<HousekeepingStatus, string> = {
   dirty: "bg-red-400", in_progress: "bg-blue-400", cleaned: "bg-cyan-400", ready: "bg-emerald-400", out_of_service: "bg-zinc-500",
@@ -31,6 +32,69 @@ function labelFor(mode: Mode, s: Space): string {
   return SPACE_STATUS_CONFIG[s.status]?.label ?? s.status;
 }
 
+// ── Overview: all floors on screen at once, like the screenshot ───────────────
+function FloorMapTile({ floor, spaces, mode, guestOnly, onSelect }: {
+  floor: Floor; spaces: Space[]; mode: Mode; guestOnly: boolean; onSelect: (s: Space) => void;
+}) {
+  const rooms = useMemo(() => {
+    let list = spaces.filter((s) => s.floor_id === floor.id);
+    if (guestOnly) list = list.filter((s) => GUEST_TYPES.includes(s.type));
+    return [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  }, [spaces, floor.id, guestOnly]);
+
+  const cols = Math.min(rooms.length, 12);
+
+  return (
+    <div className="glass-card p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xs font-semibold text-zinc-300">{floor.name}</h3>
+        <span className="text-[10px] text-zinc-600">{rooms.length} rooms</span>
+      </div>
+      <div
+        className="grid gap-1"
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+      >
+        {rooms.map((r) => (
+          <button
+            key={r.id}
+            title={`${r.name} — ${labelFor(mode, r)}`}
+            onClick={() => onSelect(r)}
+            className={cn(
+              "aspect-square rounded-sm transition-all hover:ring-1 hover:ring-white/30",
+              dotFor(mode, r)
+            )}
+          />
+        ))}
+        {rooms.length === 0 && (
+          <p className="text-[10px] text-zinc-600 col-span-full py-1">Common space — no rooms</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Legend ────────────────────────────────────────────────────────────────────
+const LEGENDS: Record<Mode, { color: string; label: string }[]> = {
+  occupancy: [
+    { color: "bg-emerald-400", label: "Vacant" },
+    { color: "bg-red-400", label: "Occupied" },
+    { color: "bg-amber-400", label: "Arriving" },
+    { color: "bg-blue-400", label: "Departing" },
+  ],
+  housekeeping: [
+    { color: "bg-emerald-400", label: "Ready" },
+    { color: "bg-cyan-400", label: "Cleaned" },
+    { color: "bg-blue-400", label: "In Progress" },
+    { color: "bg-red-400", label: "Dirty" },
+    { color: "bg-zinc-500", label: "OOS" },
+  ],
+  status: [
+    { color: "bg-emerald-400", label: "Operational" },
+    { color: "bg-amber-400", label: "Maintenance" },
+    { color: "bg-red-400", label: "Out of Service" },
+  ],
+};
+
 export default function PropertyPage() {
   const { buildings, loading: bLoading } = useBuildings();
   const [bId, setBId] = useState("");
@@ -41,29 +105,32 @@ export default function PropertyPage() {
   useEffect(() => { setFId(floors[0]?.id ?? ""); }, [floors, bId]);
 
   const [mode, setMode] = useState<Mode>("occupancy");
+  const [viewMode, setViewMode] = useState<ViewMode>("overview");
   const [guestOnly, setGuestOnly] = useState(true);
   const [selected, setSelected] = useState<Space | null>(null);
 
-  const rooms = useMemo(() => {
+  const floorRooms = useMemo(() => {
     let list = spaces.filter((s) => s.floor_id === fId);
     if (guestOnly) list = list.filter((s) => GUEST_TYPES.includes(s.type));
     return [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
   }, [spaces, fId, guestOnly]);
 
   const counts = useMemo(() => ({
-    occupied: rooms.filter((r) => r.occupancy === "occupied").length,
-    vacant: rooms.filter((r) => (r.occupancy ?? "vacant") === "vacant").length,
-    dirty: rooms.filter((r) => r.housekeeping_status === "dirty").length,
-  }), [rooms]);
+    occupied: spaces.filter((r) => r.occupancy === "occupied").length,
+    vacant: spaces.filter((r) => (r.occupancy ?? "vacant") === "vacant" && GUEST_TYPES.includes(r.type)).length,
+    dirty: spaces.filter((r) => r.housekeeping_status === "dirty").length,
+  }), [spaces]);
 
   if (bLoading) return <PageLoader />;
-  if (!buildings.length) return null; // setup gate handles the empty state
+  if (!buildings.length) return null;
+
+  const legend = LEGENDS[mode];
 
   return (
     <div className="space-y-5">
       <div>
         <h1 className="text-2xl font-bold text-zinc-100">Property Map</h1>
-        <p className="text-sm text-zinc-500 mt-1">Drill through buildings, floors, and rooms — live status, housekeeping, and occupancy.</p>
+        <p className="text-sm text-zinc-500 mt-1">Live status across every room, floor, and building.</p>
       </div>
 
       {/* Buildings */}
@@ -79,21 +146,9 @@ export default function PropertyPage() {
 
       {dLoading ? <PageLoader /> : (
         <>
-          {/* Floors */}
-          <div className="flex flex-wrap items-center gap-2">
-            <Layers className="h-4 w-4 text-zinc-600" />
-            {floors.map((f) => (
-              <button key={f.id} onClick={() => setFId(f.id)}
-                className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                  fId === f.id ? "bg-white/[0.08] border-white/20 text-zinc-200" : "border-white/[0.06] text-zinc-500 hover:text-zinc-300")}>
-                {f.name}
-              </button>
-            ))}
-            {floors.length === 0 && <span className="text-xs text-zinc-600">No floors on this building yet.</span>}
-          </div>
-
-          {/* Controls */}
+          {/* Controls bar */}
           <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Mode */}
             <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5">
               {(["occupancy", "housekeeping", "status"] as Mode[]).map((m) => (
                 <button key={m} onClick={() => setMode(m)}
@@ -103,57 +158,126 @@ export default function PropertyPage() {
                 </button>
               ))}
             </div>
+
             <div className="flex items-center gap-3">
-              <span className="text-xs text-zinc-500 flex items-center gap-3">
+              {/* Stats */}
+              <span className="text-xs text-zinc-500 flex items-center gap-3 hidden sm:flex">
                 <span className="text-emerald-400">{counts.vacant} vacant</span>
                 <span className="text-red-400">{counts.occupied} occupied</span>
                 <span className="text-red-300">{counts.dirty} dirty</span>
               </span>
+
+              {/* Guest filter */}
               <button onClick={() => setGuestOnly((v) => !v)}
                 className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border transition-colors",
                   guestOnly ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-200" : "border-white/[0.08] text-zinc-400")}>
                 <Filter className="h-3 w-3" /> {guestOnly ? "Guest rooms" : "All spaces"}
               </button>
+
+              {/* View toggle */}
+              <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5">
+                <button onClick={() => setViewMode("overview")}
+                  title="All floors"
+                  className={cn("p-1.5 rounded-md transition-colors", viewMode === "overview" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                </button>
+                <button onClick={() => setViewMode("floor")}
+                  title="Floor drill-down"
+                  className={cn("p-1.5 rounded-md transition-colors", viewMode === "floor" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
+                  <Rows3 className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Room grid + detail */}
-          <div className="flex gap-4 items-start">
-            <div className="flex-1 grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-2">
-              {rooms.map((r) => (
-                <motion.button key={r.id} layout onClick={() => setSelected(r)}
-                  initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
-                  className={cn("text-left glass-card p-2.5 hover:border-white/[0.15] transition-colors",
-                    selected?.id === r.id && "border-indigo-500/50")}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-zinc-200">{r.name}</span>
-                    <span className={cn("h-2.5 w-2.5 rounded-full shrink-0", dotFor(mode, r))} title={labelFor(mode, r)} />
-                  </div>
-                  <div className="mt-1.5"><OccupancyBadge occupancy={r.occupancy} /></div>
-                </motion.button>
+          {/* Legend */}
+          <div className="flex flex-wrap gap-3">
+            {legend.map(({ color, label }) => (
+              <span key={label} className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+                <span className={cn("h-2.5 w-2.5 rounded-sm", color)} />
+                {label}
+              </span>
+            ))}
+          </div>
+
+          {/* ── OVERVIEW: all floors at once ── */}
+          {viewMode === "overview" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {floors.map((f) => (
+                <FloorMapTile
+                  key={f.id}
+                  floor={f}
+                  spaces={spaces}
+                  mode={mode}
+                  guestOnly={guestOnly}
+                  onSelect={(s) => { setSelected(s); setViewMode("floor"); setFId(f.id); }}
+                />
               ))}
-              {rooms.length === 0 && <p className="text-sm text-zinc-600 col-span-full py-8 text-center">No rooms match — try toggling “All spaces” or pick another floor.</p>}
+              {floors.length === 0 && (
+                <p className="text-sm text-zinc-600 col-span-2 py-8 text-center">No floors on this building yet.</p>
+              )}
             </div>
+          )}
 
-            {selected && (
-              <motion.div initial={{ x: 16, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-                className="w-64 shrink-0 glass-card p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-zinc-100">{selected.name}</h3>
-                  <button onClick={() => setSelected(null)} className="text-zinc-600 hover:text-zinc-400 text-xs">✕</button>
+          {/* ── FLOOR DRILL-DOWN ── */}
+          {viewMode === "floor" && (
+            <>
+              {/* Floor tabs */}
+              <div className="flex flex-wrap items-center gap-2">
+                <Layers className="h-4 w-4 text-zinc-600" />
+                {floors.map((f) => (
+                  <button key={f.id} onClick={() => setFId(f.id)}
+                    className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                      fId === f.id ? "bg-white/[0.08] border-white/20 text-zinc-200" : "border-white/[0.06] text-zinc-500 hover:text-zinc-300")}>
+                    {f.name}
+                  </button>
+                ))}
+                {floors.length === 0 && <span className="text-xs text-zinc-600">No floors yet.</span>}
+              </div>
+
+              {/* Room grid + detail panel */}
+              <div className="flex gap-4 items-start">
+                <div className="flex-1 grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-2">
+                  {floorRooms.map((r) => (
+                    <motion.button key={r.id} layout onClick={() => setSelected(r)}
+                      initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
+                      className={cn("text-left glass-card p-2.5 hover:border-white/[0.15] transition-colors",
+                        selected?.id === r.id && "border-indigo-500/50")}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-zinc-200">{r.name}</span>
+                        <span className={cn("h-2.5 w-2.5 rounded-full shrink-0", dotFor(mode, r))} title={labelFor(mode, r)} />
+                      </div>
+                      <div className="mt-1.5"><OccupancyBadge occupancy={r.occupancy} /></div>
+                    </motion.button>
+                  ))}
+                  {floorRooms.length === 0 && (
+                    <p className="text-sm text-zinc-600 col-span-full py-8 text-center">
+                      No rooms match — try toggling &quot;All spaces&quot; or pick another floor.
+                    </p>
+                  )}
                 </div>
-                <p className="text-[11px] text-zinc-500 uppercase tracking-wider">{selected.type.replace(/_/g, " ")}</p>
-                <div className="space-y-2 text-xs">
-                  <Row label="Occupancy"><OccupancyBadge occupancy={selected.occupancy} /></Row>
-                  <Row label="Housekeeping"><span className="capitalize text-zinc-300">{(selected.housekeeping_status ?? "ready").replace(/_/g, " ")}</span></Row>
-                  <Row label="Condition"><span className={SPACE_STATUS_CONFIG[selected.status]?.color}>{SPACE_STATUS_CONFIG[selected.status]?.label}</span></Row>
-                </div>
-                <Link href="/work-orders/new" className="btn-secondary w-full justify-center text-xs h-8">
-                  <DoorClosed className="h-3.5 w-3.5" /> Log an issue here
-                </Link>
-              </motion.div>
-            )}
-          </div>
+
+                {selected && (
+                  <motion.div initial={{ x: 16, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
+                    className="w-64 shrink-0 glass-card p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-zinc-100">{selected.name}</h3>
+                      <button onClick={() => setSelected(null)} className="text-zinc-600 hover:text-zinc-400 text-xs">✕</button>
+                    </div>
+                    <p className="text-[11px] text-zinc-500 uppercase tracking-wider">{selected.type.replace(/_/g, " ")}</p>
+                    <div className="space-y-2 text-xs">
+                      <Row label="Occupancy"><OccupancyBadge occupancy={selected.occupancy} /></Row>
+                      <Row label="Housekeeping"><span className="capitalize text-zinc-300">{(selected.housekeeping_status ?? "ready").replace(/_/g, " ")}</span></Row>
+                      <Row label="Condition"><span className={SPACE_STATUS_CONFIG[selected.status]?.color}>{SPACE_STATUS_CONFIG[selected.status]?.label}</span></Row>
+                    </div>
+                    <Link href="/work-orders/new" className="btn-secondary w-full justify-center text-xs h-8">
+                      <DoorClosed className="h-3.5 w-3.5" /> Log an issue here
+                    </Link>
+                  </motion.div>
+                )}
+              </div>
+            </>
+          )}
         </>
       )}
     </div>
