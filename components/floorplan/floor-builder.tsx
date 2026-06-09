@@ -276,7 +276,7 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
     }
   },[evCell,spaces,cols,rows]);
 
-  const onMouseUp=useCallback(async(_e:React.MouseEvent)=>{
+  const onMouseUp=useCallback(async()=>{
     const d=drag.current;drag.current={type:"none"};
     if(d.type==="create"&&d.startCell&&d.endCell){
       const r=c2r(d.startCell,d.endCell);
