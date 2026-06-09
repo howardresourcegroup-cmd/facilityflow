@@ -89,8 +89,7 @@ export async function setupBuilding(input: {
   address: string;
   city: string;
   state: string;
-  floorCount: number;
-  roomsPerFloor: number;
+  floors: number[]; // room count per floor, e.g. [14, 10, 8] — supports uneven floors
 }): Promise<Building> {
   const supabase = sb();
   const building = await createBuilding({
@@ -98,13 +97,14 @@ export async function setupBuilding(input: {
   });
 
   const perRow = 7; // rooms per row on the floor-plan grid
-  for (let f = 0; f < input.floorCount; f++) {
+  for (let f = 0; f < input.floors.length; f++) {
     const level = f + 1;
+    const roomsOnFloor = input.floors[f];
     const floor = await createFloor({
       building_id: building.id, name: `Floor ${level}`, level,
-      grid_cols: 16, grid_rows: Math.max(8, Math.ceil(input.roomsPerFloor / perRow) * 2 + 2),
+      grid_cols: 16, grid_rows: Math.max(8, Math.ceil(roomsOnFloor / perRow) * 2 + 2),
     });
-    const rooms = Array.from({ length: input.roomsPerFloor }, (_, r) => {
+    const rooms = Array.from({ length: roomsOnFloor }, (_, r) => {
       // A realistic starting mix so the property is alive on day one (real PMS sync overrides this).
       const n = level * 100 + (r + 1);
       const occupancy = r % 4 === 0 ? "occupied" : r % 7 === 3 ? "arriving" : r % 11 === 5 ? "departing" : "vacant";

@@ -33,12 +33,19 @@ function BuildingSetupWizard({ onDone }: { onDone: () => void }) {
   const [type, setType] = useState("Hotel");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [floors, setFloors] = useState(3);
-  const [rooms, setRooms] = useState(12);
+  // Per-floor room counts — supports uneven floors (e.g. a bigger ground floor).
+  const [floorRooms, setFloorRooms] = useState<number[]>([12, 12, 12]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const total = Math.max(0, floors) * Math.max(0, rooms);
+  const total = floorRooms.reduce((a, b) => a + Math.max(0, b), 0);
+
+  const setFloorCount = (n: number) => {
+    const count = Math.max(1, Math.min(50, n || 1));
+    setFloorRooms((prev) => Array.from({ length: count }, (_, i) => prev[i] ?? prev[prev.length - 1] ?? 12));
+  };
+  const setRoomsOn = (i: number, n: number) =>
+    setFloorRooms((prev) => prev.map((v, idx) => (idx === i ? Math.max(0, Math.min(200, n || 0)) : v)));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +54,7 @@ function BuildingSetupWizard({ onDone }: { onDone: () => void }) {
     try {
       await setupBuilding({
         name: name.trim(), type: type.toLowerCase(), address: "", city: city.trim(), state: state.trim(),
-        floorCount: Math.max(1, Math.min(50, floors)), roomsPerFloor: Math.max(0, Math.min(200, rooms)),
+        floors: floorRooms,
       });
       onDone();
     } catch (err) {
@@ -99,22 +106,30 @@ function BuildingSetupWizard({ onDone }: { onDone: () => void }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
               <Label htmlFor="floors">Floors</Label>
-              <Input id="floors" type="number" min={1} max={50} value={floors} onChange={(e) => setFloors(+e.target.value)} />
+              <span className="text-[11px] text-zinc-600">Set rooms per floor — they can differ</span>
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="rooms">Rooms per floor</Label>
-              <Input id="rooms" type="number" min={0} max={200} value={rooms} onChange={(e) => setRooms(+e.target.value)} />
-            </div>
+            <Input id="floors" type="number" min={1} max={50} value={floorRooms.length} onChange={(e) => setFloorCount(+e.target.value)} />
+          </div>
+
+          <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+            {floorRooms.map((rooms, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <span className="text-xs text-zinc-500 w-16 shrink-0">Floor {i + 1}</span>
+                <Input type="number" min={0} max={200} value={rooms} onChange={(e) => setRoomsOn(i, +e.target.value)} className="h-8" />
+                <span className="text-[11px] text-zinc-600 w-10 shrink-0">rooms</span>
+              </div>
+            ))}
           </div>
 
           <div className="flex items-center gap-2 text-xs text-zinc-400 bg-white/[0.03] border border-white/[0.06] rounded-lg px-3 py-2">
             <Building2 className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
-            Creates <span className="text-zinc-200 font-medium">{floors} floors</span> and
+            Creates <span className="text-zinc-200 font-medium">{floorRooms.length} floors</span> and
             <span className="text-zinc-200 font-medium">{total} guest rooms</span> — all live on the housekeeping board.
           </div>
+          <p className="text-[11px] text-zinc-600 -mt-1">Got more than one building? Add the rest from the Buildings page after this.</p>
 
           {error && <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>}
 
