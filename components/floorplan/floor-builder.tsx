@@ -507,7 +507,7 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
               editorMode==="stamp"?"cursor-crosshair":"")}
             style={{width:gridW,height:gridH,minWidth:gridW}}
             onMouseDown={onGridDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp}
-            onMouseLeave={e=>{if(drag.current.type!=="none")onMouseUp(e);}}>
+            onMouseLeave={()=>{if(drag.current.type!=="none")onMouseUp();}}>
 
             {/* Grid cells */}
             {Array.from({length:rows}).map((_,y)=>
