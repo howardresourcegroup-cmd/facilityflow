@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Trash2, X, Check, MousePointer2, Stamp, Sparkles, FileText,
-  Maximize2, ChevronDown, Plus, Minus,
+  Maximize2, Plus, Minus,
 } from "lucide-react";
 import type { Floor, Space } from "@/types";
 import { cn, SPACE_STATUS_CONFIG } from "@/lib/utils";
@@ -276,7 +276,7 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
     }
   },[evCell,spaces,cols,rows]);
 
-  const onMouseUp=useCallback(async(e:React.MouseEvent)=>{
+  const onMouseUp=useCallback(async(_e:React.MouseEvent)=>{
     const d=drag.current;drag.current={type:"none"};
     if(d.type==="create"&&d.startCell&&d.endCell){
       const r=c2r(d.startCell,d.endCell);
