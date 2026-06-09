@@ -104,16 +104,28 @@ export async function setupBuilding(input: {
       building_id: building.id, name: `Floor ${level}`, level,
       grid_cols: 16, grid_rows: Math.max(8, Math.ceil(input.roomsPerFloor / perRow) * 2 + 2),
     });
-    const rooms = Array.from({ length: input.roomsPerFloor }, (_, r) => ({
-      floor_id: floor.id,
-      name: `Room ${level * 100 + (r + 1)}`,
-      type: "guest_room",
-      status: "operational" as const,
-      housekeeping_status: "ready" as const,
-      position_x: (r % perRow) * 2 + 1,
-      position_y: Math.floor(r / perRow) * 2 + 1,
-      width: 2, height: 2,
-    }));
+    const rooms = Array.from({ length: input.roomsPerFloor }, (_, r) => {
+      // A realistic starting mix so the property is alive on day one (real PMS sync overrides this).
+      const n = level * 100 + (r + 1);
+      const occupancy = r % 4 === 0 ? "occupied" : r % 7 === 3 ? "arriving" : r % 11 === 5 ? "departing" : "vacant";
+      const housekeeping_status =
+        occupancy === "occupied" ? "ready"
+        : occupancy === "departing" ? "dirty"
+        : r % 5 === 2 ? "dirty"
+        : r % 6 === 4 ? "in_progress"
+        : "ready";
+      return {
+        floor_id: floor.id,
+        name: `Room ${n}`,
+        type: "guest_room",
+        status: "operational" as const,
+        housekeeping_status,
+        occupancy,
+        position_x: (r % perRow) * 2 + 1,
+        position_y: Math.floor(r / perRow) * 2 + 1,
+        width: 2, height: 2,
+      };
+    });
     if (rooms.length) {
       const { error } = await supabase.from("spaces").insert(rooms);
       if (error) throw error;

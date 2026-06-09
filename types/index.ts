@@ -13,6 +13,9 @@ export type HousekeepingStatus =
   | "ready"
   | "out_of_service";
 
+// Live PMS occupancy — "is there a guest in the room right now?"
+export type Occupancy = "vacant" | "occupied" | "arriving" | "departing";
+
 export type WorkOrderStatus =
   | "open"
   | "assigned"
@@ -93,6 +96,7 @@ export interface Space {
   qr_code: string | null;
   notes: string | null;
   housekeeping_status?: HousekeepingStatus;
+  occupancy?: Occupancy;
   created_at: string;
   updated_at: string;
   // virtual

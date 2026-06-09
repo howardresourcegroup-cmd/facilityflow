@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Bell, Search, Plus, LogOut, Settings as SettingsIcon, User, CheckCheck, AlertTriangle, Sparkles, Wrench } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,7 +32,6 @@ const PAGE_META: Record<string, { title: string; action?: { label: string; href:
 
 export function Header() {
   const pathname = usePathname();
-  const router = useRouter();
   const profile = useCurrentProfile();
   const { workOrders } = useWorkOrders();
   const { buildings } = useBuildings();
@@ -62,8 +61,8 @@ export function Header() {
     const supabase = createClient();
     await supabase.auth.signOut().catch(() => {});
     await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" }).catch(() => {});
-    router.push("/login");
-    router.refresh();
+    // Hard navigation so the middleware re-runs with the cleared cookies (router.push kept the session)
+    window.location.href = "/login";
   };
 
   const notifIcon = (priority: string) =>

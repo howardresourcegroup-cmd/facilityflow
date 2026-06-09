@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Sparkles, BedDouble, CircleCheck, Ban, ArrowRight } from "lucide-react";
 import { useHousekeeping, usePermissions, useCurrentProfile } from "@/lib/data/hooks";
 import { PageLoader } from "@/components/shared/loading-spinner";
+import { OccupancyBadge } from "@/components/rooms/occupancy-badge";
 import { cn } from "@/lib/utils";
 import type { HousekeepingStatus, Space } from "@/types";
 
@@ -86,6 +87,9 @@ export default function HousekeepingPage() {
                         <span className="text-[10px] text-zinc-600">
                           {(room as Space & { floor?: { building?: { name: string } } }).floor?.building?.name?.split(" ")[0] ?? ""}
                         </span>
+                      </div>
+                      <div className="mt-1.5">
+                        <OccupancyBadge occupancy={room.occupancy} />
                       </div>
                       {next && canClean && (
                         <button
