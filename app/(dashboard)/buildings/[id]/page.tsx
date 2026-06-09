@@ -19,7 +19,7 @@ import { Layers } from "lucide-react";
 export default function BuildingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace, addFloor } = useBuildingDetail(id);
+  const { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace, addFloor, patchSpace, patchFloor } = useBuildingDetail(id);
   const { can } = usePermissions();
   const [activeFloorId, setActiveFloorId] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -135,6 +135,8 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
                     spaces={spaces.filter((s) => s.floor_id === f.id)}
                     onAdd={addSpace}
                     onRemove={removeSpace}
+                    onPatch={patchSpace}
+                    onPatchFloor={(patch) => patchFloor(f.id, patch)}
                     onDone={() => setEditMode(false)}
                   />
                 ) : (

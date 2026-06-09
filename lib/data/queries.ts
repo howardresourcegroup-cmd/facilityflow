@@ -196,6 +196,19 @@ export async function deleteSpace(spaceId: string): Promise<void> {
   if (error) throw error;
 }
 
+export async function updateSpace(spaceId: string, patch: {
+  name?: string; type?: string;
+  position_x?: number; position_y?: number; width?: number; height?: number;
+}): Promise<void> {
+  const { error } = await sb().from("spaces").update(patch).eq("id", spaceId);
+  if (error) throw error;
+}
+
+export async function updateFloorGrid(floorId: string, patch: { grid_cols?: number; grid_rows?: number; name?: string }): Promise<void> {
+  const { error } = await sb().from("floors").update(patch).eq("id", floorId);
+  if (error) throw error;
+}
+
 export async function createFloor(input: {
   building_id: string;
   name: string;

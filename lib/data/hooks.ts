@@ -77,7 +77,15 @@ export function useBuildingDetail(buildingId: string) {
   const removeSpace = useCallback((id: string) => setSpaces((prev) => prev.filter((s) => s.id !== id)), []);
   const addFloor = useCallback((floor: Floor) => setFloors((prev) => [...prev, floor]), []);
 
-  return { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace, addFloor };
+  const patchSpace = useCallback((id: string, patch: Partial<Space>) => {
+    setSpaces((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)));
+  }, []);
+
+  const patchFloor = useCallback((id: string, patch: Partial<Floor>) => {
+    setFloors((prev) => prev.map((f) => (f.id === id ? { ...f, ...patch } : f)));
+  }, []);
+
+  return { building, floors, spaces, loading, setSpaceStatus, addSpace, removeSpace, addFloor, patchSpace, patchFloor };
 }
 
 // ─── Work orders ──────────────────────────────────────────────────────────────
