@@ -20,6 +20,7 @@ import { ClipboardList, Building2 } from "lucide-react";
 const PAGE_META: Record<string, { title: string; action?: { label: string; href: string } }> = {
   "/": { title: "Operations Dashboard" },
   "/buildings": { title: "Buildings", action: { label: "Add Building", href: "/buildings?new=1" } },
+  "/property": { title: "Property Map" },
   "/work-orders": { title: "Work Orders", action: { label: "New Work Order", href: "/work-orders/new" } },
   "/housekeeping": { title: "Housekeeping Board" },
   "/messages": { title: "Team Chat" },

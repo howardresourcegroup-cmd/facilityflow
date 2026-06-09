@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Building2, ClipboardList, Users,
-  Settings, ChevronLeft, Package, BarChart3, LogOut, MessageSquare, HelpCircle, BedDouble,
+  Settings, ChevronLeft, Package, BarChart3, LogOut, MessageSquare, HelpCircle, BedDouble, Map,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
@@ -18,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/comp
 const NAV_ITEMS = [
   { href: "/", icon: LayoutDashboard, label: "Dashboard", perm: "dashboard.view" },
   { href: "/buildings", icon: Building2, label: "Buildings", perm: "buildings.view" },
+  { href: "/property", icon: Map, label: "Property Map", perm: "buildings.view" },
   { href: "/work-orders", icon: ClipboardList, label: "Work Orders", perm: "work_orders.view" },
   { href: "/housekeeping", icon: BedDouble, label: "Housekeeping", perm: "buildings.view" },
   { href: "/messages", icon: MessageSquare, label: "Team Chat", perm: "chat.participate" },
