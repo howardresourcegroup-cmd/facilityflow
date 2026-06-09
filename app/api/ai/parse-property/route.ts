@@ -60,7 +60,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await res.json();
-    const raw = data.content[0].text.trim();
+    let raw = data.content[0].text.trim();
+    // Strip markdown code fences if present
+    raw = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
     const parsed: ParsedProperty = JSON.parse(raw);
 
     const validTypes = ["hotel","lodge","resort","inn","other"];
