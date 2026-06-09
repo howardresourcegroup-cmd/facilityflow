@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
   },
   robots: { index: true, follow: true },
+  verification: { google: "jV4sEPhvwlRDsdFZn5qbR7WQdX5y64pLwCZJ-VRGgp8" },
 };
 
 export const viewport: Viewport = {
