@@ -48,7 +48,7 @@ export default function WorkOrdersPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-zinc-100">Work Orders</h1>
           <div className="flex items-center gap-3 mt-1.5 text-xs">
@@ -83,8 +83,8 @@ export default function WorkOrdersPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
+      <div className="flex flex-col gap-3">
+        <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
           <Input
             placeholder="Search by title or location…"
@@ -94,7 +94,8 @@ export default function WorkOrdersPage() {
           />
         </div>
 
-        <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.06] rounded-xl p-1 flex-wrap">
+        <div className="overflow-x-auto pb-1 -mx-1 px-1">
+        <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.06] rounded-xl p-1 w-max min-w-full">
           <button
             onClick={() => setStatusFilter("all")}
             className={cn(
@@ -120,9 +121,10 @@ export default function WorkOrdersPage() {
             );
           })}
         </div>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
         <Filter className="h-3.5 w-3.5 text-zinc-600" />
         <span className="text-xs text-zinc-600">Priority:</span>
         {PRIORITIES.map((p) => {

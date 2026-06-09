@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Bell, Search, Plus, LogOut, Settings as SettingsIcon, User, CheckCheck, AlertTriangle, Sparkles, Wrench } from "lucide-react";
+import { Bell, Search, Plus, LogOut, Settings as SettingsIcon, User, CheckCheck, AlertTriangle, Sparkles, Wrench, Menu } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useCurrentProfile, useWorkOrders, useBuildings, useProfiles } from "@/lib/data/hooks";
+import { useAppStore } from "@/lib/store";
 import { createClient } from "@/lib/supabase/client";
 import { getInitials, cn, timeAgo } from "@/lib/utils";
 import { ClipboardList, Building2 } from "lucide-react";
@@ -58,6 +59,8 @@ export function Header() {
     .slice(0, 6);
   const notificationCount = notifications.filter((w) => w.priority === "critical" || w.priority === "high").length;
 
+  const { toggleMobileSidebar } = useAppStore();
+
   const signOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut().catch(() => {});
@@ -74,7 +77,13 @@ export function Header() {
   )?.[1] ?? { title: "Roomward" };
 
   return (
-    <header className="h-14 flex items-center gap-4 px-5 border-b border-white/[0.05] bg-[#080811]/80 backdrop-blur-md sticky top-0 z-10 flex-shrink-0">
+    <header className="h-14 flex items-center gap-3 px-4 border-b border-white/[0.05] bg-[#080811]/80 backdrop-blur-md sticky top-0 z-10 flex-shrink-0">
+      {/* Hamburger — mobile only */}
+      <button onClick={toggleMobileSidebar}
+        className="md:hidden flex h-8 w-8 items-center justify-center rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.06] transition-colors flex-shrink-0">
+        <Menu className="h-5 w-5" />
+      </button>
+
       {/* Page title */}
       <div className="flex-1 min-w-0">
         <h1 className="text-sm font-semibold text-zinc-200 truncate">{meta.title}</h1>
