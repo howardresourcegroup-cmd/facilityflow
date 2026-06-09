@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: ["/", "/login", "/signup"],
+      allow: ["/", "/login", "/signup", "/blog"],
       disallow: ["/api/", "/buildings", "/work-orders", "/housekeeping", "/settings", "/reports", "/assets", "/messages", "/technicians", "/help"],
     },
     sitemap: "https://roomward.app/sitemap.xml",

@@ -128,6 +128,7 @@ export default function LandingPage() {
             <span>© 2026 Roomward · by Howard Resource Group</span>
           </div>
           <div className="flex items-center gap-4">
+            <Link href="/blog" className="hover:text-zinc-400 transition-colors">Blog</Link>
             <Link href="/login" className="hover:text-zinc-400 transition-colors">Log in</Link>
             <Link href="/signup" className="hover:text-zinc-400 transition-colors">Start free trial</Link>
           </div>

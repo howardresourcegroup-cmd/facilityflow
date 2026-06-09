@@ -34,6 +34,7 @@
     "date-fns": "^4",
     "framer-motion": "^11",
     "lucide-react": "^0.468.0",
+    "marked": "^18.0.5",
     "next": "^15.5.18",
     "react": "^19",
     "react-dom": "^19",
