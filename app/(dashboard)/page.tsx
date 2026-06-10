@@ -1,18 +1,23 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { format } from "date-fns";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
-import { MetricsChart } from "@/components/dashboard/metrics-chart";
-import { ActivityFeed } from "@/components/dashboard/activity-feed";
-import { BuildingHealth } from "@/components/dashboard/building-health";
 import { WorkOrderCard } from "@/components/work-orders/work-order-card";
-import { RoomMasterPanel, IntegrationsPanel } from "@/components/integrations/roommaster-panel";
-import { EpturaPanel } from "@/components/integrations/eptura-panel";
 import { GettingStarted } from "@/components/dashboard/getting-started";
-import { MaintenanceDashboard, HousekeepingDashboard, FrontDeskDashboard } from "@/components/dashboard/role-dashboards";
 import { MOCK_STATS, MOCK_ACTIVITY } from "@/lib/mock-data";
 import { useWorkOrders, useDashboardStats, useCurrentProfile, usePermissions } from "@/lib/data/hooks";
+
+const MetricsChart    = dynamic(() => import("@/components/dashboard/metrics-chart").then(m => ({ default: m.MetricsChart })), { ssr: false });
+const ActivityFeed    = dynamic(() => import("@/components/dashboard/activity-feed").then(m => ({ default: m.ActivityFeed })), { ssr: false });
+const BuildingHealth  = dynamic(() => import("@/components/dashboard/building-health").then(m => ({ default: m.BuildingHealth })), { ssr: false });
+const RoomMasterPanel = dynamic(() => import("@/components/integrations/roommaster-panel").then(m => ({ default: m.RoomMasterPanel })), { ssr: false });
+const IntegrationsPanel = dynamic(() => import("@/components/integrations/roommaster-panel").then(m => ({ default: m.IntegrationsPanel })), { ssr: false });
+const EpturaPanel     = dynamic(() => import("@/components/integrations/eptura-panel").then(m => ({ default: m.EpturaPanel })), { ssr: false });
+const MaintenanceDashboard = dynamic(() => import("@/components/dashboard/role-dashboards").then(m => ({ default: m.MaintenanceDashboard })), { ssr: false });
+const HousekeepingDashboard = dynamic(() => import("@/components/dashboard/role-dashboards").then(m => ({ default: m.HousekeepingDashboard })), { ssr: false });
+const FrontDeskDashboard = dynamic(() => import("@/components/dashboard/role-dashboards").then(m => ({ default: m.FrontDeskDashboard })), { ssr: false });
 
 export default function DashboardPage() {
   const { workOrders } = useWorkOrders();

@@ -11,21 +11,30 @@ import { Input } from "@/components/ui/input";
 // yet (e.g. they confirmed their email and signed in on a later visit), this
 // completes onboarding — using the org name stashed at signup, or prompting
 // for one if it's missing.
+const SESSION_KEY = "rw_org_ok";
+
 export function OnboardingGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [state, setState] = useState<"checking" | "ready" | "needs-org">("checking");
+  // Skip the Supabase round-trips if we already confirmed org this session
+  const cached = typeof sessionStorage !== "undefined" && sessionStorage.getItem(SESSION_KEY) === "1";
+  const [state, setState] = useState<"checking" | "ready" | "needs-org">(cached ? "ready" : "checking");
   const [orgName, setOrgName] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (cached) return; // already confirmed this session
     const supabase = createClient();
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
       if (!user) { setState("ready"); return; } // not logged in → middleware handles it
 
       const { data: profile } = await supabase.from("profiles").select("organization_id").eq("id", user.id).single();
-      if (profile?.organization_id) { setState("ready"); return; }
+      if (profile?.organization_id) {
+        sessionStorage.setItem(SESSION_KEY, "1");
+        setState("ready"); return;
+      }
 
       // No org — try to auto-complete from signup metadata
       const pending = (user.user_metadata?.pending_org as string | undefined)?.trim();
@@ -34,11 +43,11 @@ export function OnboardingGuard({ children }: { children: React.ReactNode }) {
           org_name: pending,
           full_name: (user.user_metadata?.full_name as string) ?? "",
         });
-        if (!e) { router.refresh(); setState("ready"); return; }
+        if (!e) { sessionStorage.setItem(SESSION_KEY, "1"); router.refresh(); setState("ready"); return; }
       }
       setState("needs-org");
     })();
-  }, [router]);
+  }, [router, cached]);
 
   const completeSetup = async (e: React.FormEvent) => {
     e.preventDefault();
