@@ -78,9 +78,10 @@ export const TUTORIALS: Tutorial[] = [
     summary: "Invite staff and keep everyone coordinated.",
     minutes: 2,
     steps: [
-      { title: "Invite a teammate", body: "Go to Technicians → Add Technician. Enter their name, email, and role. They get login credentials to share." },
-      { title: "Assign work", body: "From any technician card, click Assign Task to start a work order pre-filled for them, or View All to see their queue." },
-      { title: "Track availability", body: "Each card shows a green (available) or amber (on task) dot, plus their active, closed, and urgent job counts." },
+      { title: "Invite a teammate", body: "Go to Settings → Team → Invite. Enter their name, email, and role. Copy the temporary credentials and share them — they can change their password after first login." },
+      { title: "Change a role", body: "In Settings → Team, click the role icon next to any member to change their role instantly. Permissions update across the whole app immediately." },
+      { title: "Remove access", body: "Click the trash icon next to a member to remove them from your organization. Their account is deactivated but not deleted." },
+      { title: "Track technicians", body: "The Technicians page shows availability, active task counts, and lets you assign work orders directly from each card." },
     ],
   },
   {
@@ -127,6 +128,6 @@ export const CHECKLIST = [
   { id: "building", label: "Add your first building", href: "/buildings" },
   { id: "floor", label: "Add a floor & map rooms", href: "/buildings" },
   { id: "work_order", label: "Create a work order", href: "/work-orders/new" },
-  { id: "team", label: "Invite a teammate", href: "/technicians" },
+  { id: "team", label: "Invite a teammate", href: "/settings" },
   { id: "roles", label: "Review roles & permissions", href: "/settings" },
 ];

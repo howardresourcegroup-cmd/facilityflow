@@ -6,7 +6,7 @@ import * as q from "./queries";
 import { fetchRoles, fetchMyPermissions } from "./roles";
 import type {
   Building, Floor, Space, WorkOrder, Profile, Channel, Message, Role, Asset,
-  SpaceStatus, HousekeepingStatus, WorkOrderStatus, DashboardStats,
+  SpaceStatus, HousekeepingStatus, WorkOrderStatus, DashboardStats, ActivityItem,
 } from "@/types";
 
 // ─── Tiny stale-while-revalidate cache ────────────────────────────────────────
@@ -204,6 +204,11 @@ export function useBilling(): BillingState & { reload: () => void } {
 // ─── Dashboard stats ──────────────────────────────────────────────────────────
 export function useDashboardStats() {
   const { data } = useCachedQuery<DashboardStats | null>("dashboard_stats", q.fetchDashboardStats, null);
+  return data;
+}
+
+export function useRecentActivity() {
+  const { data } = useCachedQuery<ActivityItem[]>("recent_activity", q.fetchRecentActivity, []);
   return data;
 }
 

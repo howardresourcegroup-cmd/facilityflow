@@ -441,12 +441,78 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   const activeWo = wo.filter((x) => x.status !== "completed" && x.status !== "cancelled");
   const today = new Date(); today.setHours(0, 0, 0, 0);
 
+  // Compute real avg resolution from completed orders with both timestamps
+  const resolved = wo.filter((x) => x.completed_at && x.created_at);
+  const avgResolutionHours = resolved.length
+    ? Math.round((resolved.reduce((sum, x) => {
+        return sum + (new Date(x.completed_at!).getTime() - new Date(x.created_at).getTime());
+      }, 0) / resolved.length) / 36e5 * 10) / 10
+    : 0;
+
   return {
     active_issues: activeWo.length,
     operational_percent: s.length ? Math.round((operational / s.length) * 100) : 100,
     technicians_online: p.filter((x) => x.role === "technician" && x.is_available).length,
     critical_alerts: activeWo.filter((x) => x.priority === "critical").length,
     completed_today: wo.filter((x) => x.completed_at && new Date(x.completed_at) >= today).length,
-    avg_resolution_hours: 3.8,
+    avg_resolution_hours: avgResolutionHours,
   };
+}
+
+export async function fetchRecentActivity(): Promise<import("@/types").ActivityItem[]> {
+  const supabase = sb();
+  const since = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+
+  const [{ data: orders }, { data: comments }] = await Promise.all([
+    supabase.from("work_orders")
+      .select("id, title, priority, status, created_at, updated_at, creator:profiles!work_orders_created_by_fkey(full_name), assignee:profiles!work_orders_assigned_to_fkey(full_name)")
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(20),
+    supabase.from("messages")
+      .select("id, body, created_at, author:profiles!messages_author_id_fkey(full_name)")
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(10),
+  ]);
+
+  const items: import("@/types").ActivityItem[] = [];
+
+  for (const o of (orders ?? [])) {
+    const creator = (o.creator as { full_name?: string } | null)?.full_name ?? "Someone";
+    items.push({
+      id: `wo-${o.id}`,
+      type: "work_order_created",
+      title: "New work order",
+      description: o.title,
+      user: { name: creator },
+      timestamp: o.created_at,
+      meta: { priority: o.priority },
+    });
+    if (o.assignee) {
+      const assignee = (o.assignee as { full_name?: string } | null)?.full_name ?? "Technician";
+      items.push({
+        id: `assign-${o.id}`,
+        type: "tech_assigned",
+        title: "Technician assigned",
+        description: `${assignee} assigned to: ${o.title}`,
+        user: { name: creator },
+        timestamp: o.updated_at ?? o.created_at,
+      });
+    }
+  }
+
+  for (const c of (comments ?? [])) {
+    const author = (c.author as { full_name?: string } | null)?.full_name ?? "Team member";
+    items.push({
+      id: `msg-${c.id}`,
+      type: "comment_added",
+      title: "Team message",
+      description: String(c.body ?? "").slice(0, 80),
+      user: { name: author },
+      timestamp: c.created_at,
+    });
+  }
+
+  return items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
 }

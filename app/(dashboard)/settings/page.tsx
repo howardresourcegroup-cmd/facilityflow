@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check, CreditCard, Sparkles } from "lucide-react";
+import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check, CreditCard, Sparkles, Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -181,18 +182,108 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {(activeSection === "notifs" || activeSection === "security") && (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="h-12 w-12 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mb-3">
-                {activeSection === "notifs" && <Bell className="h-5 w-5 text-zinc-600" />}
-                {activeSection === "security" && <Shield className="h-5 w-5 text-zinc-600" />}
+          {activeSection === "notifs" && (
+            <div className="space-y-5">
+              <div>
+                <h2 className="text-base font-semibold text-zinc-200">Notifications</h2>
+                <p className="text-xs text-zinc-500 mt-0.5">Choose what activity sends you an alert.</p>
               </div>
-              <p className="text-sm font-medium text-zinc-400">Coming soon</p>
-              <p className="text-xs text-zinc-600 mt-1">This section will be available in the next release.</p>
+              {[
+                { label: "New work order created", desc: "When anyone logs a new maintenance request", defaultOn: true },
+                { label: "Work order assigned to you", desc: "When a job is assigned to your account", defaultOn: true },
+                { label: "Critical priority alert", desc: "Immediately when a critical issue is logged", defaultOn: true },
+                { label: "Work order completed", desc: "When a job you created is closed out", defaultOn: false },
+                { label: "Housekeeping status changes", desc: "When rooms move between dirty / clean / ready", defaultOn: false },
+                { label: "New team member joined", desc: "When someone accepts an invite to your org", defaultOn: false },
+              ].map(({ label, desc, defaultOn }) => (
+                <NotifRow key={label} label={label} desc={desc} defaultOn={defaultOn} />
+              ))}
+            </div>
+          )}
+
+          {activeSection === "security" && (
+            <div className="space-y-5">
+              <div>
+                <h2 className="text-base font-semibold text-zinc-200">Security</h2>
+                <p className="text-xs text-zinc-500 mt-0.5">Manage your password and account access.</p>
+              </div>
+              <ChangePasswordForm />
             </div>
           )}
         </div>
       </div>
     </div>
+  );
+}
+
+function NotifRow({ label, desc, defaultOn }: { label: string; desc: string; defaultOn: boolean }) {
+  const [on, setOn] = useState(defaultOn);
+  return (
+    <div className="flex items-center justify-between py-3 border-b border-white/[0.05] last:border-0">
+      <div>
+        <p className="text-sm text-zinc-200">{label}</p>
+        <p className="text-xs text-zinc-500 mt-0.5">{desc}</p>
+      </div>
+      <button
+        onClick={() => setOn(v => !v)}
+        className={cn(
+          "relative h-5 w-9 rounded-full transition-colors shrink-0",
+          on ? "bg-indigo-500" : "bg-zinc-700"
+        )}
+      >
+        <span className={cn(
+          "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+          on ? "translate-x-4" : "translate-x-0.5"
+        )} />
+      </button>
+    </div>
+  );
+}
+
+function ChangePasswordForm() {
+  const [form, setForm] = useState({ current: "", next: "", confirm: "" });
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (form.next !== form.confirm) { setMsg({ type: "err", text: "New passwords don't match." }); return; }
+    if (form.next.length < 8) { setMsg({ type: "err", text: "Password must be at least 8 characters." }); return; }
+    setSaving(true); setMsg(null);
+    const supabase = createClient();
+    const { error } = await supabase.auth.updateUser({ password: form.next });
+    if (error) { setMsg({ type: "err", text: error.message }); }
+    else { setMsg({ type: "ok", text: "Password updated." }); setForm({ current: "", next: "", confirm: "" }); }
+    setSaving(false);
+  };
+
+  return (
+    <form onSubmit={submit} className="space-y-3 max-w-sm">
+      {[
+        { label: "New password", key: "next" },
+        { label: "Confirm new password", key: "confirm" },
+      ].map(({ label, key }) => (
+        <div key={key} className="space-y-1.5">
+          <Label className="text-xs text-zinc-400">{label}</Label>
+          <Input
+            type="password"
+            value={form[key as keyof typeof form]}
+            onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+            placeholder="••••••••"
+            minLength={8}
+          />
+        </div>
+      ))}
+      {msg && (
+        <p className={cn("text-xs px-3 py-2 rounded-lg border", msg.type === "ok"
+          ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+          : "text-red-400 bg-red-500/10 border-red-500/20"
+        )}>{msg.text}</p>
+      )}
+      <Button type="submit" disabled={saving || !form.next || !form.confirm} size="sm">
+        {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+        Update password
+      </Button>
+    </form>
   );
 }

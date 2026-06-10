@@ -6,8 +6,8 @@ import { format } from "date-fns";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { WorkOrderCard } from "@/components/work-orders/work-order-card";
 import { GettingStarted } from "@/components/dashboard/getting-started";
-import { MOCK_STATS, MOCK_ACTIVITY } from "@/lib/mock-data";
-import { useWorkOrders, useDashboardStats, useCurrentProfile, usePermissions } from "@/lib/data/hooks";
+import { MOCK_STATS } from "@/lib/mock-data";
+import { useWorkOrders, useDashboardStats, useCurrentProfile, usePermissions, useRecentActivity } from "@/lib/data/hooks";
 
 const MetricsChart    = dynamic(() => import("@/components/dashboard/metrics-chart").then(m => ({ default: m.MetricsChart })), { ssr: false });
 const ActivityFeed    = dynamic(() => import("@/components/dashboard/activity-feed").then(m => ({ default: m.ActivityFeed })), { ssr: false });
@@ -24,6 +24,7 @@ export default function DashboardPage() {
   const stats = useDashboardStats();
   const profile = useCurrentProfile();
   const { can } = usePermissions();
+  const activity = useRecentActivity();
   const showIntegrations = can("integrations.manage");
   const now = new Date();
 
@@ -92,7 +93,7 @@ export default function DashboardPage() {
         <div className="space-y-5">
           <GettingStarted />
           <div className="h-[320px]">
-            <ActivityFeed items={MOCK_ACTIVITY.slice(0, 6)} />
+            <ActivityFeed items={activity.slice(0, 6)} />
           </div>
           <BuildingHealth />
           {showIntegrations && <IntegrationsPanel />}
