@@ -180,7 +180,10 @@ export default function SignupPage() {
       </p>
 
       <p className="mt-4 text-center text-[11px] text-zinc-600">
-        By signing up you agree to our Terms of Service and Privacy Policy.
+        By signing up you agree to our{" "}
+        <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms of Service</Link>
+        {" "}and{" "}
+        <Link href="/privacy" className="hover:text-zinc-400 transition-colors">Privacy Policy</Link>.
       </p>
     </div>
   );

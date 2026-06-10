@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthPage    = pathname === "/login" || pathname === "/signup";
-  const isPublicPage  = pathname === "/landing" || pathname.startsWith("/blog");
+  const isPublicPage  = pathname === "/landing" || pathname.startsWith("/blog") || pathname === "/privacy" || pathname === "/terms";
   const isApiAuth     = pathname.startsWith("/api/auth");
   const isOAuthCallback = pathname === "/auth/callback" || pathname === "/auth/reset-password";
   const isStatic      = pathname.startsWith("/_next") || pathname.includes(".");
