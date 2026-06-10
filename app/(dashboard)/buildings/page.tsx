@@ -8,10 +8,15 @@ import { CreateBuildingModal } from "@/components/buildings/create-building-moda
 import { EmptyState } from "@/components/shared/empty-state";
 import { SkeletonCard } from "@/components/shared/loading-spinner";
 import { useBuildings, usePermissions } from "@/lib/data/hooks";
+import type { Building } from "@/types";
 
 export default function BuildingsPage() {
-  const { buildings, loading, reload } = useBuildings();
+  const { buildings, loading, reload, setBuildings } = useBuildings();
   const { can } = usePermissions();
+
+  const handleDelete = (id: string) => setBuildings(prev => prev.filter(b => b.id !== id));
+  const handleUpdate = (id: string, patch: Partial<Building>) =>
+    setBuildings(prev => prev.map(b => b.id === id ? { ...b, ...patch } : b));
   const [showCreate, setShowCreate] = useState(false);
 
   const stats = {
@@ -58,7 +63,12 @@ export default function BuildingsPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {buildings.map((b, i) => (
-            <BuildingCard key={b.id} building={b} index={i} />
+            <BuildingCard
+              key={b.id} building={b} index={i}
+              canManage={can("buildings.edit")}
+              onDelete={handleDelete}
+              onUpdate={handleUpdate}
+            />
           ))}
         </div>
       )}

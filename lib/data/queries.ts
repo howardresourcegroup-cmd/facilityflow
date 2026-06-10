@@ -79,6 +79,16 @@ export async function createBuilding(input: {
   return data as Building;
 }
 
+export async function updateBuilding(id: string, patch: { name?: string; address?: string; city?: string; state?: string; type?: string }): Promise<void> {
+  const { error } = await sb().from("buildings").update(patch).eq("id", id);
+  if (error) throw error;
+}
+
+export async function deleteBuilding(id: string): Promise<void> {
+  const { error } = await sb().from("buildings").delete().eq("id", id);
+  if (error) throw error;
+}
+
 // Smart setup: create a building + floors + auto-generated guest rooms in one shot.
 // Rooms are typed as guest_room, given a starting housekeeping status, and grid-positioned
 // for the floor plan — so they flow into the floor plan, housekeeping board, and work orders

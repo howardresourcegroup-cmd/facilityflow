@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { RolesManager } from "@/components/settings/roles-manager";
+import { TeamManager } from "@/components/settings/team-manager";
 import { fetchOrganization, updateOrganization } from "@/lib/data/queries";
 import { useBilling } from "@/lib/data/hooks";
 import { UpgradeModal } from "@/components/billing/upgrade-modal";
@@ -172,10 +173,17 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {(activeSection === "team" || activeSection === "notifs" || activeSection === "security") && (
+          {activeSection === "team" && (
+            <div className="space-y-1">
+              <h2 className="text-base font-semibold text-zinc-200">Team Members</h2>
+              <p className="text-xs text-zinc-500 mb-4">Invite staff, change roles, or remove access.</p>
+              <TeamManager />
+            </div>
+          )}
+
+          {(activeSection === "notifs" || activeSection === "security") && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="h-12 w-12 rounded-2xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mb-3">
-                {activeSection === "team" && <Users className="h-5 w-5 text-zinc-600" />}
                 {activeSection === "notifs" && <Bell className="h-5 w-5 text-zinc-600" />}
                 {activeSection === "security" && <Shield className="h-5 w-5 text-zinc-600" />}
               </div>
