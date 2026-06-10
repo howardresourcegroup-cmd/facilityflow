@@ -44,6 +44,7 @@ export interface Profile {
   id: string;
   organization_id: string | null;
   full_name: string;
+  email?: string | null;
   avatar_url: string | null;
   role: UserRole;
   role_id?: string | null;

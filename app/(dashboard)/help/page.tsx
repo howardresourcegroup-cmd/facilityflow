@@ -112,7 +112,7 @@ export default function HelpPage() {
       </div>
 
       <p className="text-center text-xs text-zinc-600 pt-2">
-        Still stuck? Email <span className="text-zinc-400">support@facilityflow.app</span> — we&apos;re happy to help.
+        Still stuck? Email <span className="text-zinc-400">support@roomward.app</span> — we&apos;re happy to help.
       </p>
     </div>
   );

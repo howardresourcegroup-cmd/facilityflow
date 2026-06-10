@@ -92,7 +92,7 @@ export default function SettingsPage() {
                   <div className="space-y-1.5">
                     <Label>URL Slug</Label>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-zinc-500 shrink-0">facilityflow.app/</span>
+                      <span className="text-sm text-zinc-500 shrink-0">roomward.app/</span>
                       <Input value={org.slug} onChange={(e) => setOrg((o) => ({ ...o, slug: e.target.value }))} />
                     </div>
                   </div>

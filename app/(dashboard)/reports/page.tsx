@@ -8,7 +8,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from "recharts";
-import { useWorkOrders } from "@/lib/data/hooks";
+import { useWorkOrders, useOrganization } from "@/lib/data/hooks";
 import type { WorkOrder } from "@/types";
 
 const CAT_COLORS = ["#6366f1", "#06b6d4", "#f59e0b", "#8b5cf6", "#10b981", "#ef4444", "#52525b"];
@@ -51,6 +51,7 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
 
 export default function ReportsPage() {
   const { workOrders } = useWorkOrders();
+  const { org } = useOrganization();
 
   const { monthly, categories, kpis } = useMemo(() => {
     const monthly = buildMonthly(workOrders);
@@ -91,7 +92,7 @@ export default function ReportsPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-zinc-100">Reports</h1>
-          <p className="text-sm text-zinc-500 mt-1">Operations analytics for Grandview Resort &amp; Lodge</p>
+          <p className="text-sm text-zinc-500 mt-1">Operations analytics{org?.name ? ` for ${org.name}` : ""}</p>
         </div>
         <Button variant="secondary">
           <Download className="h-4 w-4" />

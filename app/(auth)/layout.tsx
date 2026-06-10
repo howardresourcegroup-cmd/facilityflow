@@ -17,7 +17,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-sm relative z-10">{children}</div>
 
       <p className="mt-8 text-xs text-zinc-600 relative z-10">
-        © 2025 Roomward. All rights reserved.
+        © 2026 Roomward. All rights reserved.
       </p>
     </div>
   );

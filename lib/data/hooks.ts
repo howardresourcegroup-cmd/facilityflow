@@ -212,6 +212,13 @@ export function useRecentActivity() {
   return data;
 }
 
+export function useOrganization() {
+  const { data, loading, reload } = useCachedQuery<{ id: string; name: string; slug: string; settings?: unknown } | null>(
+    "organization", q.fetchOrganization, null
+  );
+  return { org: data, loading, reload };
+}
+
 // ─── Chat (with realtime) ─────────────────────────────────────────────────────
 export function useChannels() {
   const { data } = useCachedQuery<Channel[]>("channels", q.fetchChannels, []);
