@@ -32,9 +32,15 @@ function labelFor(mode: Mode, s: Space): string {
   return SPACE_STATUS_CONFIG[s.status]?.label ?? s.status;
 }
 
+// Short label for a room box: the number ("Room 304" → "304"), else an abbrev.
+function shortLabel(name: string): string {
+  const m = name.match(/\d+/);
+  return m ? m[0] : name.replace(/[^A-Za-z]/g, "").slice(0, 3).toUpperCase();
+}
+
 // ── Overview: all floors on screen at once, like the screenshot ───────────────
-function FloorMapTile({ floor, spaces, mode, guestOnly, onSelect }: {
-  floor: Floor; spaces: Space[]; mode: Mode; guestOnly: boolean; onSelect: (s: Space) => void;
+function FloorMapTile({ floor, spaces, mode, guestOnly, onSelect, onOpenFloor }: {
+  floor: Floor; spaces: Space[]; mode: Mode; guestOnly: boolean; onSelect: (s: Space) => void; onOpenFloor: () => void;
 }) {
   const rooms = useMemo(() => {
     let list = spaces.filter((s) => s.floor_id === floor.id);
@@ -42,14 +48,14 @@ function FloorMapTile({ floor, spaces, mode, guestOnly, onSelect }: {
     return [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
   }, [spaces, floor.id, guestOnly]);
 
-  const cols = Math.min(rooms.length, 12);
+  const cols = Math.min(Math.max(rooms.length, 1), 6);
 
   return (
     <div className="glass-card p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold text-zinc-300">{floor.name}</h3>
-        <span className="text-[10px] text-zinc-600">{rooms.length} rooms</span>
-      </div>
+      <button onClick={onOpenFloor} className="flex w-full items-center justify-between group">
+        <h3 className="text-xs font-semibold text-zinc-300 group-hover:text-indigo-300 transition-colors">{floor.name}</h3>
+        <span className="text-[10px] text-zinc-600 group-hover:text-indigo-300 transition-colors">{rooms.length} rooms ›</span>
+      </button>
       <div
         className="grid gap-1"
         style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
@@ -60,10 +66,12 @@ function FloorMapTile({ floor, spaces, mode, guestOnly, onSelect }: {
             title={`${r.name} — ${labelFor(mode, r)}`}
             onClick={() => onSelect(r)}
             className={cn(
-              "aspect-square rounded-sm transition-all hover:ring-1 hover:ring-white/30",
+              "aspect-square rounded-sm flex items-center justify-center text-[10px] font-semibold text-zinc-900/80 leading-none transition-all hover:ring-2 hover:ring-white/50",
               dotFor(mode, r)
             )}
-          />
+          >
+            {shortLabel(r.name)}
+          </button>
         ))}
         {rooms.length === 0 && (
           <p className="text-[10px] text-zinc-600 col-span-full py-1">Common space — no rooms</p>
@@ -177,14 +185,14 @@ export default function PropertyPage() {
               {/* View toggle */}
               <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5">
                 <button onClick={() => setViewMode("overview")}
-                  title="All floors"
-                  className={cn("p-1.5 rounded-md transition-colors", viewMode === "overview" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
-                  <LayoutGrid className="h-3.5 w-3.5" />
+                  title="All floors at once"
+                  className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors", viewMode === "overview" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
+                  <LayoutGrid className="h-3.5 w-3.5" /> All floors
                 </button>
                 <button onClick={() => setViewMode("floor")}
-                  title="Floor drill-down"
-                  className={cn("p-1.5 rounded-md transition-colors", viewMode === "floor" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
-                  <Rows3 className="h-3.5 w-3.5" />
+                  title="One floor at a time"
+                  className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors", viewMode === "floor" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
+                  <Rows3 className="h-3.5 w-3.5" /> Single floor
                 </button>
               </div>
             </div>
@@ -211,6 +219,7 @@ export default function PropertyPage() {
                   mode={mode}
                   guestOnly={guestOnly}
                   onSelect={(s) => { setSelected(s); setViewMode("floor"); setFId(f.id); }}
+                  onOpenFloor={() => { setViewMode("floor"); setFId(f.id); setSelected(null); }}
                 />
               ))}
               {floors.length === 0 && (
