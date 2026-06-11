@@ -97,8 +97,12 @@ export default function LandingPage() {
       {/* Hero product shot */}
       <section className="relative z-10 max-w-5xl mx-auto px-6 pb-20">
         <motion.img
-          src="/screenshots/00-property-map.png"
+          src="/screenshots/00-property-map.webp"
           alt="Roomward hotel property map showing color-coded room status across four floors"
+          width={1300}
+          height={874}
+          decoding="async"
+          fetchPriority="high"
           className="w-full h-auto"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -122,7 +126,7 @@ export default function LandingPage() {
               <p className="text-base text-zinc-400 mt-3 leading-relaxed">{s.body}</p>
             </div>
             <div className="md:w-3/5">
-              <img src={`/screenshots/${s.img}.png`} alt={s.alt} loading="lazy" className="w-full h-auto" />
+              <img src={`/screenshots/${s.img}.webp`} alt={s.alt} width={1300} height={877} loading="lazy" decoding="async" className="w-full h-auto" />
             </div>
           </motion.div>
         ))}
