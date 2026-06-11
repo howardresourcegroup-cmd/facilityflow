@@ -11,13 +11,13 @@ const CustomTooltip = ({ active, payload, label }: {
 }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#141425] border border-white/[0.08] rounded-xl p-3 shadow-xl text-xs">
-      <p className="text-zinc-400 font-medium mb-2">{label}</p>
+    <div className="bg-card border border-border rounded-xl p-3 shadow-xl text-xs">
+      <p className="text-muted-foreground font-medium mb-2">{label}</p>
       {payload.map((p) => (
-        <div key={p.name} className="flex items-center gap-2 text-zinc-300">
+        <div key={p.name} className="flex items-center gap-2 text-foreground">
           <span className="h-2 w-2 rounded-full" style={{ background: p.color }} />
           <span className="capitalize">{p.name}:</span>
-          <span className="font-semibold text-zinc-100">{p.value}</span>
+          <span className="font-semibold text-foreground">{p.value}</span>
         </div>
       ))}
     </div>
@@ -29,10 +29,10 @@ export function MetricsChart() {
     <div className="glass-card p-5 h-full">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Issue Trend</p>
-          <p className="text-base font-semibold text-zinc-200 mt-0.5">Last 7 Days</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Issue Trend</p>
+          <p className="text-base font-semibold text-foreground mt-0.5">Last 7 Days</p>
         </div>
-        <div className="flex items-center gap-4 text-xs text-zinc-500">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-indigo-500" />Opened
           </span>

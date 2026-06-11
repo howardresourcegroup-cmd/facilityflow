@@ -15,12 +15,12 @@ const HK_CONFIG: Record<HousekeepingStatus, { label: string; color: string; bg: 
   in_progress:    { label: "Being Cleaned",   color: "text-blue-400",    bg: "bg-blue-500/[0.07]",    border: "border-blue-500/20",    icon: Clock },
   cleaned:        { label: "Awaiting Inspect",color: "text-cyan-400",    bg: "bg-cyan-500/[0.07]",    border: "border-cyan-500/20",    icon: Clock },
   ready:          { label: "Ready",           color: "text-emerald-400", bg: "bg-emerald-500/[0.07]", border: "border-emerald-500/20", icon: CheckCircle2 },
-  out_of_service: { label: "Out of Service",  color: "text-zinc-500",    bg: "bg-zinc-500/[0.07]",    border: "border-zinc-500/20",    icon: WrenchIcon },
+  out_of_service: { label: "Out of Service",  color: "text-muted-foreground",    bg: "bg-zinc-500/[0.07]",    border: "border-border/20",    icon: WrenchIcon },
 };
 
 const CATEGORIES = ["General", "Plumbing", "Electrical", "HVAC", "Furniture", "Cleaning", "Safety", "Other"];
 const PRIORITIES: { value: WorkOrderPriority; label: string; color: string }[] = [
-  { value: "low",      label: "Low",      color: "text-zinc-400" },
+  { value: "low",      label: "Low",      color: "text-muted-foreground" },
   { value: "medium",   label: "Medium",   color: "text-blue-400" },
   { value: "high",     label: "High",     color: "text-amber-400" },
   { value: "critical", label: "Critical", color: "text-red-400" },
@@ -88,7 +88,7 @@ export default function FrontDeskPage() {
             <ConciergeBell className="h-6 w-6 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-zinc-100">Front Desk</h1>
+            <h1 className="text-2xl font-bold text-foreground">Front Desk</h1>
             <div className="flex items-center gap-3 mt-1 text-xs">
               <span className="flex items-center gap-1.5 text-emerald-400">
                 <CheckCircle2 className="h-3.5 w-3.5" />{readyCount} ready for check-in
@@ -96,7 +96,7 @@ export default function FrontDeskPage() {
               <span className="flex items-center gap-1.5 text-amber-400">
                 <BedDouble className="h-3.5 w-3.5" />{dirtyCount} not ready
               </span>
-              <span className="flex items-center gap-1.5 text-zinc-500">
+              <span className="flex items-center gap-1.5 text-muted-foreground">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />Live
               </span>
             </div>
@@ -105,7 +105,7 @@ export default function FrontDeskPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 bg-zinc-800/50 rounded-xl w-fit">
+      <div className="flex gap-1 p-1 bg-card/50 rounded-xl w-fit">
         {[
           { key: "status",  label: "Room Status" },
           { key: "request", label: "Submit Work Order", hidden: !can("work_orders.create") },
@@ -116,8 +116,8 @@ export default function FrontDeskPage() {
             className={cn(
               "px-4 py-2 text-sm font-medium rounded-lg transition-all",
               tab === key
-                ? "bg-zinc-700 text-zinc-100 shadow-sm"
-                : "text-zinc-400 hover:text-zinc-200"
+                ? "bg-zinc-700 text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {label}
@@ -146,7 +146,7 @@ export default function FrontDeskPage() {
                   {list.map((room) => (
                     <span
                       key={room.id}
-                      className="px-2.5 py-1 rounded-lg bg-zinc-900/60 border border-zinc-700/50 text-zinc-200 text-xs font-medium"
+                      className="px-2.5 py-1 rounded-lg bg-card/60 border border-border/50 text-foreground text-xs font-medium"
                     >
                       {room.name}
                     </span>
@@ -156,7 +156,7 @@ export default function FrontDeskPage() {
             );
           })}
           {rooms.length === 0 && (
-            <div className="text-center py-16 text-zinc-500 text-sm">No rooms configured yet.</div>
+            <div className="text-center py-16 text-muted-foreground text-sm">No rooms configured yet.</div>
           )}
         </div>
       )}
@@ -173,23 +173,23 @@ export default function FrontDeskPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Title */}
             <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1.5">Issue title *</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1.5">Issue title *</label>
               <input
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 placeholder="e.g. AC not cooling in Room 204"
                 required
-                className="w-full rounded-lg bg-zinc-800/80 border border-zinc-700 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                className="w-full rounded-lg bg-card/80 border border-border px-3 py-2 text-sm text-foreground placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
               />
             </div>
 
             {/* Room */}
             <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1.5">Room (optional)</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1.5">Room (optional)</label>
               <select
                 value={spaceId}
                 onChange={e => setSpaceId(e.target.value)}
-                className="w-full rounded-lg bg-zinc-800/80 border border-zinc-700 px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                className="w-full rounded-lg bg-card/80 border border-border px-3 py-2 text-sm text-foreground focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
               >
                 <option value="">— No specific room —</option>
                 {rooms.map(r => (
@@ -201,21 +201,21 @@ export default function FrontDeskPage() {
             {/* Category + Priority row */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1.5">Category</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1.5">Category</label>
                 <select
                   value={category}
                   onChange={e => setCategory(e.target.value)}
-                  className="w-full rounded-lg bg-zinc-800/80 border border-zinc-700 px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                  className="w-full rounded-lg bg-card/80 border border-border px-3 py-2 text-sm text-foreground focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
                 >
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-zinc-400 mb-1.5">Priority</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-1.5">Priority</label>
                 <select
                   value={priority}
                   onChange={e => setPriority(e.target.value as WorkOrderPriority)}
-                  className="w-full rounded-lg bg-zinc-800/80 border border-zinc-700 px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
+                  className="w-full rounded-lg bg-card/80 border border-border px-3 py-2 text-sm text-foreground focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30"
                 >
                   {PRIORITIES.map(p => (
                     <option key={p.value} value={p.value}>{p.label}</option>
@@ -226,13 +226,13 @@ export default function FrontDeskPage() {
 
             {/* Description */}
             <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1.5">Description</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1.5">Description</label>
               <textarea
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 placeholder="Describe the issue in more detail…"
                 rows={3}
-                className="w-full rounded-lg bg-zinc-800/80 border border-zinc-700 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 resize-none"
+                className="w-full rounded-lg bg-card/80 border border-border px-3 py-2 text-sm text-foreground placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 resize-none"
               />
             </div>
 

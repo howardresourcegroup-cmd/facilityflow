@@ -79,7 +79,7 @@ export function Header() {
     <header className="h-14 flex items-center gap-3 px-4 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-10 flex-shrink-0">
       {/* Hamburger — mobile only */}
       <button onClick={toggleMobileSidebar}
-        className="md:hidden flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors flex-shrink-0">
+        className="md:hidden flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] transition-colors flex-shrink-0">
         <Menu className="h-5 w-5" />
       </button>
 
@@ -96,7 +96,7 @@ export function Header() {
             animate={{ width: 280, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="relative"
+            className="relative max-w-[calc(100vw-9rem)] sm:max-w-none"
           >
             <Input
               autoFocus
@@ -113,7 +113,7 @@ export function Header() {
                 ) : results.map((r) => (
                   <Link key={r.href} href={r.href} onMouseDown={(e) => e.preventDefault()}
                     onClick={() => { setSearchOpen(false); setQuery(""); }}
-                    className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-white/[0.06] transition-colors">
+                    className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 hover:bg-foreground/[0.06] transition-colors">
                     <r.icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                     <span className="text-xs text-foreground truncate flex-1">{r.label}</span>
                     <span className="text-[10px] text-muted-foreground shrink-0">{r.kind}</span>
@@ -127,7 +127,7 @@ export function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onClick={() => setSearchOpen(true)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] transition-colors"
           >
             <Search className="h-4 w-4" />
           </motion.button>
@@ -137,7 +137,7 @@ export function Header() {
       {/* Notifications */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="relative flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40">
+          <button className="relative flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40">
             <Bell className="h-4 w-4" />
             {notificationCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">

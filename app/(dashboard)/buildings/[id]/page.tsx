@@ -54,10 +54,10 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-1.5 text-xs text-zinc-500">
-        <Link href="/buildings" className="hover:text-zinc-300 transition-colors">Buildings</Link>
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Link href="/buildings" className="hover:text-foreground transition-colors">Buildings</Link>
         <ChevronRight className="h-3 w-3" />
-        <span className="text-zinc-300">{building.name}</span>
+        <span className="text-foreground">{building.name}</span>
       </div>
 
       <div className="flex items-start justify-between">
@@ -66,8 +66,8 @@ export default function BuildingDetailPage({ params }: { params: Promise<{ id: s
             <Building2 className="h-6 w-6 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-zinc-100">{building.name}</h1>
-            <p className="text-sm text-zinc-500 mt-0.5">
+            <h1 className="text-2xl font-bold text-foreground">{building.name}</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
               {building.address && `${building.address}, `}{building.city}, {building.state}
               {" · "}{floors.length} floor{floors.length !== 1 ? "s" : ""}
               {" · "}{buildingSpaces.length} spaces

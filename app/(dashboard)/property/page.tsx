@@ -53,8 +53,8 @@ function FloorMapTile({ floor, spaces, mode, guestOnly, onSelect, onOpenFloor }:
   return (
     <div className="glass-card p-3 space-y-2">
       <button onClick={onOpenFloor} className="flex w-full items-center justify-between group">
-        <h3 className="text-xs font-semibold text-zinc-300 group-hover:text-indigo-300 transition-colors">{floor.name}</h3>
-        <span className="text-[10px] text-zinc-600 group-hover:text-indigo-300 transition-colors">{rooms.length} rooms ›</span>
+        <h3 className="text-xs font-semibold text-foreground group-hover:text-indigo-300 transition-colors">{floor.name}</h3>
+        <span className="text-[10px] text-muted-foreground group-hover:text-indigo-300 transition-colors">{rooms.length} rooms ›</span>
       </button>
       <div
         className="grid gap-1"
@@ -74,7 +74,7 @@ function FloorMapTile({ floor, spaces, mode, guestOnly, onSelect, onOpenFloor }:
           </button>
         ))}
         {rooms.length === 0 && (
-          <p className="text-[10px] text-zinc-600 col-span-full py-1">Common space — no rooms</p>
+          <p className="text-[10px] text-muted-foreground col-span-full py-1">Common space — no rooms</p>
         )}
       </div>
     </div>
@@ -137,8 +137,8 @@ export default function PropertyPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-100">Property Map</h1>
-        <p className="text-sm text-zinc-500 mt-1">Live status across every room, floor, and building.</p>
+        <h1 className="text-2xl font-bold text-foreground">Property Map</h1>
+        <p className="text-sm text-muted-foreground mt-1">Live status across every room, floor, and building.</p>
       </div>
 
       {/* Buildings */}
@@ -146,7 +146,7 @@ export default function PropertyPage() {
         {buildings.map((b) => (
           <button key={b.id} onClick={() => setBId(b.id)}
             className={cn("inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border transition-colors",
-              bId === b.id ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-200" : "border-white/[0.08] text-zinc-400 hover:border-white/20")}>
+              bId === b.id ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-200" : "border-border text-muted-foreground hover:border-white/20")}>
             <Building2 className="h-3.5 w-3.5" /> {b.name}
           </button>
         ))}
@@ -157,11 +157,11 @@ export default function PropertyPage() {
           {/* Controls bar */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Mode */}
-            <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5">
+            <div className="inline-flex rounded-lg border border-border p-0.5">
               {(["occupancy", "housekeeping", "status"] as Mode[]).map((m) => (
                 <button key={m} onClick={() => setMode(m)}
                   className={cn("text-xs px-3 py-1.5 rounded-md capitalize transition-colors",
-                    mode === m ? "bg-indigo-500/20 text-indigo-200" : "text-zinc-500 hover:text-zinc-300")}>
+                    mode === m ? "bg-indigo-500/20 text-indigo-200" : "text-muted-foreground hover:text-foreground")}>
                   {m}
                 </button>
               ))}
@@ -169,7 +169,7 @@ export default function PropertyPage() {
 
             <div className="flex items-center gap-3">
               {/* Stats */}
-              <span className="text-xs text-zinc-500 flex items-center gap-3 hidden sm:flex">
+              <span className="text-xs text-muted-foreground flex items-center gap-3 hidden sm:flex">
                 <span className="text-emerald-400">{counts.vacant} vacant</span>
                 <span className="text-red-400">{counts.occupied} occupied</span>
                 <span className="text-red-300">{counts.dirty} dirty</span>
@@ -178,20 +178,20 @@ export default function PropertyPage() {
               {/* Guest filter */}
               <button onClick={() => setGuestOnly((v) => !v)}
                 className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border transition-colors",
-                  guestOnly ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-200" : "border-white/[0.08] text-zinc-400")}>
+                  guestOnly ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-200" : "border-border text-muted-foreground")}>
                 <Filter className="h-3 w-3" /> {guestOnly ? "Guest rooms" : "All spaces"}
               </button>
 
               {/* View toggle */}
-              <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5">
+              <div className="inline-flex rounded-lg border border-border p-0.5">
                 <button onClick={() => setViewMode("overview")}
                   title="All floors at once"
-                  className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors", viewMode === "overview" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
+                  className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors", viewMode === "overview" ? "bg-foreground/[0.08] text-foreground" : "text-muted-foreground hover:text-foreground")}>
                   <LayoutGrid className="h-3.5 w-3.5" /> All floors
                 </button>
                 <button onClick={() => setViewMode("floor")}
                   title="One floor at a time"
-                  className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors", viewMode === "floor" ? "bg-white/[0.08] text-zinc-200" : "text-zinc-500 hover:text-zinc-300")}>
+                  className={cn("inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors", viewMode === "floor" ? "bg-foreground/[0.08] text-foreground" : "text-muted-foreground hover:text-foreground")}>
                   <Rows3 className="h-3.5 w-3.5" /> Single floor
                 </button>
               </div>
@@ -201,7 +201,7 @@ export default function PropertyPage() {
           {/* Legend */}
           <div className="flex flex-wrap gap-3">
             {legend.map(({ color, label }) => (
-              <span key={label} className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+              <span key={label} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 <span className={cn("h-2.5 w-2.5 rounded-sm", color)} />
                 {label}
               </span>
@@ -223,7 +223,7 @@ export default function PropertyPage() {
                 />
               ))}
               {floors.length === 0 && (
-                <p className="text-sm text-zinc-600 col-span-2 py-8 text-center">No floors on this building yet.</p>
+                <p className="text-sm text-muted-foreground col-span-2 py-8 text-center">No floors on this building yet.</p>
               )}
             </div>
           )}
@@ -233,34 +233,34 @@ export default function PropertyPage() {
             <>
               {/* Floor tabs */}
               <div className="flex flex-wrap items-center gap-2">
-                <Layers className="h-4 w-4 text-zinc-600" />
+                <Layers className="h-4 w-4 text-muted-foreground" />
                 {floors.map((f) => (
                   <button key={f.id} onClick={() => setFId(f.id)}
                     className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                      fId === f.id ? "bg-white/[0.08] border-white/20 text-zinc-200" : "border-white/[0.06] text-zinc-500 hover:text-zinc-300")}>
+                      fId === f.id ? "bg-foreground/[0.08] border-white/20 text-foreground" : "border-border text-muted-foreground hover:text-foreground")}>
                     {f.name}
                   </button>
                 ))}
-                {floors.length === 0 && <span className="text-xs text-zinc-600">No floors yet.</span>}
+                {floors.length === 0 && <span className="text-xs text-muted-foreground">No floors yet.</span>}
               </div>
 
               {/* Room grid + detail panel */}
-              <div className="flex gap-4 items-start">
-                <div className="flex-1 grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-2">
+              <div className="flex flex-col lg:flex-row gap-4 items-start">
+                <div className="w-full flex-1 grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-2">
                   {floorRooms.map((r) => (
                     <motion.button key={r.id} layout onClick={() => setSelected(r)}
                       initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
-                      className={cn("text-left glass-card p-2.5 hover:border-white/[0.15] transition-colors",
+                      className={cn("text-left glass-card p-2.5 hover:border-border transition-colors",
                         selected?.id === r.id && "border-indigo-500/50")}>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-zinc-200">{r.name}</span>
+                        <span className="text-sm font-medium text-foreground">{r.name}</span>
                         <span className={cn("h-2.5 w-2.5 rounded-full shrink-0", dotFor(mode, r))} title={labelFor(mode, r)} />
                       </div>
                       <div className="mt-1.5"><OccupancyBadge occupancy={r.occupancy} /></div>
                     </motion.button>
                   ))}
                   {floorRooms.length === 0 && (
-                    <p className="text-sm text-zinc-600 col-span-full py-8 text-center">
+                    <p className="text-sm text-muted-foreground col-span-full py-8 text-center">
                       No rooms match — try toggling &quot;All spaces&quot; or pick another floor.
                     </p>
                   )}
@@ -268,15 +268,15 @@ export default function PropertyPage() {
 
                 {selected && (
                   <motion.div initial={{ x: 16, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-                    className="w-64 shrink-0 glass-card p-4 space-y-3">
+                    className="w-full lg:w-64 shrink-0 glass-card p-4 space-y-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-zinc-100">{selected.name}</h3>
-                      <button onClick={() => setSelected(null)} className="text-zinc-600 hover:text-zinc-400 text-xs">✕</button>
+                      <h3 className="text-sm font-semibold text-foreground">{selected.name}</h3>
+                      <button onClick={() => setSelected(null)} className="text-muted-foreground hover:text-muted-foreground text-xs">✕</button>
                     </div>
-                    <p className="text-[11px] text-zinc-500 uppercase tracking-wider">{selected.type.replace(/_/g, " ")}</p>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider">{selected.type.replace(/_/g, " ")}</p>
                     <div className="space-y-2 text-xs">
                       <Row label="Occupancy"><OccupancyBadge occupancy={selected.occupancy} /></Row>
-                      <Row label="Housekeeping"><span className="capitalize text-zinc-300">{(selected.housekeeping_status ?? "ready").replace(/_/g, " ")}</span></Row>
+                      <Row label="Housekeeping"><span className="capitalize text-foreground">{(selected.housekeeping_status ?? "ready").replace(/_/g, " ")}</span></Row>
                       <Row label="Condition"><span className={SPACE_STATUS_CONFIG[selected.status]?.color}>{SPACE_STATUS_CONFIG[selected.status]?.label}</span></Row>
                     </div>
                     <Link href="/work-orders/new" className="btn-secondary w-full justify-center text-xs h-8">
@@ -296,7 +296,7 @@ export default function PropertyPage() {
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-zinc-500">{label}</span>
+      <span className="text-muted-foreground">{label}</span>
       {children}
     </div>
   );

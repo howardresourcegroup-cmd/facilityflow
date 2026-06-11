@@ -58,7 +58,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-zinc-100">Settings</h1>
+      <h1 className="text-2xl font-bold text-foreground">Settings</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar nav */}
@@ -71,7 +71,7 @@ export default function SettingsPage() {
                 "w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-left transition-all",
                 activeSection === id
                   ? "bg-indigo-500/15 text-indigo-300"
-                  : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.05]"
+                  : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -85,7 +85,7 @@ export default function SettingsPage() {
           {activeSection === "org" && (
             <>
               <div>
-                <h2 className="text-base font-semibold text-zinc-200 mb-4">Organization Settings</h2>
+                <h2 className="text-base font-semibold text-foreground mb-4">Organization Settings</h2>
                 <div className="space-y-4">
                   <div className="space-y-1.5">
                     <Label>Organization Name</Label>
@@ -94,7 +94,7 @@ export default function SettingsPage() {
                   <div className="space-y-1.5">
                     <Label>URL Slug</Label>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-zinc-500 shrink-0">roomward.app/</span>
+                      <span className="text-sm text-muted-foreground shrink-0">roomward.app/</span>
                       <Input value={org.slug} onChange={(e) => setOrg((o) => ({ ...o, slug: e.target.value }))} />
                     </div>
                   </div>
@@ -111,11 +111,11 @@ export default function SettingsPage() {
               </div>
               <Separator />
               <div>
-                <h3 className="text-sm font-semibold text-zinc-300 mb-1">Plan</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-1">Plan</h3>
                 <div className="flex items-center justify-between rounded-xl bg-indigo-500/10 border border-indigo-500/20 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold text-indigo-300">Pro Plan</p>
-                    <p className="text-xs text-zinc-500 mt-0.5">Unlimited buildings · 25 team members · All integrations</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Unlimited buildings · 25 team members · All integrations</p>
                   </div>
                   <Button size="sm" variant="outline">Manage</Button>
                 </div>
@@ -125,14 +125,14 @@ export default function SettingsPage() {
 
           {activeSection === "billing" && (
             <div>
-              <h2 className="text-base font-semibold text-zinc-200 mb-4">Billing &amp; Plan</h2>
+              <h2 className="text-base font-semibold text-foreground mb-4">Billing &amp; Plan</h2>
               {billing.isActive ? (
                 <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4">
                   <div className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-emerald-400" />
                     <p className="text-sm font-semibold text-emerald-300">Roomward Pro — active</p>
                   </div>
-                  <p className="text-xs text-zinc-500 mt-1">Your subscription is active. Thanks for being a customer.</p>
+                  <p className="text-xs text-muted-foreground mt-1">Your subscription is active. Thanks for being a customer.</p>
                 </div>
               ) : (
                 <div className="rounded-xl bg-indigo-500/10 border border-indigo-500/20 p-5">
@@ -141,7 +141,7 @@ export default function SettingsPage() {
                       <p className="text-sm font-semibold text-indigo-300">
                         {billing.isExpired ? "Trial ended" : `Free trial — ${billing.daysLeft} ${billing.daysLeft === 1 ? "day" : "days"} left`}
                       </p>
-                      <p className="text-xs text-zinc-500 mt-1">Roomward Standard · $149/mo per property · cancel anytime.</p>
+                      <p className="text-xs text-muted-foreground mt-1">Roomward Standard · $149/mo per property · cancel anytime.</p>
                     </div>
                     <Button onClick={() => setShowUpgrade(true)}>
                       <Sparkles className="h-4 w-4" />
@@ -160,17 +160,17 @@ export default function SettingsPage() {
 
           {activeSection === "integrations" && (
             <div>
-              <h2 className="text-base font-semibold text-zinc-200 mb-4">Integrations</h2>
+              <h2 className="text-base font-semibold text-foreground mb-4">Integrations</h2>
               <div className="space-y-3">
                 {INTEGRATIONS.map((i) => (
-                  <div key={i.name} className="flex items-center justify-between rounded-xl bg-white/[0.02] border border-white/[0.06] px-4 py-3 hover:bg-white/[0.04] transition-colors">
+                  <div key={i.name} className="flex items-center justify-between rounded-xl bg-foreground/[0.02] border border-border px-4 py-3 hover:bg-foreground/[0.04] transition-colors">
                     <div>
-                      <p className="text-sm font-medium text-zinc-200">{i.name}</p>
-                      <p className="text-xs text-zinc-500 mt-0.5">{i.desc}</p>
+                      <p className="text-sm font-medium text-foreground">{i.name}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{i.desc}</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className={cn("badge border text-xs", i.badgeColor)}>{i.badge}</span>
-                      <ChevronRight className="h-4 w-4 text-zinc-600" />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     </div>
                   </div>
                 ))}
@@ -180,8 +180,8 @@ export default function SettingsPage() {
 
           {activeSection === "team" && (
             <div className="space-y-1">
-              <h2 className="text-base font-semibold text-zinc-200">Team Members</h2>
-              <p className="text-xs text-zinc-500 mb-4">Invite staff, change roles, or remove access.</p>
+              <h2 className="text-base font-semibold text-foreground">Team Members</h2>
+              <p className="text-xs text-muted-foreground mb-4">Invite staff, change roles, or remove access.</p>
               <TeamManager />
             </div>
           )}
@@ -189,8 +189,8 @@ export default function SettingsPage() {
           {activeSection === "notifs" && (
             <div className="space-y-5">
               <div>
-                <h2 className="text-base font-semibold text-zinc-200">Notifications</h2>
-                <p className="text-xs text-zinc-500 mt-0.5">Choose what activity sends you an alert.</p>
+                <h2 className="text-base font-semibold text-foreground">Notifications</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Choose what activity sends you an alert.</p>
               </div>
               {[
                 { label: "New work order created", desc: "When anyone logs a new maintenance request", defaultOn: true },
@@ -208,8 +208,8 @@ export default function SettingsPage() {
           {activeSection === "security" && (
             <div className="space-y-5">
               <div>
-                <h2 className="text-base font-semibold text-zinc-200">Security</h2>
-                <p className="text-xs text-zinc-500 mt-0.5">Manage your password and account access.</p>
+                <h2 className="text-base font-semibold text-foreground">Security</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Manage your password and account access.</p>
               </div>
               <ChangePasswordForm />
             </div>
@@ -225,16 +225,16 @@ function AppearancePanel() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-base font-semibold text-zinc-200">Appearance</h2>
-        <p className="text-xs text-zinc-500 mt-0.5">Personalize how Roomward looks. Saved to this device.</p>
+        <h2 className="text-base font-semibold text-foreground">Appearance</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">Personalize how Roomward looks. Saved to this device.</p>
       </div>
 
       {/* Mode */}
       <div className="space-y-2.5">
-        <Label className="text-xs text-zinc-400">Theme</Label>
+        <Label className="text-xs text-muted-foreground">Theme</Label>
         <div className="grid grid-cols-2 gap-3 max-w-sm">
           {([
-            { key: "dark",  label: "Dark",  icon: Moon, preview: "bg-[#0f0f1a]" },
+            { key: "dark",  label: "Dark",  icon: Moon, preview: "bg-card" },
             { key: "light", label: "Light (beta)", icon: Sun,  preview: "bg-slate-100" },
           ] as const).map(({ key, label, icon: Icon, preview }) => (
             <button
@@ -244,13 +244,13 @@ function AppearancePanel() {
                 "flex items-center gap-3 rounded-xl border p-3 transition-all",
                 mode === key
                   ? "border-accent-500 bg-accent-500/10"
-                  : "border-white/[0.08] hover:border-white/[0.16]"
+                  : "border-border hover:border-border"
               )}
             >
               <span className={cn("h-8 w-8 rounded-lg border border-white/10 flex items-center justify-center", preview)}>
-                <Icon className={cn("h-4 w-4", key === "light" ? "text-slate-600" : "text-zinc-400")} />
+                <Icon className={cn("h-4 w-4", key === "light" ? "text-slate-600" : "text-muted-foreground")} />
               </span>
-              <span className="text-sm font-medium text-zinc-200">{label}</span>
+              <span className="text-sm font-medium text-foreground">{label}</span>
               {mode === key && <Check className="h-4 w-4 text-accent-400 ml-auto" />}
             </button>
           ))}
@@ -259,7 +259,7 @@ function AppearancePanel() {
 
       {/* Accent */}
       <div className="space-y-2.5">
-        <Label className="text-xs text-zinc-400">Accent color</Label>
+        <Label className="text-xs text-muted-foreground">Accent color</Label>
         <div className="flex flex-wrap gap-2.5">
           {(Object.keys(ACCENTS) as AccentKey[]).map((key) => (
             <button
@@ -276,7 +276,7 @@ function AppearancePanel() {
             </button>
           ))}
         </div>
-        <p className="text-[11px] text-zinc-600">Buttons, links, and highlights use this color.</p>
+        <p className="text-[11px] text-muted-foreground">Buttons, links, and highlights use this color.</p>
       </div>
     </div>
   );
@@ -285,10 +285,10 @@ function AppearancePanel() {
 function NotifRow({ label, desc, defaultOn }: { label: string; desc: string; defaultOn: boolean }) {
   const [on, setOn] = useState(defaultOn);
   return (
-    <div className="flex items-center justify-between py-3 border-b border-white/[0.05] last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-border last:border-0">
       <div>
-        <p className="text-sm text-zinc-200">{label}</p>
-        <p className="text-xs text-zinc-500 mt-0.5">{desc}</p>
+        <p className="text-sm text-foreground">{label}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
       </div>
       <button
         onClick={() => setOn(v => !v)}
@@ -330,7 +330,7 @@ function ChangePasswordForm() {
         { label: "Confirm new password", key: "confirm" },
       ].map(({ label, key }) => (
         <div key={key} className="space-y-1.5">
-          <Label className="text-xs text-zinc-400">{label}</Label>
+          <Label className="text-xs text-muted-foreground">{label}</Label>
           <Input
             type="password"
             value={form[key as keyof typeof form]}

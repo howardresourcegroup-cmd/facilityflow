@@ -25,7 +25,7 @@ export function WorkOrderCard({ order, index = 0 }: WorkOrderCardProps) {
     >
       <Link
         href={`/work-orders/${order.id}`}
-        className="group flex items-start gap-4 glass-card px-5 py-4 hover:border-white/[0.12] hover:bg-[#141425] transition-all duration-200"
+        className="group flex items-start gap-4 glass-card px-5 py-4 hover:border-border hover:bg-card transition-all duration-200"
       >
         {/* Priority stripe — pCfg.dot is a static color class (e.g. bg-red-400) */}
         <div className={cn("w-1 self-stretch rounded-full shrink-0", pCfg.dot)} />
@@ -33,14 +33,14 @@ export function WorkOrderCard({ order, index = 0 }: WorkOrderCardProps) {
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-2">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors leading-snug line-clamp-1">
+            <h3 className="text-sm font-medium text-foreground group-hover:text-white transition-colors leading-snug line-clamp-1">
               {order.title}
             </h3>
-            <ArrowRight className="h-4 w-4 text-zinc-700 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all shrink-0 mt-0.5" />
+            <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-muted-foreground group-hover:translate-x-1 transition-all shrink-0 mt-0.5" />
           </div>
 
           {/* Meta row */}
-          <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
             {order.space?.name && (
               <span className="flex items-center gap-1.5">
                 <MapPin className="h-3 w-3" />
@@ -87,13 +87,13 @@ export function WorkOrderCard({ order, index = 0 }: WorkOrderCardProps) {
                     {getInitials(order.assignee.full_name)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-xs text-zinc-500">{order.assignee.full_name.split(" ")[0]}</span>
+                <span className="text-xs text-muted-foreground">{order.assignee.full_name.split(" ")[0]}</span>
               </div>
             ) : (
-              <span className="text-xs text-zinc-600">Unassigned</span>
+              <span className="text-xs text-muted-foreground">Unassigned</span>
             )}
-            <span className="text-xs text-zinc-600">·</span>
-            <span className="text-xs text-zinc-600">{timeAgo(order.created_at)}</span>
+            <span className="text-xs text-muted-foreground">·</span>
+            <span className="text-xs text-muted-foreground">{timeAgo(order.created_at)}</span>
           </div>
         </div>
       </Link>

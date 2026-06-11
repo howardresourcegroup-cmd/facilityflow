@@ -32,7 +32,7 @@ function TechCard({ tech, index, workOrders }: { tech: Profile; index: number; w
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.06 }}
-      className="glass-card p-5 space-y-4 hover:border-white/[0.1] transition-all"
+      className="glass-card p-5 space-y-4 hover:border-border transition-all"
     >
       {/* Header */}
       <div className="flex items-start justify-between">
@@ -47,8 +47,8 @@ function TechCard({ tech, index, workOrders }: { tech: Profile; index: number; w
             )} />
           </div>
           <div>
-            <p className="text-sm font-semibold text-zinc-200">{tech.full_name}</p>
-            <p className="text-xs text-zinc-500 capitalize">{tech.role}</p>
+            <p className="text-sm font-semibold text-foreground">{tech.full_name}</p>
+            <p className="text-xs text-muted-foreground capitalize">{tech.role}</p>
           </div>
         </div>
         <Badge variant={tech.is_available ? "success" : "warning"}>
@@ -58,19 +58,19 @@ function TechCard({ tech, index, workOrders }: { tech: Profile; index: number; w
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="rounded-lg bg-white/[0.03] border border-white/[0.05] p-2.5 text-center">
-          <p className="text-lg font-bold text-zinc-200 tabular-nums">{assignedOrders.length}</p>
-          <p className="text-[10px] text-zinc-600 mt-0.5">Active</p>
+        <div className="rounded-lg bg-foreground/[0.03] border border-border p-2.5 text-center">
+          <p className="text-lg font-bold text-foreground tabular-nums">{assignedOrders.length}</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Active</p>
         </div>
-        <div className="rounded-lg bg-white/[0.03] border border-white/[0.05] p-2.5 text-center">
-          <p className="text-lg font-bold text-zinc-200 tabular-nums">{completedToday}</p>
-          <p className="text-[10px] text-zinc-600 mt-0.5">Closed</p>
+        <div className="rounded-lg bg-foreground/[0.03] border border-border p-2.5 text-center">
+          <p className="text-lg font-bold text-foreground tabular-nums">{completedToday}</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Closed</p>
         </div>
-        <div className="rounded-lg bg-white/[0.03] border border-white/[0.05] p-2.5 text-center">
-          <p className="text-lg font-bold text-zinc-200 tabular-nums">
+        <div className="rounded-lg bg-foreground/[0.03] border border-border p-2.5 text-center">
+          <p className="text-lg font-bold text-foreground tabular-nums">
             {assignedOrders.filter((w) => w.priority === "critical" || w.priority === "high").length}
           </p>
-          <p className="text-[10px] text-zinc-600 mt-0.5">Urgent</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Urgent</p>
         </div>
       </div>
 
@@ -78,13 +78,13 @@ function TechCard({ tech, index, workOrders }: { tech: Profile; index: number; w
       {assignedOrders[0] && (
         <div className="rounded-lg bg-indigo-500/10 border border-indigo-500/20 px-3 py-2.5">
           <p className="text-[10px] text-indigo-400 font-medium uppercase tracking-wider mb-1">Current Task</p>
-          <p className="text-xs text-zinc-300 line-clamp-1">{assignedOrders[0].title}</p>
+          <p className="text-xs text-foreground line-clamp-1">{assignedOrders[0].title}</p>
         </div>
       )}
 
       {/* Phone */}
       {tech.phone && (
-        <div className="flex items-center gap-2 text-xs text-zinc-600">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Phone className="h-3 w-3" />
           {tech.phone}
         </div>
@@ -120,7 +120,7 @@ export default function TechniciansPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">Technicians</h1>
+          <h1 className="text-2xl font-bold text-foreground">Technicians</h1>
           <div className="flex items-center gap-3 mt-1.5 text-xs">
             <span className="flex items-center gap-1.5 text-emerald-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -152,8 +152,8 @@ export default function TechniciansPage() {
               <Icon className={cn("h-4.5 w-4.5", color)} />
             </div>
             <div>
-              <p className="text-lg font-bold text-zinc-200 tabular-nums">{value}</p>
-              <p className="text-xs text-zinc-500">{label}</p>
+              <p className="text-lg font-bold text-foreground tabular-nums">{value}</p>
+              <p className="text-xs text-muted-foreground">{label}</p>
             </div>
           </div>
         ))}
@@ -212,17 +212,17 @@ function InviteModal({ open, onClose }: { open: boolean; onClose: () => void }) 
         <DialogHeader><DialogTitle>{result ? "Teammate added" : "Invite Teammate"}</DialogTitle></DialogHeader>
         {result ? (
           <div className="px-6 pb-2 space-y-3">
-            <p className="text-sm text-zinc-400">
-              <span className="text-zinc-200">{result.email}</span> can now sign in. Share these temporary credentials —
+            <p className="text-sm text-muted-foreground">
+              <span className="text-foreground">{result.email}</span> can now sign in. Share these temporary credentials —
               they should change the password after first login.
             </p>
-            <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] p-3 space-y-1.5 font-mono text-xs">
-              <div className="flex justify-between"><span className="text-zinc-500">email</span><span className="text-zinc-200">{result.email}</span></div>
+            <div className="rounded-lg bg-foreground/[0.03] border border-border p-3 space-y-1.5 font-mono text-xs">
+              <div className="flex justify-between"><span className="text-muted-foreground">email</span><span className="text-foreground">{result.email}</span></div>
               <div className="flex justify-between items-center">
-                <span className="text-zinc-500">password</span>
-                <span className="flex items-center gap-2 text-zinc-200">
+                <span className="text-muted-foreground">password</span>
+                <span className="flex items-center gap-2 text-foreground">
                   {result.temp_password}
-                  <button onClick={() => navigator.clipboard.writeText(result.temp_password)} className="text-zinc-500 hover:text-zinc-300"><Copy className="h-3 w-3" /></button>
+                  <button onClick={() => navigator.clipboard.writeText(result.temp_password)} className="text-muted-foreground hover:text-foreground"><Copy className="h-3 w-3" /></button>
                 </span>
               </div>
             </div>
@@ -232,15 +232,15 @@ function InviteModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           <form onSubmit={submit}>
             <div className="px-6 pb-2 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Full Name</label>
+                <label className="text-xs text-muted-foreground">Full Name</label>
                 <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Alex Rivera" autoFocus />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Email *</label>
+                <label className="text-xs text-muted-foreground">Email *</label>
                 <Input type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="alex@property.com" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Role</label>
+                <label className="text-xs text-muted-foreground">Role</label>
                 <Select value={form.role} onValueChange={(v) => setForm((f) => ({ ...f, role: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>

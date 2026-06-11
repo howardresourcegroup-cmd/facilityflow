@@ -30,10 +30,10 @@ export function BuildingStack({
     <div className="glass-card p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Building Overview</p>
-          <p className="text-base font-semibold text-zinc-200 mt-0.5">Live Status by Floor</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Building Overview</p>
+          <p className="text-base font-semibold text-foreground mt-0.5">Live Status by Floor</p>
         </div>
-        <Layers className="h-4 w-4 text-zinc-600" />
+        <Layers className="h-4 w-4 text-muted-foreground" />
       </div>
 
       <div className="space-y-2">
@@ -57,7 +57,7 @@ export function BuildingStack({
                 "group rounded-xl border p-3 cursor-pointer transition-all duration-200",
                 isActive
                   ? "border-indigo-500/40 bg-indigo-500/[0.07]"
-                  : "border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.04]",
+                  : "border-border bg-foreground/[0.02] hover:border-border hover:bg-foreground/[0.04]",
                 hasEmergency && "border-red-500/40 bg-red-500/[0.06]"
               )}
             >
@@ -66,11 +66,11 @@ export function BuildingStack({
                 <div className="flex items-center gap-2 min-w-0">
                   <span className={cn(
                     "flex h-6 w-6 items-center justify-center rounded-md text-[10px] font-bold shrink-0",
-                    isActive ? "bg-indigo-500/25 text-indigo-300" : "bg-white/[0.06] text-zinc-400"
+                    isActive ? "bg-indigo-500/25 text-indigo-300" : "bg-foreground/[0.06] text-muted-foreground"
                   )}>
                     {floor.level}
                   </span>
-                  <span className={cn("text-sm font-medium truncate", isActive ? "text-indigo-200" : "text-zinc-300")}>
+                  <span className={cn("text-sm font-medium truncate", isActive ? "text-indigo-200" : "text-foreground")}>
                     {floor.name}
                   </span>
                   {hasEmergency && (
@@ -89,7 +89,7 @@ export function BuildingStack({
                   </span>
                   <ChevronRight className={cn(
                     "h-3.5 w-3.5 transition-transform",
-                    isActive ? "text-indigo-400" : "text-zinc-600 group-hover:translate-x-0.5"
+                    isActive ? "text-indigo-400" : "text-muted-foreground group-hover:translate-x-0.5"
                   )} />
                 </div>
               </div>
@@ -122,7 +122,7 @@ export function BuildingStack({
 
               {/* Issue summary */}
               {issues.length > 0 && (
-                <p className="text-[10px] text-zinc-500 mt-2">
+                <p className="text-[10px] text-muted-foreground mt-2">
                   {issues.length} {issues.length === 1 ? "space needs" : "spaces need"} attention
                 </p>
               )}
@@ -132,11 +132,11 @@ export function BuildingStack({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-4 pt-3 border-t border-white/[0.05]">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-4 pt-3 border-t border-border">
         {(["operational", "cleaning_required", "needs_maintenance", "offline", "emergency"] as SpaceStatus[]).map((s) => {
           const cfg = SPACE_STATUS_CONFIG[s];
           return (
-            <span key={s} className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+            <span key={s} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
               <span className={cn("h-2 w-2 rounded-sm border", cfg.bg, cfg.border)} />
               {cfg.label}
             </span>

@@ -69,18 +69,18 @@ export function RoomMasterPanel() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-zinc-200">RoomMaster</p>
+              <p className="text-sm font-semibold text-foreground">RoomMaster</p>
               <span className={cn(
                 "flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-md border",
                 hasSync
                   ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400"
-                  : "bg-zinc-700/40 border-zinc-600/40 text-zinc-500"
+                  : "bg-zinc-700/40 border-border/40 text-muted-foreground"
               )}>
                 <span className={cn("h-1.5 w-1.5 rounded-full", hasSync ? "bg-emerald-400" : "bg-zinc-600")} />
                 {hasSync ? "Connected" : "Not synced"}
               </span>
             </div>
-            <p className="text-[11px] text-zinc-500">
+            <p className="text-[11px] text-muted-foreground">
               {last_synced
                 ? `Last synced ${timeAgo(last_synced)} · ${rooms_synced} rooms`
                 : "Click Sync to pull room statuses from RoomMaster"}
@@ -130,10 +130,10 @@ export function RoomMasterPanel() {
                 <RefreshCw className="h-4 w-4 text-blue-400 animate-spin shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-blue-300 font-medium">Pulling from RoomMaster…</p>
-                  <p className="text-xs text-zinc-500 mt-0.5">Fetching housekeeping statuses for all rooms</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Fetching housekeeping statuses for all rooms</p>
                 </div>
               </div>
-              <div className="mt-2 h-1 w-full rounded-full bg-white/[0.06] overflow-hidden">
+              <div className="mt-2 h-1 w-full rounded-full bg-foreground/[0.06] overflow-hidden">
                 <motion.div
                   className="h-full bg-blue-500 rounded-full"
                   initial={{ width: "0%" }}
@@ -159,13 +159,13 @@ export function RoomMasterPanel() {
               {/* Summary */}
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { label: "Rooms synced",  value: lastResult.changes.length,         color: "text-zinc-300" },
+                  { label: "Rooms synced",  value: lastResult.changes.length,         color: "text-foreground" },
                   { label: "Need attention",value: actionableChanges.length,           color: "text-amber-400" },
                   { label: "Orders created",value: lastResult.work_orders_created,     color: "text-indigo-400" },
                 ].map(({ label, value, color }) => (
-                  <div key={label} className="rounded-lg bg-white/[0.03] border border-white/[0.05] p-2.5 text-center">
+                  <div key={label} className="rounded-lg bg-foreground/[0.03] border border-border p-2.5 text-center">
                     <p className={cn("text-xl font-bold tabular-nums", color)}>{value}</p>
-                    <p className="text-[10px] text-zinc-600 mt-0.5">{label}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
                   </div>
                 ))}
               </div>
@@ -173,7 +173,7 @@ export function RoomMasterPanel() {
               {/* Actionable changes */}
               {actionableChanges.length > 0 && (
                 <div className="space-y-1.5">
-                  <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
                     Rooms requiring action
                   </p>
                   {actionableChanges.slice(0, 5).map((c) => {
@@ -186,7 +186,7 @@ export function RoomMasterPanel() {
                       >
                         <Icon className={cn("h-3.5 w-3.5 shrink-0", cfg.color)} />
                         <span className={cn("font-medium", cfg.color)}>{c.space_name}</span>
-                        <span className="text-zinc-500 flex-1">{c.pms_status}</span>
+                        <span className="text-muted-foreground flex-1">{c.pms_status}</span>
                         {c.create_work_order && (
                           <span className="text-[10px] bg-indigo-500/15 text-indigo-400 border border-indigo-500/20 px-1.5 py-0.5 rounded-md">
                             WO created
@@ -196,7 +196,7 @@ export function RoomMasterPanel() {
                     );
                   })}
                   {actionableChanges.length > 5 && (
-                    <p className="text-xs text-zinc-600 text-center">
+                    <p className="text-xs text-muted-foreground text-center">
                       +{actionableChanges.length - 5} more — view in Work Orders
                     </p>
                   )}
@@ -212,7 +212,7 @@ export function RoomMasterPanel() {
 
               <button
                 onClick={() => setExpanded(false)}
-                className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors w-full text-center pt-1"
+                className="text-xs text-muted-foreground hover:text-muted-foreground transition-colors w-full text-center pt-1"
               >
                 Collapse
               </button>
@@ -228,7 +228,7 @@ export function RoomMasterPanel() {
           onClick={() => lastResult && setExpanded(true)}
         >
           <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-          <span className="text-xs text-zinc-500 flex-1">
+          <span className="text-xs text-muted-foreground flex-1">
             {changes_applied > 0
               ? `${changes_applied} work order${changes_applied !== 1 ? "s" : ""} auto-created from last sync`
               : "All rooms synced — no changes needed"}
@@ -259,8 +259,8 @@ export function IntegrationsPanel() {
     <div className="glass-card p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">PMS Integrations</p>
-          <p className="text-sm font-semibold text-zinc-200 mt-0.5">Connect Your PMS</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">PMS Integrations</p>
+          <p className="text-sm font-semibold text-foreground mt-0.5">Connect Your PMS</p>
         </div>
         <a href="#" className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors">
           View all <ExternalLink className="h-3 w-3" />
@@ -275,18 +275,18 @@ export function IntegrationsPanel() {
             className={cn(
               "flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-all text-xs",
               i.status === "available"
-                ? "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/[0.1] text-zinc-300"
-                : "border-white/[0.04] bg-transparent text-zinc-600 cursor-not-allowed"
+                ? "border-border bg-foreground/[0.02] hover:bg-foreground/[0.06] hover:border-border text-foreground"
+                : "border-border bg-transparent text-muted-foreground cursor-not-allowed"
             )}
           >
-            <span className="h-6 w-6 rounded-md bg-white/[0.06] flex items-center justify-center text-[9px] font-bold text-zinc-400 shrink-0">
+            <span className="h-6 w-6 rounded-md bg-foreground/[0.06] flex items-center justify-center text-[9px] font-bold text-muted-foreground shrink-0">
               {i.logo}
             </span>
             <div className="min-w-0">
-              <p className={cn("font-medium truncate", i.status === "coming_soon" && "text-zinc-600")}>
+              <p className={cn("font-medium truncate", i.status === "coming_soon" && "text-muted-foreground")}>
                 {i.name}
               </p>
-              <p className="text-[10px] text-zinc-600 truncate">
+              <p className="text-[10px] text-muted-foreground truncate">
                 {i.status === "coming_soon" ? "Coming soon" : i.desc}
               </p>
             </div>

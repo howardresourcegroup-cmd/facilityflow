@@ -7,7 +7,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-white/[0.06] border-white/[0.08] text-zinc-300",
+        default: "bg-foreground/[0.06] border-border text-foreground",
         primary: "bg-indigo-500/15 border-indigo-500/30 text-indigo-300",
         success: "bg-emerald-500/15 border-emerald-500/30 text-emerald-400",
         warning: "bg-amber-500/15 border-amber-500/30 text-amber-400",
@@ -15,7 +15,7 @@ const badgeVariants = cva(
         critical: "bg-red-500/20 border-red-500/50 text-red-300",
         info: "bg-cyan-500/15 border-cyan-500/30 text-cyan-400",
         orange: "bg-orange-500/15 border-orange-500/30 text-orange-400",
-        muted: "bg-zinc-800/60 border-zinc-700/50 text-zinc-500",
+        muted: "bg-card/60 border-border/50 text-muted-foreground",
       },
     },
     defaultVariants: { variant: "default" },

@@ -54,7 +54,7 @@ export function WorkOrderForm() {
   };
 
   const pCfg = {
-    low: "text-zinc-400", medium: "text-blue-400", high: "text-orange-400", critical: "text-red-400",
+    low: "text-muted-foreground", medium: "text-blue-400", high: "text-orange-400", critical: "text-red-400",
   };
 
   return (
@@ -96,7 +96,7 @@ export function WorkOrderForm() {
               {PRIORITIES.map((p) => (
                 <SelectItem key={p.value} value={p.value}>
                   <span className={cn("font-medium", pCfg[p.value as WorkOrderPriority])}>{p.label}</span>
-                  <span className="text-zinc-500 ml-1.5 text-[11px]">— {p.desc}</span>
+                  <span className="text-muted-foreground ml-1.5 text-[11px]">— {p.desc}</span>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -127,7 +127,7 @@ export function WorkOrderForm() {
           value={form.space_id}
           onChange={(e) => set("space_id")(e.target.value)}
         />
-        <p className="text-xs text-zinc-600">Link to a specific room on the floorplan.</p>
+        <p className="text-xs text-muted-foreground">Link to a specific room on the floorplan.</p>
       </div>
 
       {/* Assign */}

@@ -24,6 +24,9 @@ const config: Config = {
           foreground: "rgb(var(--card-foreground) / <alpha-value>)",
         },
         "muted-foreground": "rgb(var(--muted-foreground) / <alpha-value>)",
+        // --border / --border-strong carry their own alpha, so no <alpha-value> here
+        border: "rgb(var(--border))",
+        "border-strong": "rgb(var(--border-strong))",
         primary: {
           DEFAULT: "rgb(var(--primary) / <alpha-value>)",
           foreground: "rgb(var(--primary-foreground) / <alpha-value>)",

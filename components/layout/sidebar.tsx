@@ -56,7 +56,7 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
             <Link key={href} href={href} onClick={onNav}
               className={cn(
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
-                active ? "bg-accent-500/15 text-accent-300" : "text-muted-foreground hover:text-foreground hover:bg-white/[0.05]"
+                active ? "bg-accent-500/15 text-accent-300" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
               )}>
               {active && (
                 <motion.div layoutId="sidebar-active"
@@ -90,7 +90,7 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
         {BOTTOM_ITEMS.map(({ href, icon: Icon, label }) => {
           const item = (
             <Link key={href} href={href} onClick={onNav}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/[0.05] transition-all duration-150">
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05] transition-all duration-150">
               <Icon className="h-4 w-4 shrink-0" />
               <AnimatePresence>
                 {!collapsed && (
@@ -111,7 +111,7 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
         })}
 
         <button onClick={signOut}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-600 hover:text-red-400 hover:bg-red-500/[0.08] transition-all duration-150">
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-red-400 hover:bg-red-500/[0.08] transition-all duration-150">
           <LogOut className="h-4 w-4 shrink-0" />
           <AnimatePresence>
             {!collapsed && (
@@ -166,7 +166,7 @@ export function Sidebar() {
         <NavContent collapsed={sidebarCollapsed} />
 
         <button onClick={toggleSidebar}
-          className="absolute -right-3 top-[4.5rem] flex h-6 w-6 items-center justify-center rounded-full bg-card-hover border border-white/[0.08] text-muted-foreground hover:text-foreground transition-colors shadow-lg">
+          className="absolute -right-3 top-[4.5rem] flex h-6 w-6 items-center justify-center rounded-full bg-card-hover border border-border text-muted-foreground hover:text-foreground transition-colors shadow-lg">
           <motion.div animate={{ rotate: sidebarCollapsed ? 180 : 0 }} transition={{ duration: 0.2 }}>
             <ChevronLeft className="h-3 w-3" />
           </motion.div>
@@ -201,7 +201,7 @@ export function MobileSidebar() {
                 <span className="text-sm font-bold text-foreground tracking-tight">Roomward</span>
               </div>
               <button onClick={closeMobileSidebar}
-                className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors">
+                className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] transition-colors">
                 <X className="h-4 w-4" />
               </button>
             </div>

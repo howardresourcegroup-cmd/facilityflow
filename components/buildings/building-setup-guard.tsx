@@ -12,7 +12,7 @@ export function BuildingSetupGuard({ children }: { children: React.ReactNode }) 
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="h-5 w-5 animate-spin text-zinc-600" />
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -26,8 +26,8 @@ function FirstTimeSetup({ onDone }: { onDone: () => void }) {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-lg">
         <div className="flex flex-col items-center text-center mb-6">
           <LogoMark className="h-11 w-11 rounded-xl shadow-lg shadow-indigo-500/25 mb-4" />
-          <h1 className="text-2xl font-bold text-zinc-100">Set up your first property</h1>
-          <p className="text-sm text-zinc-500 mt-1.5 max-w-sm">
+          <h1 className="text-2xl font-bold text-foreground">Set up your first property</h1>
+          <p className="text-sm text-muted-foreground mt-1.5 max-w-sm">
             Describe it in plain English and AI will configure the floors and rooms — or set it up manually.
           </p>
         </div>
@@ -36,7 +36,7 @@ function FirstTimeSetup({ onDone }: { onDone: () => void }) {
           <BuildingSetupForm onDone={onDone} submitLabel="Create property" aiFirst={true} />
         </div>
 
-        <p className="text-center text-[11px] text-zinc-600 mt-4">
+        <p className="text-center text-[11px] text-muted-foreground mt-4">
           You can add more buildings, floors, and rooms anytime.
         </p>
       </motion.div>

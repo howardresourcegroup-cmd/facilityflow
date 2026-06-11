@@ -44,7 +44,7 @@ export function WelcomeModal() {
           onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-md glass-card p-7 overflow-hidden"
         >
-          <button onClick={close} className="absolute top-4 right-4 text-zinc-600 hover:text-zinc-300 transition-colors">
+          <button onClick={close} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors">
             <X className="h-4 w-4" />
           </button>
 
@@ -57,8 +57,8 @@ export function WelcomeModal() {
               <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center mb-5", slide.bg)}>
                 <Icon className={cn("h-7 w-7", slide.color)} />
               </div>
-              <h2 className="text-xl font-bold text-zinc-100">{slide.title}</h2>
-              <p className="text-sm text-zinc-400 mt-2 leading-relaxed">{slide.body}</p>
+              <h2 className="text-xl font-bold text-foreground">{slide.title}</h2>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{slide.body}</p>
             </motion.div>
           </AnimatePresence>
 
@@ -66,7 +66,7 @@ export function WelcomeModal() {
           <div className="flex items-center gap-1.5 mt-6">
             {SLIDES.map((_, i) => (
               <button key={i} onClick={() => setStep(i)}
-                className={cn("h-1.5 rounded-full transition-all", i === step ? "w-6 bg-indigo-500" : "w-1.5 bg-white/[0.15]")} />
+                className={cn("h-1.5 rounded-full transition-all", i === step ? "w-6 bg-indigo-500" : "w-1.5 bg-foreground/[0.15]")} />
             ))}
           </div>
 
@@ -76,7 +76,7 @@ export function WelcomeModal() {
                 <Link href="/help">Browse guides</Link>
               </Button>
             ) : (
-              <button onClick={close} className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">Skip</button>
+              <button onClick={close} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Skip</button>
             )}
             <Button size="sm" onClick={() => (isLast ? close() : setStep(step + 1))}>
               {isLast ? "Get started" : "Next"}

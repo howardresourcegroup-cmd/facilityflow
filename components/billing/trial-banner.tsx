@@ -48,15 +48,15 @@ export function TrialBanner() {
             <div className="mx-auto h-12 w-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center mb-4">
               <Lock className="h-6 w-6 text-indigo-400" />
             </div>
-            <h2 className="text-xl font-bold text-zinc-100">Your free trial has ended</h2>
-            <p className="text-sm text-zinc-400 mt-2">
+            <h2 className="text-xl font-bold text-foreground">Your free trial has ended</h2>
+            <p className="text-sm text-muted-foreground mt-2">
               Subscribe to keep your team running on Roomward. Your data is safe and waiting.
             </p>
             <Button className="w-full mt-5" onClick={() => setOpen(true)}>
               <Sparkles className="h-4 w-4" />
               Subscribe to Roomward Pro
             </Button>
-            <p className="text-[11px] text-zinc-600 mt-3">Questions? support@roomward.app</p>
+            <p className="text-[11px] text-muted-foreground mt-3">Questions? support@roomward.app</p>
           </motion.div>
         </div>
         <UpgradeModal open={open} onClose={() => setOpen(false)} />

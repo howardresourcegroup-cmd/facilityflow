@@ -30,8 +30,8 @@ export default function BuildingsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">Buildings</h1>
-          <p className="text-sm text-zinc-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground">Buildings</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {stats.total} facilities · {stats.totalSpaces} spaces tracked ·{" "}
             {stats.withIssues > 0 ? (
               <span className="text-amber-400">{stats.withIssues} with active issues</span>

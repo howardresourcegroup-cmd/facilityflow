@@ -47,11 +47,11 @@ export default function HousekeepingPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">Housekeeping Board</h1>
+          <h1 className="text-2xl font-bold text-foreground">Housekeeping Board</h1>
           <div className="flex items-center gap-3 mt-1.5 text-xs">
             <span className="flex items-center gap-1.5 text-emerald-400"><CircleCheck className="h-3.5 w-3.5" />{readyCount} ready for check-in</span>
             <span className="flex items-center gap-1.5 text-red-400"><BedDouble className="h-3.5 w-3.5" />{dirtyCount} to clean</span>
-            <span className="flex items-center gap-1.5 text-zinc-500"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />Live</span>
+            <span className="flex items-center gap-1.5 text-muted-foreground"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />Live</span>
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function HousekeepingPage() {
                   <span className={cn("h-2 w-2 rounded-full", col.dot)} />
                   <span className={cn("text-sm font-semibold", col.color)}>{col.label}</span>
                 </div>
-                <span className="text-xs text-zinc-500 tabular-nums">{list.length}</span>
+                <span className="text-xs text-muted-foreground tabular-nums">{list.length}</span>
               </div>
 
               <div className="space-y-2 min-h-[60px]">
@@ -83,8 +83,8 @@ export default function HousekeepingPage() {
                       className="glass-card p-3"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-zinc-200">{room.name}</span>
-                        <span className="text-[10px] text-zinc-600">
+                        <span className="text-sm font-medium text-foreground">{room.name}</span>
+                        <span className="text-[10px] text-muted-foreground">
                           {(room as Space & { floor?: { building?: { name: string } } }).floor?.building?.name?.split(" ")[0] ?? ""}
                         </span>
                       </div>
@@ -98,8 +98,8 @@ export default function HousekeepingPage() {
                           className={cn(
                             "mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-all",
                             blocked
-                              ? "bg-white/[0.03] text-zinc-600 cursor-not-allowed"
-                              : "bg-white/[0.06] text-zinc-200 hover:bg-white/[0.12] active:scale-[0.98]"
+                              ? "bg-foreground/[0.03] text-muted-foreground cursor-not-allowed"
+                              : "bg-foreground/[0.06] text-foreground hover:bg-foreground/[0.12] active:scale-[0.98]"
                           )}
                           title={blocked ? "Only a manager can mark a room ready" : undefined}
                         >
@@ -114,14 +114,14 @@ export default function HousekeepingPage() {
                       )}
                       {col.status === "ready" && canClean && (
                         <button onClick={() => setStatus(room.id, "dirty")}
-                          className="mt-1 w-full text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">
+                          className="mt-1 w-full text-[10px] text-muted-foreground hover:text-muted-foreground transition-colors">
                           Mark dirty (checkout)
                         </button>
                       )}
                     </motion.div>
                   );
                 })}
-                {list.length === 0 && <p className="text-xs text-zinc-700 text-center py-4">None</p>}
+                {list.length === 0 && <p className="text-xs text-muted-foreground text-center py-4">None</p>}
               </div>
             </div>
           );
@@ -132,19 +132,19 @@ export default function HousekeepingPage() {
       {oos.length > 0 && (
         <div className="glass-card p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Ban className="h-3.5 w-3.5 text-zinc-500" />
-            <span className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Out of Service ({oos.length})</span>
+            <Ban className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Out of Service ({oos.length})</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {oos.map((r) => (
-              <span key={r.id} className="text-xs text-zinc-500 bg-white/[0.03] border border-white/[0.06] rounded-md px-2 py-1">{r.name}</span>
+              <span key={r.id} className="text-xs text-muted-foreground bg-foreground/[0.03] border border-border rounded-md px-2 py-1">{r.name}</span>
             ))}
           </div>
         </div>
       )}
 
       {!canClean && (
-        <p className="text-xs text-zinc-600 flex items-center gap-1.5">
+        <p className="text-xs text-muted-foreground flex items-center gap-1.5">
           <Sparkles className="h-3 w-3" /> You have view-only access to the housekeeping board.
         </p>
       )}

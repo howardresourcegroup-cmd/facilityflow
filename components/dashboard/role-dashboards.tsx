@@ -11,7 +11,7 @@ function StatChip({ label, value, color }: { label: string; value: number | stri
   return (
     <div className="glass-card p-4">
       <p className={cn("text-2xl font-bold tabular-nums", color)}>{value}</p>
-      <p className="text-xs text-zinc-500 mt-0.5">{label}</p>
+      <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
 }
@@ -21,8 +21,8 @@ function Greeting({ name, sub }: { name: string; sub: string }) {
   const g = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   return (
     <div>
-      <h1 className="text-2xl font-bold text-zinc-100">{g}, {name}</h1>
-      <p className="text-sm text-zinc-500 mt-1">{sub}</p>
+      <h1 className="text-2xl font-bold text-foreground">{g}, {name}</h1>
+      <p className="text-sm text-muted-foreground mt-1">{sub}</p>
     </div>
   );
 }
@@ -46,11 +46,11 @@ export function MaintenanceDashboard({ profile }: { profile: Profile }) {
 
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-semibold text-zinc-300">Your active jobs</h2>
+          <h2 className="text-sm font-semibold text-foreground">Your active jobs</h2>
           <Link href="/work-orders" className="text-xs text-indigo-400 hover:text-indigo-300">All work orders →</Link>
         </div>
         {active.length === 0 ? (
-          <div className="glass-card p-8 text-center text-sm text-zinc-500">
+          <div className="glass-card p-8 text-center text-sm text-muted-foreground">
             <CircleCheck className="h-6 w-6 text-emerald-400 mx-auto mb-2" /> You&apos;re all caught up.
           </div>
         ) : (
@@ -79,22 +79,22 @@ export function HousekeepingDashboard({ profile }: { profile: Profile }) {
         <StatChip label="Ready" value={by("ready").length} color="text-emerald-400" />
       </div>
 
-      <Link href="/housekeeping" className="glass-card p-5 flex items-center justify-between hover:border-white/[0.12] transition-colors group">
+      <Link href="/housekeeping" className="glass-card p-5 flex items-center justify-between hover:border-border transition-colors group">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-cyan-500/15 border border-cyan-500/20 flex items-center justify-center">
             <BedDouble className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-zinc-200">Open the Housekeeping Board</p>
-            <p className="text-xs text-zinc-500">Update room status as you clean — front desk sees it live.</p>
+            <p className="text-sm font-semibold text-foreground">Open the Housekeeping Board</p>
+            <p className="text-xs text-muted-foreground">Update room status as you clean — front desk sees it live.</p>
           </div>
         </div>
-        <ArrowRight className="h-4 w-4 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
       </Link>
 
       {dirty.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-zinc-300 mb-3">Rooms to clean</h2>
+          <h2 className="text-sm font-semibold text-foreground mb-3">Rooms to clean</h2>
           <div className="flex flex-wrap gap-2">
             {dirty.map((r) => (
               <span key={r.id} className="text-xs text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-2.5 py-1.5">{r.name}</span>
@@ -133,8 +133,8 @@ export function FrontDeskDashboard({ profile }: { profile: Profile }) {
             <CircleCheck className="h-7 w-7 text-emerald-400" />
           </div>
           <div>
-            <p className="text-3xl font-bold text-zinc-100 tabular-nums">{ready.length}<span className="text-lg text-zinc-500 font-normal"> rooms ready</span></p>
-            <p className="text-xs text-zinc-500 mt-0.5">{notReady.length} still being turned over · updates live from housekeeping</p>
+            <p className="text-3xl font-bold text-foreground tabular-nums">{ready.length}<span className="text-lg text-muted-foreground font-normal"> rooms ready</span></p>
+            <p className="text-xs text-muted-foreground mt-0.5">{notReady.length} still being turned over · updates live from housekeeping</p>
           </div>
         </div>
       </div>
@@ -145,7 +145,7 @@ export function FrontDeskDashboard({ profile }: { profile: Profile }) {
 
       {guestIssues.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-zinc-300 mb-3 flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-amber-400" /> Open issues in guest rooms
           </h2>
           <div className="space-y-2">

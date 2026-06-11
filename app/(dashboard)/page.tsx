@@ -48,16 +48,16 @@ export default function DashboardPage() {
       {/* Greeting */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">
+          <h1 className="text-2xl font-bold text-foreground">
             {getGreeting()}, {firstName}
           </h1>
-          <p className="text-sm text-zinc-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {format(now, "EEEE, MMMM d, yyyy")}{org?.name ? ` · ${org.name}` : ""}
           </p>
         </div>
         <div className="text-right hidden sm:block">
-          <p className="text-xs text-zinc-600 uppercase tracking-wider">Local Time</p>
-          <p className="text-2xl font-mono font-semibold text-zinc-300 tabular-nums">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider">Local Time</p>
+          <p className="text-2xl font-mono font-semibold text-foreground tabular-nums">
             {format(now, "h:mm a")}
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function DashboardPage() {
 
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-zinc-300">Active &amp; Critical</h2>
+              <h2 className="text-sm font-semibold text-foreground">Active &amp; Critical</h2>
               <Link href="/work-orders" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
                 View all →
               </Link>

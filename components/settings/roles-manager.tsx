@@ -43,13 +43,13 @@ export function RolesManager() {
   };
 
   if (loading) {
-    return <div className="text-sm text-zinc-500 py-8 text-center">Loading roles…</div>;
+    return <div className="text-sm text-muted-foreground py-8 text-center">Loading roles…</div>;
   }
 
   if (roles.length === 0) {
     return (
-      <div className="text-sm text-zinc-500 py-8 text-center space-y-3">
-        <p>Roles aren&apos;t set up yet. Run migration <code className="text-zinc-400">003_roles_permissions.sql</code> in Supabase, then refresh.</p>
+      <div className="text-sm text-muted-foreground py-8 text-center space-y-3">
+        <p>Roles aren&apos;t set up yet. Run migration <code className="text-muted-foreground">003_roles_permissions.sql</code> in Supabase, then refresh.</p>
       </div>
     );
   }
@@ -60,8 +60,8 @@ export function RolesManager() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-zinc-200">Roles &amp; Permissions</h2>
-          <p className="text-xs text-zinc-500 mt-0.5">Fully configurable — toggle any capability for any role.</p>
+          <h2 className="text-base font-semibold text-foreground">Roles &amp; Permissions</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">Fully configurable — toggle any capability for any role.</p>
         </div>
         <Button size="sm" onClick={() => setShowCreate(true)}>
           <Plus className="h-3.5 w-3.5" />
@@ -81,15 +81,15 @@ export function RolesManager() {
                 onClick={() => setSelectedId(r.id)}
                 className={cn(
                   "w-full text-left rounded-xl border px-3 py-2.5 transition-all",
-                  isSel ? cn(c.bg, c.border) : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04]"
+                  isSel ? cn(c.bg, c.border) : "border-border bg-foreground/[0.02] hover:bg-foreground/[0.04]"
                 )}
               >
                 <div className="flex items-center gap-2">
                   <span className={cn("h-2 w-2 rounded-full", c.dot)} />
-                  <span className={cn("text-sm font-medium truncate", isSel ? c.text : "text-zinc-300")}>{r.name}</span>
-                  {r.is_system && <Lock className="h-3 w-3 text-zinc-600 ml-auto shrink-0" />}
+                  <span className={cn("text-sm font-medium truncate", isSel ? c.text : "text-foreground")}>{r.name}</span>
+                  {r.is_system && <Lock className="h-3 w-3 text-muted-foreground ml-auto shrink-0" />}
                 </div>
-                <div className="flex items-center gap-3 mt-1 text-[10px] text-zinc-500">
+                <div className="flex items-center gap-3 mt-1 text-[10px] text-muted-foreground">
                   <span className="flex items-center gap-1"><Shield className="h-2.5 w-2.5" />{grantedCount(r)} perms</span>
                   <span className="flex items-center gap-1"><Users className="h-2.5 w-2.5" />{r._member_count ?? 0}</span>
                 </div>
@@ -104,17 +104,17 @@ export function RolesManager() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold text-zinc-100">{selected.name}</h3>
+                  <h3 className="text-sm font-semibold text-foreground">{selected.name}</h3>
                   {selected.is_system && (
-                    <span className="text-[10px] text-zinc-500 bg-white/[0.05] border border-white/[0.08] px-1.5 py-0.5 rounded-md">System</span>
+                    <span className="text-[10px] text-muted-foreground bg-foreground/[0.05] border border-border px-1.5 py-0.5 rounded-md">System</span>
                   )}
                 </div>
-                {selected.description && <p className="text-xs text-zinc-500 mt-0.5">{selected.description}</p>}
+                {selected.description && <p className="text-xs text-muted-foreground mt-0.5">{selected.description}</p>}
               </div>
               {!selected.is_system && (
                 <button
                   onClick={async () => { await deleteRole(selected.id); setSelectedId(null); reload(); }}
-                  className="text-zinc-600 hover:text-red-400 transition-colors"
+                  className="text-muted-foreground hover:text-red-400 transition-colors"
                   title="Delete role"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -125,7 +125,7 @@ export function RolesManager() {
             <div className="space-y-5">
               {PERMISSION_CATALOG.map((group) => (
                 <div key={group.area}>
-                  <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider mb-2">{group.area}</p>
+                  <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-2">{group.area}</p>
                   <div className="space-y-1">
                     {group.permissions.map((perm) => {
                       const on = localPerms.has(perm.key);
@@ -133,16 +133,16 @@ export function RolesManager() {
                         <button
                           key={perm.key}
                           onClick={() => toggle(perm.key)}
-                          className="w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-white/[0.03] transition-colors text-left group"
+                          className="w-full flex items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-foreground/[0.03] transition-colors text-left group"
                         >
                           <div className="min-w-0">
-                            <p className="text-sm text-zinc-300">{perm.label}</p>
-                            <p className="text-[11px] text-zinc-600 truncate">{perm.description}</p>
+                            <p className="text-sm text-foreground">{perm.label}</p>
+                            <p className="text-[11px] text-muted-foreground truncate">{perm.description}</p>
                           </div>
                           {/* Toggle switch */}
                           <span className={cn(
                             "relative h-5 w-9 rounded-full transition-colors shrink-0",
-                            on ? "bg-indigo-500" : "bg-white/[0.08]",
+                            on ? "bg-indigo-500" : "bg-foreground/[0.08]",
                             saving === perm.key && "opacity-60"
                           )}>
                             <motion.span
@@ -196,15 +196,15 @@ function CreateRoleDialog({ open, onClose, onCreated }: { open: boolean; onClose
         <form onSubmit={submit}>
           <div className="px-6 pb-2 space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs text-zinc-400">Role Name</label>
+              <label className="text-xs text-muted-foreground">Role Name</label>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Groundskeeper" autoFocus />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs text-zinc-400">Description</label>
+              <label className="text-xs text-muted-foreground">Description</label>
               <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What this role does" />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs text-zinc-400">Color</label>
+              <label className="text-xs text-muted-foreground">Color</label>
               <div className="flex gap-2">
                 {ROLE_COLOR_OPTIONS.map((c) => (
                   <button key={c} type="button" onClick={() => setColor(c)}

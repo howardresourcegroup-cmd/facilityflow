@@ -25,7 +25,7 @@ export function LogoMark({ className = "h-8 w-8" }: { className?: string }) {
 }
 
 // Mark + wordmark, for headers and the auth screen.
-export function Logo({ className = "", markClassName = "h-8 w-8", textClassName = "text-lg font-bold text-zinc-100" }:
+export function Logo({ className = "", markClassName = "h-8 w-8", textClassName = "text-lg font-bold text-foreground" }:
   { className?: string; markClassName?: string; textClassName?: string }) {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>

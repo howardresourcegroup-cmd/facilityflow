@@ -63,25 +63,25 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
       <DialogContent className="max-w-lg p-0 max-h-[90vh] overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.1fr] rounded-xl overflow-hidden">
           {/* Left: plan */}
-          <div className="bg-gradient-to-br from-indigo-500/[0.12] to-transparent p-6 sm:border-r border-white/[0.06]">
+          <div className="bg-gradient-to-br from-indigo-500/[0.12] to-transparent p-6 sm:border-r border-border">
             <div className="flex items-center gap-2 mb-1">
               <Sparkles className="h-4 w-4 text-indigo-400" />
-              <span className="text-sm font-semibold text-zinc-100">
+              <span className="text-sm font-semibold text-foreground">
                 {plan.tier === "large" ? "Roomward Pro" : "Roomward Standard"}
               </span>
             </div>
             <div className="flex items-baseline gap-1 mt-3">
-              <span className="text-3xl font-bold text-zinc-100">${plan.amount}</span>
-              <span className="text-sm text-zinc-500">/mo per property</span>
+              <span className="text-3xl font-bold text-foreground">${plan.amount}</span>
+              <span className="text-sm text-muted-foreground">/mo per property</span>
             </div>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {plan.tier === "large"
                 ? `Pro tier · ${plan.userCount} users · billed monthly`
                 : "Billed monthly · cancel anytime"}
             </p>
             <ul className="mt-5 space-y-2.5">
               {PLAN_FEATURES.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-xs text-zinc-300">
+                <li key={f} className="flex items-start gap-2 text-xs text-foreground">
                   <Check className="h-3.5 w-3.5 text-emerald-400 mt-0.5 shrink-0" />
                   {f}
                 </li>
@@ -96,17 +96,17 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
           {/* Right: payment */}
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-zinc-100">Payment details</h3>
-              <button onClick={onClose} className="text-zinc-600 hover:text-zinc-400"><X className="h-4 w-4" /></button>
+              <h3 className="text-sm font-semibold text-foreground">Payment details</h3>
+              <button onClick={onClose} className="text-muted-foreground hover:text-muted-foreground"><X className="h-4 w-4" /></button>
             </div>
 
-            {loading && <p className="text-xs text-zinc-500 py-8 text-center">Preparing secure checkout…</p>}
+            {loading && <p className="text-xs text-muted-foreground py-8 text-center">Preparing secure checkout…</p>}
 
             {error && (
               <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
                 {error}
                 {error.includes("configured") && (
-                  <p className="text-zinc-500 mt-1">Add your Stripe keys to enable live billing.</p>
+                  <p className="text-muted-foreground mt-1">Add your Stripe keys to enable live billing.</p>
                 )}
               </div>
             )}
@@ -117,7 +117,7 @@ export function UpgradeModal({ open, onClose }: { open: boolean; onClose: () => 
               </Elements>
             )}
 
-            <div className="flex items-center justify-center gap-1.5 mt-4 text-[10px] text-zinc-600">
+            <div className="flex items-center justify-center gap-1.5 mt-4 text-[10px] text-muted-foreground">
               <Lock className="h-3 w-3" /> Secured by Stripe · PCI-compliant
             </div>
           </div>
@@ -154,8 +154,8 @@ function PaymentForm({ onClose }: { onClose: () => void }) {
         <div className="mx-auto h-12 w-12 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-3">
           <Check className="h-6 w-6 text-emerald-400" />
         </div>
-        <p className="text-sm font-semibold text-zinc-100">You&apos;re subscribed!</p>
-        <p className="text-xs text-zinc-500 mt-1">Welcome to Roomward Pro.</p>
+        <p className="text-sm font-semibold text-foreground">You&apos;re subscribed!</p>
+        <p className="text-xs text-muted-foreground mt-1">Welcome to Roomward Pro.</p>
       </motion.div>
     );
   }

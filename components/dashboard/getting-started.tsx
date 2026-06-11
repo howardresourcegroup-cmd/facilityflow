@@ -52,17 +52,17 @@ export function GettingStarted() {
               <Rocket className="h-4 w-4 text-indigo-400" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-zinc-100">Get set up</p>
-              <p className="text-xs text-zinc-500">{completed} of {CHECKLIST.length} done · {pct}%</p>
+              <p className="text-sm font-semibold text-foreground">Get set up</p>
+              <p className="text-xs text-muted-foreground">{completed} of {CHECKLIST.length} done · {pct}%</p>
             </div>
           </div>
-          <button onClick={dismiss} className="text-zinc-600 hover:text-zinc-400 transition-colors" title="Dismiss">
+          <button onClick={dismiss} className="text-muted-foreground hover:text-muted-foreground transition-colors" title="Dismiss">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Progress bar */}
-        <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden mb-4">
+        <div className="h-1.5 w-full rounded-full bg-foreground/[0.06] overflow-hidden mb-4">
           <motion.div className="h-full bg-indigo-500 rounded-full" animate={{ width: `${pct}%` }} transition={{ duration: 0.4 }} />
         </div>
 
@@ -75,7 +75,7 @@ export function GettingStarted() {
                   onClick={() => toggle(item.id)}
                   className={cn(
                     "h-5 w-5 rounded-md border flex items-center justify-center shrink-0 transition-all",
-                    isDone ? "bg-indigo-500 border-indigo-500" : "border-white/[0.15] hover:border-indigo-500/50"
+                    isDone ? "bg-indigo-500 border-indigo-500" : "border-border hover:border-indigo-500/50"
                   )}
                 >
                   {isDone && <Check className="h-3 w-3 text-white" />}
@@ -84,11 +84,11 @@ export function GettingStarted() {
                   href={item.href}
                   className={cn(
                     "flex-1 flex items-center justify-between text-sm transition-colors py-0.5",
-                    isDone ? "text-zinc-600 line-through" : "text-zinc-300 hover:text-zinc-100"
+                    isDone ? "text-muted-foreground line-through" : "text-foreground hover:text-foreground"
                   )}
                 >
                   {item.label}
-                  {!isDone && <ChevronRight className="h-3.5 w-3.5 text-zinc-700 group-hover:text-zinc-500" />}
+                  {!isDone && <ChevronRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-muted-foreground" />}
                 </Link>
               </div>
             );

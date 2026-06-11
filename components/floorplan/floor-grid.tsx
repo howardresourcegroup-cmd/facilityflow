@@ -70,14 +70,14 @@ function RoomDetailPanel({
       className="w-72 flex-shrink-0 glass-card flex flex-col h-full overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-start justify-between p-4 border-b border-white/[0.05]">
+      <div className="flex items-start justify-between p-4 border-b border-border">
         <div className="min-w-0">
-          <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{space.type}</p>
-          <h3 className="text-sm font-semibold text-zinc-100 leading-snug">{space.name}</h3>
+          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{space.type}</p>
+          <h3 className="text-sm font-semibold text-foreground leading-snug">{space.name}</h3>
         </div>
         <button
           onClick={onClose}
-          className="h-7 w-7 flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-400 hover:bg-white/[0.06] transition-colors shrink-0 ml-2"
+          className="h-7 w-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-muted-foreground hover:bg-foreground/[0.06] transition-colors shrink-0 ml-2"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -87,7 +87,7 @@ function RoomDetailPanel({
       <div className={cn("mx-4 mt-4 flex items-center gap-2.5 rounded-xl px-3 py-2.5 border", cfg.bg, cfg.border)}>
         <span className={cn("h-2.5 w-2.5 rounded-full shrink-0", cfg.dot)} />
         <div>
-          <p className="text-xs text-zinc-500">Current Status</p>
+          <p className="text-xs text-muted-foreground">Current Status</p>
           <p className={cn("text-sm font-semibold", cfg.color)}>{cfg.label}</p>
         </div>
       </div>
@@ -100,7 +100,7 @@ function RoomDetailPanel({
       )}
 
       {/* Meta */}
-      <div className="px-4 mt-4 space-y-2 text-xs text-zinc-500">
+      <div className="px-4 mt-4 space-y-2 text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
           <MapPin className="h-3 w-3" />
           Position ({space.position_x}, {space.position_y}) · {space.width}×{space.height} cells
@@ -119,15 +119,15 @@ function RoomDetailPanel({
         </div>
       )}
       {isGuestRoom && rmPushing && (
-        <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg bg-zinc-800/50 border border-white/[0.05] px-3 py-2">
-          <RefreshCw className="h-3.5 w-3.5 text-zinc-400 animate-spin shrink-0" />
-          <p className="text-xs text-zinc-400">Syncing to RoomMaster…</p>
+        <div className="mx-4 mt-3 flex items-center gap-2 rounded-lg bg-card/50 border border-border px-3 py-2">
+          <RefreshCw className="h-3.5 w-3.5 text-muted-foreground animate-spin shrink-0" />
+          <p className="text-xs text-muted-foreground">Syncing to RoomMaster…</p>
         </div>
       )}
 
       {/* Change status */}
       <div className="px-4 mt-4">
-        <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2">Change Status</p>
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Change Status</p>
         <div className="space-y-1">
           {statuses.map((s) => {
             const sc = SPACE_STATUS_CONFIG[s];
@@ -140,7 +140,7 @@ function RoomDetailPanel({
                   "w-full flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs text-left transition-all",
                   isActive
                     ? cn("border", sc.bg, sc.border, sc.color)
-                    : "text-zinc-500 hover:bg-white/[0.05] hover:text-zinc-300"
+                    : "text-muted-foreground hover:bg-foreground/[0.05] hover:text-foreground"
                 )}
               >
                 <span className={cn("h-1.5 w-1.5 rounded-full", sc.dot)} />
@@ -203,7 +203,7 @@ export function FloorGrid({ floor, spaces, onStatusChange, onCreateWorkOrder }: 
         <div className="flex items-center gap-4">
           <StatusLegend />
         </div>
-        <div className="flex items-center gap-3 text-xs text-zinc-500">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
           {issueCount > 0 && (
             <span className="flex items-center gap-1.5 text-amber-400 bg-amber-500/10 px-2 py-1 rounded-md border border-amber-500/20">
               <AlertTriangle className="h-3 w-3" />
@@ -219,7 +219,7 @@ export function FloorGrid({ floor, spaces, onStatusChange, onCreateWorkOrder }: 
         {/* Floorplan */}
         <div className="flex-1 overflow-auto">
           <div
-            className="relative rounded-xl border border-white/[0.05] bg-[#0a0a16]"
+            className="relative rounded-xl border border-border bg-background"
             style={{
               width: gridW + 32,
               height: gridH + 32,

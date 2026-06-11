@@ -10,9 +10,9 @@ const buttonVariants = cva(
       variant: {
         default: "bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-500/10",
         destructive: "bg-red-600 text-white hover:bg-red-500",
-        outline: "border border-white/10 bg-transparent text-zinc-300 hover:bg-white/[0.06] hover:text-white",
-        secondary: "bg-white/[0.06] text-zinc-200 hover:bg-white/[0.1] border border-white/[0.08]",
-        ghost: "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]",
+        outline: "border border-white/10 bg-transparent text-foreground hover:bg-foreground/[0.06] hover:text-white",
+        secondary: "bg-foreground/[0.06] text-foreground hover:bg-foreground/[0.1] border border-border",
+        ghost: "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06]",
         link: "text-indigo-400 underline-offset-4 hover:underline",
         success: "bg-emerald-600 text-white hover:bg-emerald-500",
         warning: "bg-amber-600 text-white hover:bg-amber-500",

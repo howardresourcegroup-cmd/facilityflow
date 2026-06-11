@@ -45,13 +45,13 @@ export function TeamManager() {
     setRemovingId(null);
   };
 
-  if (loading) return <div className="py-8 text-center text-zinc-500 text-sm">Loading team…</div>;
+  if (loading) return <div className="py-8 text-center text-muted-foreground text-sm">Loading team…</div>;
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -72,10 +72,10 @@ export function TeamManager() {
               <AvatarFallback className="text-xs">{getInitials(profile.full_name)}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-zinc-200 truncate">{profile.full_name || "(no name)"}</p>
-              <p className="text-xs text-zinc-500 truncate">{profile.email ?? ""}</p>
+              <p className="text-sm font-medium text-foreground truncate">{profile.full_name || "(no name)"}</p>
+              <p className="text-xs text-muted-foreground truncate">{profile.email ?? ""}</p>
             </div>
-            <span className="text-xs capitalize px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 border border-white/[0.06] shrink-0">
+            <span className="text-xs capitalize px-2 py-0.5 rounded-full bg-foreground/[0.05] text-muted-foreground border border-border shrink-0">
               {profile.role_slug ?? profile.role ?? "—"}
             </span>
             {profile.id !== me?.id && (
@@ -95,12 +95,12 @@ export function TeamManager() {
               </div>
             )}
             {profile.id === me?.id && (
-              <span className="text-[10px] text-zinc-600 shrink-0">you</span>
+              <span className="text-[10px] text-muted-foreground shrink-0">you</span>
             )}
           </div>
         ))}
         {filtered.length === 0 && (
-          <p className="py-6 text-center text-zinc-500 text-sm">No team members found.</p>
+          <p className="py-6 text-center text-muted-foreground text-sm">No team members found.</p>
         )}
       </div>
 
@@ -156,12 +156,12 @@ function InviteModal({ open, onClose }: { open: boolean; onClose: () => void }) 
         <DialogHeader><DialogTitle>{result ? "Member added" : "Invite Team Member"}</DialogTitle></DialogHeader>
         {result ? (
           <div className="px-6 pb-2 space-y-3">
-            <p className="text-sm text-zinc-400">
-              <span className="text-zinc-200 font-medium">{result.email}</span> can now sign in. Share these credentials — they should change the password after first login.
+            <p className="text-sm text-muted-foreground">
+              <span className="text-foreground font-medium">{result.email}</span> can now sign in. Share these credentials — they should change the password after first login.
             </p>
-            <div className="rounded-lg bg-zinc-900 border border-zinc-700 p-3 space-y-2 font-mono text-xs">
-              <div className="flex justify-between"><span className="text-zinc-500">email</span><span className="text-zinc-200">{result.email}</span></div>
-              <div className="flex justify-between items-center"><span className="text-zinc-500">password</span><span className="text-zinc-200">{result.temp_password}</span></div>
+            <div className="rounded-lg bg-card border border-border p-3 space-y-2 font-mono text-xs">
+              <div className="flex justify-between"><span className="text-muted-foreground">email</span><span className="text-foreground">{result.email}</span></div>
+              <div className="flex justify-between items-center"><span className="text-muted-foreground">password</span><span className="text-foreground">{result.temp_password}</span></div>
             </div>
             <DialogFooter className="gap-2">
               <Button variant="secondary" onClick={copyAll} className="gap-2">
@@ -175,15 +175,15 @@ function InviteModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           <form onSubmit={submit}>
             <div className="px-6 pb-2 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Full name</label>
+                <label className="text-xs text-muted-foreground">Full name</label>
                 <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Alex Rivera" autoFocus />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Email *</label>
+                <label className="text-xs text-muted-foreground">Email *</label>
                 <Input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="alex@property.com" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Role</label>
+                <label className="text-xs text-muted-foreground">Role</label>
                 <Select value={form.role} onValueChange={v => setForm(f => ({ ...f, role: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>

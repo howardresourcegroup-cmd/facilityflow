@@ -64,7 +64,7 @@ export function OnboardingGuard({ children }: { children: React.ReactNode }) {
 
   if (state === "checking") {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#080811]">
+      <div className="flex h-screen items-center justify-center bg-background">
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/10 border-t-indigo-500" />
       </div>
     );
@@ -72,15 +72,15 @@ export function OnboardingGuard({ children }: { children: React.ReactNode }) {
 
   if (state === "needs-org") {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#080811] px-4">
+      <div className="flex h-screen items-center justify-center bg-background px-4">
         <div className="w-full max-w-sm glass-card p-7">
           <div className="mb-5 flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center">
               <Building2 className="h-5 w-5 text-indigo-400" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-zinc-100">Name your workspace</h1>
-              <p className="text-xs text-zinc-500">One last step to set up your operations center.</p>
+              <h1 className="text-lg font-semibold text-foreground">Name your workspace</h1>
+              <p className="text-xs text-muted-foreground">One last step to set up your operations center.</p>
             </div>
           </div>
           <form onSubmit={completeSetup} className="space-y-3">

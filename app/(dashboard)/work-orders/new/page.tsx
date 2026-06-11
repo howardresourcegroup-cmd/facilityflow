@@ -68,7 +68,7 @@ export default function NewWorkOrderPage() {
   };
 
   const pColor: Record<WorkOrderPriority, string> = {
-    low: "text-zinc-400", medium: "text-blue-400", high: "text-orange-400", critical: "text-red-400",
+    low: "text-muted-foreground", medium: "text-blue-400", high: "text-orange-400", critical: "text-red-400",
   };
 
   return (
@@ -78,8 +78,8 @@ export default function NewWorkOrderPage() {
           <ClipboardList className="h-5 w-5 text-indigo-400" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-zinc-100">New Work Order</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">Document an issue and dispatch your team.</p>
+          <h1 className="text-xl font-bold text-foreground">New Work Order</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Document an issue and dispatch your team.</p>
         </div>
       </div>
 

@@ -37,11 +37,11 @@ function StatCard({ label, value, sub, icon: Icon, color, trend, delay = 0, puls
       className={cn(
         "glass-card p-5 flex flex-col gap-4 transition-all duration-200 shadow-lg group h-full",
         c.glow,
-        href ? "hover:border-white/[0.18] hover:-translate-y-0.5 cursor-pointer" : "hover:border-white/[0.1]"
+        href ? "hover:border-border hover:-translate-y-0.5 cursor-pointer" : "hover:border-border"
       )}
     >
       <div className="flex items-start justify-between">
-        <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{label}</p>
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{label}</p>
         <div className={cn("flex h-8 w-8 items-center justify-center rounded-lg ring-1 relative", c.bg, c.ring)}>
           <Icon className={cn("h-4 w-4", c.icon, pulse && "animate-pulse")} />
         </div>
@@ -52,11 +52,11 @@ function StatCard({ label, value, sub, icon: Icon, color, trend, delay = 0, puls
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.3, delay: delay + 0.1, type: "spring", bounce: 0.3 }}
-          className="text-3xl font-bold text-zinc-100 tabular-nums"
+          className="text-3xl font-bold text-foreground tabular-nums"
         >
           {value}
         </motion.p>
-        {sub && <p className="text-xs text-zinc-500">{sub}</p>}
+        {sub && <p className="text-xs text-muted-foreground">{sub}</p>}
       </div>
 
       {trend ? (
@@ -65,7 +65,7 @@ function StatCard({ label, value, sub, icon: Icon, color, trend, delay = 0, puls
           <span>{trend.value}% vs last week</span>
         </div>
       ) : href ? (
-        <div className="flex items-center gap-1 text-xs font-medium text-zinc-600 group-hover:text-zinc-400 transition-colors">
+        <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground group-hover:text-muted-foreground transition-colors">
           <span>View</span>
           <ArrowUpRight className="h-3 w-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </div>

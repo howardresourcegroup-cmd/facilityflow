@@ -48,8 +48,8 @@ export default function AssetsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">Assets</h1>
-          <p className="text-sm text-zinc-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground">Assets</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             {counts.total} tracked · {counts.operational} operational
             {counts.attention > 0 && <span className="text-amber-400"> · {counts.attention} need attention</span>}
             {counts.overdue > 0 && <span className="text-red-400"> · {counts.overdue} service overdue</span>}
@@ -77,8 +77,8 @@ export default function AssetsPage() {
               <Icon className={`h-4 w-4 ${color}`} />
             </div>
             <div>
-              <p className="text-xl font-bold text-zinc-200 tabular-nums">{value}</p>
-              <p className="text-xs text-zinc-500">{label}</p>
+              <p className="text-xl font-bold text-foreground tabular-nums">{value}</p>
+              <p className="text-xs text-muted-foreground">{label}</p>
             </div>
           </motion.div>
         ))}
@@ -99,9 +99,9 @@ export default function AssetsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/[0.05]">
+                <tr className="border-b border-border">
                   {["Asset", "Type", "Location", "Status", "Model / Serial", "Next Service", ""].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-medium text-zinc-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                    <th key={h} className="text-left px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -111,22 +111,22 @@ export default function AssetsPage() {
                   const overdue = asset.next_maintenance_at ? new Date(asset.next_maintenance_at) < new Date() : false;
                   return (
                     <motion.tr key={asset.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors group">
+                      className="border-b border-border hover:bg-foreground/[0.03] transition-colors group">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <Wrench className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
-                          <span className="text-zinc-200 font-medium">{asset.name}</span>
+                          <Wrench className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                          <span className="text-foreground font-medium">{asset.name}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-zinc-500">{asset.type}</td>
-                      <td className="px-4 py-3 text-zinc-400">{(asset as Asset & { space?: { name: string } }).space?.name ?? "—"}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{asset.type}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{(asset as Asset & { space?: { name: string } }).space?.name ?? "—"}</td>
                       <td className="px-4 py-3"><Badge variant={s.variant}>{s.label}</Badge></td>
                       <td className="px-4 py-3">
-                        <p className="text-zinc-400">{asset.model ?? "—"}</p>
-                        {asset.serial_number && <p className="text-xs text-zinc-600 font-mono">{asset.serial_number}</p>}
+                        <p className="text-muted-foreground">{asset.model ?? "—"}</p>
+                        {asset.serial_number && <p className="text-xs text-muted-foreground font-mono">{asset.serial_number}</p>}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={overdue ? "text-red-400 font-medium" : "text-zinc-400"}>
+                        <span className={overdue ? "text-red-400 font-medium" : "text-muted-foreground"}>
                           {asset.next_maintenance_at
                             ? new Date(asset.next_maintenance_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
                             : "—"}
@@ -134,7 +134,7 @@ export default function AssetsPage() {
                       </td>
                       <td className="px-4 py-3">
                         {can("assets.manage") && (
-                          <button onClick={() => remove(asset.id)} className="opacity-0 group-hover:opacity-100 text-zinc-600 hover:text-red-400 transition-all">
+                          <button onClick={() => remove(asset.id)} className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-red-400 transition-all">
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         )}
@@ -181,19 +181,19 @@ function CreateAssetModal({ open, onClose, onCreated }: { open: boolean; onClose
         <form onSubmit={submit}>
           <div className="px-6 pb-2 space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs text-zinc-400">Asset Name *</label>
+              <label className="text-xs text-muted-foreground">Asset Name *</label>
               <Input value={form.name} onChange={(e) => set("name")(e.target.value)} placeholder="e.g. HVAC Unit 3" autoFocus />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Type</label>
+                <label className="text-xs text-muted-foreground">Type</label>
                 <Select value={form.type} onValueChange={set("type")}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>{TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Status</label>
+                <label className="text-xs text-muted-foreground">Status</label>
                 <Select value={form.status} onValueChange={(v) => set("status")(v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -204,16 +204,16 @@ function CreateAssetModal({ open, onClose, onCreated }: { open: boolean; onClose
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Model</label>
+                <label className="text-xs text-muted-foreground">Model</label>
                 <Input value={form.model} onChange={(e) => set("model")(e.target.value)} placeholder="Carrier 50XC" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-zinc-400">Serial No.</label>
+                <label className="text-xs text-muted-foreground">Serial No.</label>
                 <Input value={form.serial_number} onChange={(e) => set("serial_number")(e.target.value)} placeholder="CC-0001" />
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs text-zinc-400">Next Service Date</label>
+              <label className="text-xs text-muted-foreground">Next Service Date</label>
               <Input type="date" value={form.next} onChange={(e) => set("next")(e.target.value)} />
             </div>
           </div>

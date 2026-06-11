@@ -17,7 +17,7 @@ const BUILDING_HEALTH = [
 function HealthBar({ pct }: { pct: number }) {
   const color = pct >= 95 ? "bg-emerald-500" : pct >= 80 ? "bg-amber-500" : "bg-red-500";
   return (
-    <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
+    <div className="h-1.5 w-full rounded-full bg-foreground/[0.06] overflow-hidden">
       <motion.div
         className={cn("h-full rounded-full", color)}
         initial={{ width: 0 }}
@@ -33,8 +33,8 @@ export function BuildingHealth({ buildings = MOCK_BUILDINGS }: { buildings?: Bui
     <div className="glass-card p-5">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Building Status</p>
-          <p className="text-base font-semibold text-zinc-200 mt-0.5">Portfolio Health</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Building Status</p>
+          <p className="text-base font-semibold text-foreground mt-0.5">Portfolio Health</p>
         </div>
         <Link href="/buildings" className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors">
           View all <ArrowRight className="h-3 w-3" />
@@ -57,8 +57,8 @@ export function BuildingHealth({ buildings = MOCK_BUILDINGS }: { buildings?: Bui
               <Link href={`/buildings/${b.id}`} className="block group space-y-2 hover:opacity-80 transition-opacity">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 min-w-0">
-                    <Building2 className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
-                    <span className="text-sm text-zinc-300 truncate">{b.name}</span>
+                    <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span className="text-sm text-foreground truncate">{b.name}</span>
                     {(b._issue_count ?? 0) > 0 && (
                       <span className="text-[10px] bg-amber-500/15 text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded-md shrink-0">
                         {b._issue_count} issues
@@ -68,7 +68,7 @@ export function BuildingHealth({ buildings = MOCK_BUILDINGS }: { buildings?: Bui
                   <span className={cn("text-xs font-semibold tabular-nums", color)}>{pct}%</span>
                 </div>
                 <HealthBar pct={pct} />
-                <p className="text-[11px] text-zinc-600">
+                <p className="text-[11px] text-muted-foreground">
                   {b.city}, {b.state} · {b._floor_count} floors · {b._space_count} spaces
                 </p>
               </Link>

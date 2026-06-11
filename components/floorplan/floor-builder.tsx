@@ -354,15 +354,15 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
       <div className="flex flex-wrap items-center gap-3 justify-between">
         {/* Mode toggles */}
         <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-lg border border-white/[0.08] p-0.5">
+          <div className="inline-flex rounded-lg border border-border p-0.5">
             <button onClick={()=>{setEditorMode("draw");setImportPanel(null);}}
               className={cn("flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md transition-colors",
-                editorMode==="draw"?"bg-white/[0.08] text-zinc-200":"text-zinc-500 hover:text-zinc-300")}>
+                editorMode==="draw"?"bg-foreground/[0.08] text-foreground":"text-muted-foreground hover:text-foreground")}>
               <MousePointer2 className="h-3.5 w-3.5"/>Draw
             </button>
             <button onClick={()=>{setEditorMode("stamp");setImportPanel(null);setPending(null);}}
               className={cn("flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md transition-colors",
-                editorMode==="stamp"?"bg-indigo-500/20 text-indigo-200":"text-zinc-500 hover:text-zinc-300")}>
+                editorMode==="stamp"?"bg-indigo-500/20 text-indigo-200":"text-muted-foreground hover:text-foreground")}>
               <Stamp className="h-3.5 w-3.5"/>Stamp
             </button>
           </div>
@@ -370,29 +370,29 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
           {/* Import buttons */}
           <button onClick={()=>{setImportPanel(importPanel==="ai"?null:"ai");setEditorMode("draw");setPreview(null);}}
             className={cn("flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors",
-              importPanel==="ai"?"bg-indigo-500/15 border-indigo-500/40 text-indigo-200":"border-white/[0.08] text-zinc-400 hover:border-white/20")}>
+              importPanel==="ai"?"bg-indigo-500/15 border-indigo-500/40 text-indigo-200":"border-border text-muted-foreground hover:border-white/20")}>
             <Sparkles className="h-3.5 w-3.5"/>AI Fill
           </button>
           <button onClick={()=>{setImportPanel(importPanel==="csv"?null:"csv");setEditorMode("draw");setPreview(null);}}
             className={cn("flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-colors",
-              importPanel==="csv"?"bg-emerald-500/15 border-emerald-500/40 text-emerald-200":"border-white/[0.08] text-zinc-400 hover:border-white/20")}>
+              importPanel==="csv"?"bg-emerald-500/15 border-emerald-500/40 text-emerald-200":"border-border text-muted-foreground hover:border-white/20")}>
             <FileText className="h-3.5 w-3.5"/>CSV
           </button>
         </div>
 
         {/* Grid size + done */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Maximize2 className="h-3.5 w-3.5"/>
             <input type="number" min={4} max={40} value={colsInput}
               onChange={e=>setColsInput(e.target.value)} onBlur={applyGridSize}
               onKeyDown={e=>e.key==="Enter"&&applyGridSize()}
-              className="w-12 h-7 rounded-md bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-center text-xs px-1"/>
+              className="w-12 h-7 rounded-md bg-foreground/[0.04] border border-border text-foreground text-center text-xs px-1"/>
             <span>×</span>
             <input type="number" min={4} max={40} value={rowsInput}
               onChange={e=>setRowsInput(e.target.value)} onBlur={applyGridSize}
               onKeyDown={e=>e.key==="Enter"&&applyGridSize()}
-              className="w-12 h-7 rounded-md bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-center text-xs px-1"/>
+              className="w-12 h-7 rounded-md bg-foreground/[0.04] border border-border text-foreground text-center text-xs px-1"/>
           </div>
           <Button size="sm" onClick={onDone}><Check className="h-3.5 w-3.5"/>Done</Button>
         </div>
@@ -406,32 +406,32 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
             <div className="flex flex-wrap items-center gap-3 rounded-xl bg-indigo-500/[0.06] border border-indigo-500/20 px-4 py-3">
               <Stamp className="h-4 w-4 text-indigo-400 shrink-0"/>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-zinc-400">Type</span>
+                <span className="text-xs text-muted-foreground">Type</span>
                 <Select value={stampType} onValueChange={setStampType}>
                   <SelectTrigger className="h-7 w-36 text-xs"><SelectValue/></SelectTrigger>
                   <SelectContent>{ROOM_TYPES.map(t=><SelectItem key={t} value={t}>{TYPE_LABEL[t]}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-zinc-400">Prefix</span>
+                <span className="text-xs text-muted-foreground">Prefix</span>
                 <Input value={stampPrefix} onChange={e=>setStampPrefix(e.target.value)} className="h-7 w-24 text-xs"/>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-zinc-400">#</span>
+                <span className="text-xs text-muted-foreground">#</span>
                 <div className="flex items-center">
                   <button onClick={()=>setStampCounter(c=>Math.max(1,c-1))}
-                    className="h-7 w-7 flex items-center justify-center rounded-l-md bg-white/[0.04] border border-white/[0.08] text-zinc-400 hover:text-zinc-200">
+                    className="h-7 w-7 flex items-center justify-center rounded-l-md bg-foreground/[0.04] border border-border text-muted-foreground hover:text-foreground">
                     <Minus className="h-3 w-3"/>
                   </button>
                   <input type="number" value={stampCounter} onChange={e=>setStampCounter(+e.target.value||1)}
-                    className="h-7 w-16 bg-white/[0.04] border-y border-white/[0.08] text-zinc-300 text-center text-xs px-1"/>
+                    className="h-7 w-16 bg-foreground/[0.04] border-y border-border text-foreground text-center text-xs px-1"/>
                   <button onClick={()=>setStampCounter(c=>c+1)}
-                    className="h-7 w-7 flex items-center justify-center rounded-r-md bg-white/[0.04] border border-white/[0.08] text-zinc-400 hover:text-zinc-200">
+                    className="h-7 w-7 flex items-center justify-center rounded-r-md bg-foreground/[0.04] border border-border text-muted-foreground hover:text-foreground">
                     <Plus className="h-3 w-3"/>
                   </button>
                 </div>
               </div>
-              <span className="text-[11px] text-zinc-600">Click any empty cell to stamp → <span className="text-zinc-400">{stampPrefix} {stampCounter}</span></span>
+              <span className="text-[11px] text-muted-foreground">Click any empty cell to stamp → <span className="text-muted-foreground">{stampPrefix} {stampCounter}</span></span>
             </div>
           </motion.div>
         )}
@@ -454,7 +454,7 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
                     <Button size="sm" onClick={runAI} disabled={importing||!aiDesc.trim()} className="flex-1">
                       {importing?"Parsing…":<><Sparkles className="h-3.5 w-3.5"/>Generate room list</>}
                     </Button>
-                    <button onClick={()=>{setImportPanel(null);setPreview(null);}} className="text-xs text-zinc-500 hover:text-zinc-300 px-2">Cancel</button>
+                    <button onClick={()=>{setImportPanel(null);setPreview(null);}} className="text-xs text-muted-foreground hover:text-foreground px-2">Cancel</button>
                   </div>
                 </>
               ):(
@@ -463,10 +463,10 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
                   <Textarea value={csvText} onChange={e=>setCsvText(e.target.value)}
                     placeholder={"Room 101\nRoom 102, suite\nMaintenance Closet, maintenance\nHousekeeping Storage, housekeeping"}
                     className="min-h-[100px] text-xs resize-none font-mono"/>
-                  <p className="text-[11px] text-zinc-600">Format: <span className="text-zinc-400">Name</span> or <span className="text-zinc-400">Name, type</span> — type is optional, defaults to guest_room</p>
+                  <p className="text-[11px] text-muted-foreground">Format: <span className="text-muted-foreground">Name</span> or <span className="text-muted-foreground">Name, type</span> — type is optional, defaults to guest_room</p>
                   <div className="flex gap-2">
                     <Button size="sm" variant="secondary" onClick={runCSV} disabled={!csvText.trim()} className="flex-1">Preview rooms</Button>
-                    <button onClick={()=>{setImportPanel(null);setPreview(null);}} className="text-xs text-zinc-500 hover:text-zinc-300 px-2">Cancel</button>
+                    <button onClick={()=>{setImportPanel(null);setPreview(null);}} className="text-xs text-muted-foreground hover:text-foreground px-2">Cancel</button>
                   </div>
                 </>
               )}
@@ -476,14 +476,14 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
                 {preview&&(
                   <motion.div initial={{opacity:0,y:4}} animate={{opacity:1,y:0}} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs text-zinc-400">{preview.length} rooms to place</p>
-                      <button onClick={()=>setPreview(null)} className="text-[11px] text-zinc-600 hover:text-zinc-400">Clear</button>
+                      <p className="text-xs text-muted-foreground">{preview.length} rooms to place</p>
+                      <button onClick={()=>setPreview(null)} className="text-[11px] text-muted-foreground hover:text-muted-foreground">Clear</button>
                     </div>
                     <div className="max-h-32 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-1">
                       {preview.map((r,i)=>(
-                        <div key={i} className="flex items-center gap-1.5 text-[11px] bg-white/[0.03] border border-white/[0.05] rounded px-2 py-1">
-                          <span className="text-zinc-300 truncate">{r.name}</span>
-                          <span className="text-zinc-600 shrink-0">{r.type.replace(/_/g," ")}</span>
+                        <div key={i} className="flex items-center gap-1.5 text-[11px] bg-foreground/[0.03] border border-border rounded px-2 py-1">
+                          <span className="text-foreground truncate">{r.name}</span>
+                          <span className="text-muted-foreground shrink-0">{r.type.replace(/_/g," ")}</span>
                         </div>
                       ))}
                     </div>
@@ -503,7 +503,7 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
         {/* ── Canvas ── */}
         <div className="flex-1 overflow-auto">
           <div ref={containerRef}
-            className={cn("relative rounded-xl border border-white/[0.06] bg-[#0a0a16] select-none",
+            className={cn("relative rounded-xl border border-border bg-background select-none",
               editorMode==="stamp"?"cursor-crosshair":"")}
             style={{width:gridW,height:gridH,minWidth:gridW}}
             onMouseDown={onGridDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp}
@@ -569,10 +569,10 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
               {pending?(
                 <>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-zinc-200">New Room</p>
-                    <button onClick={()=>setPending(null)} className="h-6 w-6 flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-400"><X className="h-3.5 w-3.5"/></button>
+                    <p className="text-sm font-semibold text-foreground">New Room</p>
+                    <button onClick={()=>setPending(null)} className="h-6 w-6 flex items-center justify-center rounded-lg text-muted-foreground hover:text-muted-foreground"><X className="h-3.5 w-3.5"/></button>
                   </div>
-                  <p className="text-[11px] text-zinc-600">{pending.w}×{pending.h} cells at ({pending.x},{pending.y})</p>
+                  <p className="text-[11px] text-muted-foreground">{pending.w}×{pending.h} cells at ({pending.x},{pending.y})</p>
                   <div className="space-y-1"><Label className="text-xs">Name</Label>
                     <Input autoFocus value={newName} onChange={e=>setNewName(e.target.value)} placeholder="Room 215" onKeyDown={e=>e.key==="Enter"&&saveNew()}/>
                   </div>
@@ -587,10 +587,10 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
               ):selectedSpace?(
                 <>
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-zinc-200">Edit Room</p>
-                    <button onClick={()=>setSelectedId(null)} className="h-6 w-6 flex items-center justify-center rounded-lg text-zinc-600 hover:text-zinc-400"><X className="h-3.5 w-3.5"/></button>
+                    <p className="text-sm font-semibold text-foreground">Edit Room</p>
+                    <button onClick={()=>setSelectedId(null)} className="h-6 w-6 flex items-center justify-center rounded-lg text-muted-foreground hover:text-muted-foreground"><X className="h-3.5 w-3.5"/></button>
                   </div>
-                  <p className="text-[11px] text-zinc-500">{selectedSpace.width}×{selectedSpace.height} cells · ({selectedSpace.position_x},{selectedSpace.position_y})</p>
+                  <p className="text-[11px] text-muted-foreground">{selectedSpace.width}×{selectedSpace.height} cells · ({selectedSpace.position_x},{selectedSpace.position_y})</p>
                   <div className="space-y-1"><Label className="text-xs">Name</Label>
                     <Input value={editName} onChange={e=>setEditName(e.target.value)} onKeyDown={e=>e.key==="Enter"&&saveEdit()}/>
                   </div>

@@ -34,12 +34,12 @@ export default function HelpPage() {
             <BookOpen className="h-5 w-5 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-zinc-100">Help &amp; Guides</h1>
-            <p className="text-sm text-zinc-500">Everything you need to run Roomward.</p>
+            <h1 className="text-xl font-bold text-foreground">Help &amp; Guides</h1>
+            <p className="text-sm text-muted-foreground">Everything you need to run Roomward.</p>
           </div>
         </div>
         <div className="relative mt-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input placeholder="Search the guides…" value={query} onChange={(e) => setQuery(e.target.value)} className="pl-9" />
         </div>
       </div>
@@ -59,21 +59,21 @@ export default function HelpPage() {
             >
               <button
                 onClick={() => setOpen(isOpen ? null : t.id)}
-                className="w-full flex items-center gap-4 p-5 text-left hover:bg-white/[0.02] transition-colors"
+                className="w-full flex items-center gap-4 p-5 text-left hover:bg-foreground/[0.02] transition-colors"
               >
-                <div className="h-10 w-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center shrink-0">
+                <div className="h-10 w-10 rounded-xl bg-foreground/[0.04] border border-border flex items-center justify-center shrink-0">
                   <Icon className="h-5 w-5 text-indigo-400" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-zinc-100">{t.title}</h3>
-                    <span className="flex items-center gap-1 text-[10px] text-zinc-600">
+                    <h3 className="text-sm font-semibold text-foreground">{t.title}</h3>
+                    <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                       <Clock className="h-2.5 w-2.5" />{t.minutes} min
                     </span>
                   </div>
-                  <p className="text-xs text-zinc-500 mt-0.5">{t.summary}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t.summary}</p>
                 </div>
-                <ChevronDown className={cn("h-4 w-4 text-zinc-600 transition-transform shrink-0", isOpen && "rotate-180")} />
+                <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform shrink-0", isOpen && "rotate-180")} />
               </button>
 
               <AnimatePresence>
@@ -84,15 +84,15 @@ export default function HelpPage() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <ol className="px-5 pb-5 space-y-3 border-t border-white/[0.05] pt-4">
+                    <ol className="px-5 pb-5 space-y-3 border-t border-border pt-4">
                       {t.steps.map((step, si) => (
                         <li key={si} className="flex gap-3">
                           <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-500/15 text-indigo-400 text-xs font-semibold">
                             {si + 1}
                           </span>
                           <div className="min-w-0 pt-0.5">
-                            <p className="text-sm font-medium text-zinc-200">{step.title}</p>
-                            <p className="text-sm text-zinc-500 mt-0.5 leading-relaxed">{step.body}</p>
+                            <p className="text-sm font-medium text-foreground">{step.title}</p>
+                            <p className="text-sm text-muted-foreground mt-0.5 leading-relaxed">{step.body}</p>
                           </div>
                         </li>
                       ))}
@@ -105,14 +105,14 @@ export default function HelpPage() {
         })}
 
         {filtered.length === 0 && (
-          <div className="glass-card p-8 text-center text-sm text-zinc-500">
+          <div className="glass-card p-8 text-center text-sm text-muted-foreground">
             No guides match &ldquo;{query}&rdquo;.
           </div>
         )}
       </div>
 
-      <p className="text-center text-xs text-zinc-600 pt-2">
-        Still stuck? Email <span className="text-zinc-400">support@roomward.app</span> — we&apos;re happy to help.
+      <p className="text-center text-xs text-muted-foreground pt-2">
+        Still stuck? Email <span className="text-muted-foreground">support@roomward.app</span> — we&apos;re happy to help.
       </p>
     </div>
   );

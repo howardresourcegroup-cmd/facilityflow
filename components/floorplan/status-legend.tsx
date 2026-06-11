@@ -12,7 +12,7 @@ export function StatusLegend() {
       {STATUSES.map((s) => {
         const cfg = SPACE_STATUS_CONFIG[s];
         return (
-          <span key={s} className="flex items-center gap-1.5 text-xs text-zinc-500">
+          <span key={s} className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <span className={cn("h-2 w-2 rounded-full", cfg.dot)} />
             {cfg.label}
           </span>

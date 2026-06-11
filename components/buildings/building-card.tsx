@@ -54,9 +54,9 @@ export function BuildingCard({ building, index = 0, onDelete, onUpdate, canManag
             {menuOpen && (
               <>
                 <div className="fixed inset-0 z-20" onClick={() => setMenuOpen(false)} />
-                <div className="absolute right-0 top-8 z-30 w-36 rounded-xl bg-zinc-800 border border-zinc-700 shadow-xl py-1 text-sm">
+                <div className="absolute right-0 top-8 z-30 w-36 rounded-xl bg-card border border-border shadow-xl py-1 text-sm">
                   <button
-                    className="flex w-full items-center gap-2.5 px-3 py-2 text-zinc-300 hover:text-zinc-100 hover:bg-white/[0.06]"
+                    className="flex w-full items-center gap-2.5 px-3 py-2 text-foreground hover:text-foreground hover:bg-foreground/[0.06]"
                     onClick={() => { setMenuOpen(false); setEditOpen(true); }}
                   >
                     <Pencil className="h-3.5 w-3.5" />Edit
@@ -76,26 +76,26 @@ export function BuildingCard({ building, index = 0, onDelete, onUpdate, canManag
 
       <Link
         href={`/buildings/${building.id}`}
-        className="block glass-card p-5 hover:border-white/[0.12] hover:bg-[#141425] transition-all duration-200"
+        className="block glass-card p-5 hover:border-border hover:bg-card transition-all duration-200"
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-xl">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-foreground/[0.04] border border-border text-xl">
               {TYPE_ICONS[building.type] ?? "🏢"}
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-200 group-hover/card:text-white transition-colors line-clamp-1">
+              <h3 className="text-sm font-semibold text-foreground group-hover/card:text-white transition-colors line-clamp-1">
                 {building.name}
               </h3>
-              <p className="text-xs text-zinc-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 {building.city}, {building.state}
               </p>
             </div>
           </div>
-          <ArrowRight className="h-4 w-4 text-zinc-700 group-hover/card:text-zinc-400 group-hover/card:translate-x-1 transition-all" />
+          <ArrowRight className="h-4 w-4 text-muted-foreground group-hover/card:text-muted-foreground group-hover/card:translate-x-1 transition-all" />
         </div>
 
-        <div className="flex items-center gap-4 mb-4 text-xs text-zinc-500">
+        <div className="flex items-center gap-4 mb-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <Layers className="h-3 w-3" />
             {building._floor_count ?? 0} floors
@@ -132,7 +132,7 @@ export function BuildingCard({ building, index = 0, onDelete, onUpdate, canManag
         <Dialog open onOpenChange={() => setConfirmDelete(false)}>
           <DialogContent className="max-w-sm">
             <DialogHeader><DialogTitle>Delete {building.name}?</DialogTitle></DialogHeader>
-            <p className="px-6 text-sm text-zinc-400">
+            <p className="px-6 text-sm text-muted-foreground">
               This permanently removes the building, all floors, rooms, and associated data. This cannot be undone.
             </p>
             <DialogFooter className="px-6 pb-4 gap-2">
@@ -193,7 +193,7 @@ function EditBuildingModal({ building, onClose, onSaved }: {
               { label: "State", key: "state", placeholder: "GA" },
             ] as { label: string; key: keyof typeof form; placeholder: string }[]).map(({ label, key, placeholder }) => (
               <div key={key} className="space-y-1.5">
-                <label className="text-xs text-zinc-400">{label}</label>
+                <label className="text-xs text-muted-foreground">{label}</label>
                 <Input
                   value={form[key]}
                   onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}

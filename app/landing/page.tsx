@@ -7,6 +7,14 @@ import {
   ArrowRight, Check, Building2, RefreshCw,
 } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo";
+import { cn } from "@/lib/utils";
+
+const SHOWCASE = [
+  { img: "01-dashboard", title: "One dashboard for the whole property", body: "Active issues, rooms online, critical alerts, and average resolution time — all live, all in one view.", alt: "Roomward hotel operations dashboard with live work order stats and trends" },
+  { img: "02-work-orders", title: "Every request, tracked end to end", body: "Log, assign, prioritize, and close hotel maintenance with full history — nothing falls through the cracks.", alt: "Hotel work order software list showing priorities, assignees, and statuses" },
+  { img: "03-housekeeping", title: "A housekeeping board your crew actually uses", body: "Dirty → cleaning → ready, live — with room occupancy pulled straight from your PMS.", alt: "Hotel housekeeping board with dirty, in-progress, cleaned, and ready columns" },
+  { img: "05-team-chat", title: "Maintenance, housekeeping, and front desk — talking", body: "Coordinate in real time, organized by channel and kept in context. Encrypted in transit and at rest.", alt: "Roomward team chat maintenance channel with encrypted messaging" },
+];
 
 const FEATURES = [
   { icon: LayoutGrid, title: "Live floor plans", body: "Map any property top-down. Every room color-coded by status, updating in real time." },
@@ -84,6 +92,40 @@ export default function LandingPage() {
           </div>
           <p className="text-xs text-zinc-600 mt-4">14 days free · no credit card required</p>
         </motion.div>
+      </section>
+
+      {/* Hero product shot */}
+      <section className="relative z-10 max-w-5xl mx-auto px-6 pb-20">
+        <motion.img
+          src="/screenshots/00-property-map.png"
+          alt="Roomward hotel property map showing color-coded room status across four floors"
+          className="w-full h-auto"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+        />
+      </section>
+
+      {/* Feature showcase — alternating screenshots */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pb-20 space-y-14 sm:space-y-20">
+        {SHOWCASE.map((s, i) => (
+          <motion.div
+            key={s.img}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5 }}
+            className={cn("flex flex-col items-center gap-6 md:gap-10 md:flex-row", i % 2 === 1 && "md:flex-row-reverse")}
+          >
+            <div className="md:w-2/5">
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight">{s.title}</h3>
+              <p className="text-base text-zinc-400 mt-3 leading-relaxed">{s.body}</p>
+            </div>
+            <div className="md:w-3/5">
+              <img src={`/screenshots/${s.img}.png`} alt={s.alt} loading="lazy" className="w-full h-auto" />
+            </div>
+          </motion.div>
+        ))}
       </section>
 
       {/* Features */}
