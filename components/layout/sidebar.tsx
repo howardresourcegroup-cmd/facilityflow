@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
-import { usePermissions } from "@/lib/data/hooks";
+import { usePermissions, useCurrentProfile } from "@/lib/data/hooks";
 import { LogoMark } from "@/components/brand/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -34,7 +34,7 @@ const BOTTOM_ITEMS = [
 
 function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => void }) {
   const pathname = usePathname();
-  const { profile } = useAppStore();
+  const profile = useCurrentProfile();
   const { can, loading: permsLoading } = usePermissions();
   const navItems = NAV_ITEMS.filter((i) => permsLoading || can(i.perm));
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
