@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         </div>
 
         <Section title="1. Who We Are">
-          <p>Roomward is a property operations platform developed and operated by <strong className="text-zinc-200">Howard Resource Group LLC</strong>, a limited liability company based in Dawsonville, Georgia. When this policy says "Roomward," "we," "us," or "our," it means Howard Resource Group LLC.</p>
+          <p>Roomward is a property operations platform developed and operated by <strong className="text-zinc-200">Howard Resource Group LLC</strong>, a limited liability company based in Dawsonville, Georgia. When this policy says &ldquo;Roomward,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our,&rdquo; it means Howard Resource Group LLC.</p>
           <p className="mt-3">Contact: <a href="mailto:admin@howardresourcegroup.com" className="text-indigo-400 hover:text-indigo-300">admin@howardresourcegroup.com</a></p>
         </Section>
 

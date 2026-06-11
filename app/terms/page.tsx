@@ -32,7 +32,7 @@ export default function TermsPage() {
         </div>
 
         <Section title="1. Agreement">
-          <p>These Terms of Service ("Terms") are a legal agreement between you (or the organization you represent) and <strong className="text-zinc-200">Howard Resource Group LLC</strong> ("we," "us," "Roomward"). By creating an account or using Roomward, you agree to these Terms. If you do not agree, do not use the service.</p>
+          <p>These Terms of Service (&ldquo;Terms&rdquo;) are a legal agreement between you (or the organization you represent) and <strong className="text-zinc-200">Howard Resource Group LLC</strong> (&ldquo;we,&rdquo; &ldquo;us,&rdquo; &ldquo;Roomward&rdquo;). By creating an account or using Roomward, you agree to these Terms. If you do not agree, do not use the service.</p>
         </Section>
 
         <Section title="2. The Service">
@@ -45,7 +45,7 @@ export default function TermsPage() {
             <li>You must provide accurate information when creating an account.</li>
             <li>You are responsible for maintaining the security of your login credentials.</li>
             <li>You are responsible for all activity that occurs under your account.</li>
-            <li>One account may represent one organization. Each organization's data is isolated from others on the platform.</li>
+            <li>One account may represent one organization. Each organization&apos;s data is isolated from others on the platform.</li>
             <li>You must be at least 18 years old to use Roomward.</li>
           </ul>
         </Section>
@@ -54,10 +54,10 @@ export default function TermsPage() {
           <p>Roomward offers a 14-day free trial with no credit card required. After the trial, continued use requires a paid subscription.</p>
           <ul className="list-disc list-inside space-y-2 text-zinc-400 mt-3">
             <li>Subscriptions are billed monthly per property.</li>
-            <li>Payments are processed by Stripe. By subscribing you also agree to Stripe's terms.</li>
+            <li>Payments are processed by Stripe. By subscribing you also agree to Stripe&apos;s terms.</li>
             <li>Subscriptions auto-renew unless cancelled before the renewal date.</li>
             <li>Refunds are handled on a case-by-case basis — contact us within 7 days of a charge if you believe it was made in error.</li>
-            <li>We may change pricing with 30 days' notice. Continued use after the notice period constitutes acceptance.</li>
+            <li>We may change pricing with 30 days&apos; notice. Continued use after the notice period constitutes acceptance.</li>
           </ul>
         </Section>
 
@@ -65,7 +65,7 @@ export default function TermsPage() {
           <p>You agree not to:</p>
           <ul className="list-disc list-inside space-y-2 text-zinc-400 mt-3">
             <li>Use Roomward for any unlawful purpose or in violation of any regulations</li>
-            <li>Attempt to gain unauthorized access to other organizations' data</li>
+            <li>Attempt to gain unauthorized access to other organizations&apos; data</li>
             <li>Reverse engineer, decompile, or extract the source code of the platform</li>
             <li>Use automated tools to scrape or overload our infrastructure</li>
             <li>Resell or sublicense access to the platform without our written consent</li>
@@ -81,7 +81,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="7. Integrations">
-          <p>Roomward may connect to third-party systems (RoomMaster, Eptura, Opera, etc.) at your direction. We are not responsible for the availability, accuracy, or actions of those third-party systems. Any data shared with integrations is governed by those providers' own terms.</p>
+          <p>Roomward may connect to third-party systems (RoomMaster, Eptura, Opera, etc.) at your direction. We are not responsible for the availability, accuracy, or actions of those third-party systems. Any data shared with integrations is governed by those providers&apos; own terms.</p>
         </Section>
 
         <Section title="8. Intellectual Property">
@@ -94,7 +94,7 @@ export default function TermsPage() {
         </Section>
 
         <Section title="10. Disclaimers">
-          <p>Roomward is provided "as is" without warranties of any kind, express or implied. We do not warrant that the service will be uninterrupted, error-free, or completely secure. We recommend maintaining your own backups of critical operational data.</p>
+          <p>Roomward is provided &ldquo;as is&rdquo; without warranties of any kind, express or implied. We do not warrant that the service will be uninterrupted, error-free, or completely secure. We recommend maintaining your own backups of critical operational data.</p>
         </Section>
 
         <Section title="11. Termination">
