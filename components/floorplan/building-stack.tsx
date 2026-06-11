@@ -107,11 +107,15 @@ export function BuildingStack({
                       }}
                       title={`${space.name} — ${cfg.label}`}
                       className={cn(
-                        "h-5 flex-1 min-w-[14px] max-w-[28px] rounded-sm border transition-all hover:scale-110 hover:z-10",
+                        "h-6 flex-1 min-w-[24px] max-w-[42px] rounded-sm border flex items-center justify-center transition-all hover:scale-110 hover:z-10",
                         cfg.bg, cfg.border,
                         space.status === "emergency" && "animate-pulse"
                       )}
-                    />
+                    >
+                      <span className={cn("text-[8px] font-semibold leading-none truncate px-0.5", cfg.color)}>
+                        {space.name}
+                      </span>
+                    </button>
                   );
                 })}
               </div>

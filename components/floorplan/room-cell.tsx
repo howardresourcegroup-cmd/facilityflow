@@ -51,8 +51,8 @@ export function RoomCell({ space, isSelected, onClick, cellW, cellH, gap }: Room
       )}
       style={{ left: x, top: y, width: w, height: h }}
     >
-      {/* Top bar - status color accent */}
-      <div className={cn("h-0.5 w-full", `bg-${cfg.dot.split("bg-")[1]?.split(" ")[0] ?? "white"}/50`)} />
+      {/* Top bar - status color accent (cfg.dot is a static color class) */}
+      <div className={cn("h-0.5 w-full opacity-60", cfg.dot)} />
 
       <div className="flex-1 p-2 flex flex-col justify-between min-h-0">
         {/* Room name */}

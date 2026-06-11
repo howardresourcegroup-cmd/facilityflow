@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Bell, Search, Plus, LogOut, Settings as SettingsIcon, User, CheckCheck, AlertTriangle, Sparkles, Wrench, Menu } from "lucide-react";
+import { Bell, Search, LogOut, Settings as SettingsIcon, User, CheckCheck, AlertTriangle, Sparkles, Wrench, Menu } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,11 @@ import { createClient } from "@/lib/supabase/client";
 import { getInitials, cn, timeAgo } from "@/lib/utils";
 import { ClipboardList, Building2 } from "lucide-react";
 
-const PAGE_META: Record<string, { title: string; action?: { label: string; href: string } }> = {
+const PAGE_META: Record<string, { title: string }> = {
   "/": { title: "Operations Dashboard" },
-  "/buildings": { title: "Buildings", action: { label: "Add Building", href: "/buildings?new=1" } },
+  "/buildings": { title: "Buildings" },
   "/property": { title: "Property Map" },
-  "/work-orders": { title: "Work Orders", action: { label: "New Work Order", href: "/work-orders/new" } },
+  "/work-orders": { title: "Work Orders" },
   "/housekeeping": { title: "Housekeeping Board" },
   "/messages": { title: "Team Chat" },
   "/technicians": { title: "Technicians" },
@@ -134,16 +134,6 @@ export function Header() {
           </motion.button>
         )}
       </AnimatePresence>
-
-      {/* Action button */}
-      {meta.action && (
-        <Button size="sm" asChild>
-          <Link href={meta.action.href}>
-            <Plus className="h-4 w-4" />
-            {meta.action.label}
-          </Link>
-        </Button>
-      )}
 
       {/* Notifications */}
       <DropdownMenu>

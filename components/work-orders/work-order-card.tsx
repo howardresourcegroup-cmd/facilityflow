@@ -27,10 +27,8 @@ export function WorkOrderCard({ order, index = 0 }: WorkOrderCardProps) {
         href={`/work-orders/${order.id}`}
         className="group flex items-start gap-4 glass-card px-5 py-4 hover:border-white/[0.12] hover:bg-[#141425] transition-all duration-200"
       >
-        {/* Priority stripe */}
-        <div className={cn("mt-1 h-full w-0.5 self-stretch rounded-full", `bg-${pCfg.dot.split("bg-")[1]?.split(" ")[0] ?? "zinc-600"}`)}>
-          <div className="h-4 w-0.5 invisible" />
-        </div>
+        {/* Priority stripe — pCfg.dot is a static color class (e.g. bg-red-400) */}
+        <div className={cn("w-1 self-stretch rounded-full shrink-0", pCfg.dot)} />
 
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-2">
