@@ -139,7 +139,7 @@ export default function SettingsPage() {
                       <p className="text-sm font-semibold text-indigo-300">
                         {billing.isExpired ? "Trial ended" : `Free trial — ${billing.daysLeft} ${billing.daysLeft === 1 ? "day" : "days"} left`}
                       </p>
-                      <p className="text-xs text-zinc-500 mt-1">Roomward Pro · $199/mo per property · cancel anytime.</p>
+                      <p className="text-xs text-zinc-500 mt-1">Roomward Standard · $149/mo per property · cancel anytime.</p>
                     </div>
                     <Button onClick={() => setShowUpgrade(true)}>
                       <Sparkles className="h-4 w-4" />

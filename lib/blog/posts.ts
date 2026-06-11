@@ -97,6 +97,223 @@ Track how often each asset needs reactive repair. If a unit keeps breaking despi
 
 [Start a free 14-day trial](/signup) and build your property's plan in an afternoon.`,
   },
+  {
+    slug: "best-hotel-maintenance-software-2026",
+    title: "The Best Hotel Maintenance Software in 2026",
+    description: "What to look for in hotel maintenance software, the features that actually matter day-to-day, and how to choose a tool your team will use instead of working around.",
+    date: "2026-06-10",
+    readMins: 7,
+    keyword: "hotel maintenance software",
+    content: `The right **hotel maintenance software** does one thing above all else: it makes sure nothing falls through the cracks between the person who finds a problem and the person who fixes it. Everything else — the dashboards, the reports, the integrations — is secondary to that single hand-off working reliably, shift after shift.
+
+This guide covers what to look for, the features that matter once you're past the demo, and a few honest warnings about tools that look great in a sales call and gather dust three weeks later.
+
+## What hotel maintenance software is for
+
+A hotel is a building guests live inside of. When something breaks, the clock is different than it is in an office — a dead AC at 11pm is a refund and a one-star review, not a Monday-morning ticket. Maintenance software exists to shrink the time between "noticed" and "fixed," and to make sure the front desk knows a room is down before they sell it.
+
+Good software handles four jobs:
+
+- **Work orders** — log an issue, assign it, track it from open to done, with photos and a full history.
+- **Preventive maintenance** — recurring tasks that generate themselves so upkeep happens *before* something fails.
+- **Asset tracking** — a record of every HVAC unit, water heater, and elevator, with service history attached.
+- **Visibility** — a live view the whole team shares, so "what's the status of Room 214?" has an answer without three phone calls.
+
+## The features that actually matter
+
+After watching how hotel teams really use these tools, a short list separates software people *use* from software people *work around*:
+
+**It's fast to log an issue.** Your housekeepers walk every room, every day. If flagging a worn outlet takes more than a few taps on a phone, they won't do it. The single most valuable feature is a report flow so quick that the people who see problems actually report them.
+
+**It ties issues to a place.** A work order that says "leak" is useless. One that says "leak under the sink in Room 214" routes itself, tracks itself, and tells the front desk to stop selling that room. Software built for hotels maps issues to rooms and floors, not a generic location field.
+
+**It connects the front desk.** Maintenance and housekeeping status are useless if the people selling rooms can't see them. The best tools put room readiness in front of the front desk in real time.
+
+**It doesn't need training.** If a new housekeeper needs a 30-minute tutorial, the tool is too complicated for a role with high turnover. The interface should be obvious.
+
+## What to be skeptical of
+
+- **Per-seat pricing that punishes you for adding staff.** Housekeeping turns over. If every new hire costs you a license, you'll end up sharing logins — and losing accountability.
+- **Generic CMMS tools retrofitted for hotels.** Factory maintenance software can technically track a hotel, but it has no concept of a guest room, a housekeeping board, or a front desk. The mismatch shows up daily.
+- **Anything that replaces your PMS.** You don't want to rip out RoomMaster or Opera. You want a maintenance layer that *syncs* with it.
+
+## How Roomward approaches it
+
+[Roomward](/) is hotel maintenance software built around that one critical hand-off. Housekeeping flags an issue from any room in a couple taps, it becomes a tracked work order instantly, maintenance picks it up, and the front desk sees the room status the whole time. Rooms live on a real floor plan, work orders carry photos and history, and it syncs with your PMS rather than replacing it.
+
+Pricing is per property, not per seat — add your whole housekeeping team without thinking about it.
+
+[Start a free 14-day trial](/signup), no credit card, and have your first building mapped in a few minutes.`,
+  },
+  {
+    slug: "hotel-housekeeping-checklist",
+    title: "The Complete Hotel Housekeeping Checklist",
+    description: "A room-by-room hotel housekeeping checklist for daily cleans, departures, and deep cleans — plus how to keep the front desk in sync with what's ready.",
+    date: "2026-06-10",
+    readMins: 8,
+    keyword: "hotel housekeeping",
+    content: `A good **hotel housekeeping** routine is the difference between a guest who never thinks about the cleaning and one who notices everything. The goal isn't just a clean room — it's a *consistent* one, where every housekeeper hits the same standard whether it's their first week or their fifth year. A checklist is how you get there.
+
+Below is a practical, room-by-room checklist you can adapt to your property, plus a note on the part most checklists ignore: keeping the front desk in sync with what's actually ready to sell.
+
+## Daily cleaning checklist (occupied rooms)
+
+For a guest who's staying another night, you're refreshing, not resetting:
+
+- Make the bed with fresh linens or neatly remake existing ones per your policy
+- Empty all trash and replace liners
+- Wipe and disinfect bathroom surfaces, toilet, sink, and shower
+- Replace used towels and restock amenities
+- Wipe down high-touch surfaces: light switches, remotes, door handles, phone
+- Vacuum floors and spot-clean any visible marks
+- Restock coffee, water, and any in-room consumables
+- Quick check for maintenance issues — a flickering light, a slow drain, a loose fixture
+
+## Departure checklist (checkout rooms)
+
+A checkout gets a full reset:
+
+- Strip all bedding and inspect the mattress and pillows for stains or damage
+- Check under the bed and in drawers for left-behind items
+- Full bathroom deep clean — grout, mirror, fixtures, behind the toilet
+- Wipe inside drawers, closets, and the minibar
+- Inspect for damage that should become a maintenance ticket
+- Reset all amenities, linens, and supplies to standard
+- Vacuum thoroughly, including corners and under furniture
+- Final walk-through against the room's standard layout
+
+## Weekly and deep-clean tasks
+
+Some things don't need daily attention but can't be ignored:
+
+- Wash windows and wipe sills and tracks
+- Clean light fixtures and check every bulb
+- Move furniture and vacuum underneath
+- Launder or steam curtains and upholstery on a rotation
+- Descale showerheads and faucets
+- Deep-clean carpets or hard floors on a schedule
+
+## The part most checklists miss: telling the front desk
+
+Here's the gap that costs hotels the most: a room can be spotless and the front desk still doesn't know it. So they either hold a guest at the desk waiting, or — worse — assign a room that isn't actually ready.
+
+The fix is a live housekeeping board. When a housekeeper marks a room *clean and ready*, the front desk sees it change color in real time. No phone call, no radio, no walking down to check. The room moves from dirty to cleaning to ready, and everyone who needs to know, knows the moment it happens.
+
+This also catches maintenance problems early. When a housekeeper spots a slow drain during a clean, flagging it should be one tap — and it should become a work order maintenance can see immediately, not a note that gets forgotten by the end of the shift.
+
+## Making the checklist live with Roomward
+
+[Roomward](/) turns this checklist into a live board your whole team shares. Housekeepers update room status from a phone as they go, the front desk sees readiness in real time on a floor plan, and any issue spotted mid-clean becomes a tracked work order in a couple taps.
+
+[Start a free 14-day trial](/signup) — no credit card — and put your housekeeping board online today.`,
+  },
+  {
+    slug: "how-to-manage-hotel-work-orders",
+    title: "How to Manage Hotel Work Orders (Without Losing Track)",
+    description: "A practical system for managing hotel work orders — from how an issue gets reported to how it gets closed — and how to stop tickets from slipping between shifts.",
+    date: "2026-06-10",
+    readMins: 6,
+    keyword: "hotel work order software",
+    content: `Most hotels don't have a work order *problem* — they have a work order *tracking* problem. Issues get reported. They just get reported to the wrong person, on the wrong channel, at the wrong time, and then disappear into a group text or a sticky note that's gone by the next shift.
+
+Here's a system for managing hotel work orders that survives shift changes, turnover, and a busy weekend.
+
+## The five stages of a work order
+
+Every maintenance issue, no matter how small, moves through the same path:
+
+1. **Reported** — someone notices a problem and logs it.
+2. **Assigned** — it goes to a specific person, not a general pile.
+3. **In progress** — someone is actively working on it.
+4. **Blocked or waiting** — sometimes it needs a part or a vendor; this stage keeps it visible instead of stalled-and-forgotten.
+5. **Closed** — fixed, verified, and logged with what was done.
+
+The goal of any system is to make sure every issue is always in exactly one of these stages and never falls *between* them.
+
+## Where hotels lose track
+
+The breakdowns are almost always at the seams:
+
+- **Reported → Assigned.** A housekeeper tells the front desk, the front desk means to tell maintenance, and it never happens. The hand-off dies.
+- **In progress → Closed.** A tech fixes something but never marks it done, so it gets re-reported or a manager chases a problem that's already solved.
+- **Across shifts.** The morning team's knowledge doesn't reach the evening team. Whatever wasn't written down is gone.
+
+Every one of these is a *visibility* failure, not an effort failure. Your team is working — they just can't see each other's work.
+
+## Building a system that holds
+
+A few principles make work orders stick:
+
+**One place, not five.** Texts, radios, sticky notes, and verbal hand-offs can't be searched or audited. Everything in one system means nothing depends on someone remembering.
+
+**Every issue tied to a room.** "The TV is broken" is a mystery. "The TV in 214 is broken" routes itself and warns the front desk.
+
+**Photos by default.** A picture of the damage saves a trip and removes the back-and-forth about what's actually wrong.
+
+**Status anyone can check.** When the front desk can see that Room 214 is *in progress*, they stop calling maintenance to ask — and they stop selling the room.
+
+**A history that outlives the shift.** When every order is logged with what was done, the next shift inherits the knowledge instead of starting blind.
+
+## Why software beats a binder here
+
+You can run this system on paper, and small properties do. But paper can't notify the right person, can't be in two places at once, and can't show the front desk a live status. Once you're past a handful of rooms, [hotel work order software](/) pays for itself the first time it prevents a single re-sold down room.
+
+## How Roomward handles it
+
+[Roomward](/) is built around exactly these five stages. Anyone can report an issue in a couple taps — tied to a room, with a photo. It routes to maintenance, moves through each stage where everyone can see it, and closes with a full history. The front desk watches room status update live, so a down room never gets sold by accident.
+
+[Start a free 14-day trial](/signup), no credit card, and log your first work order in minutes.`,
+  },
+  {
+    slug: "what-is-hotel-operations-management",
+    title: "What Is a Hotel Operations Management System?",
+    description: "A clear explanation of hotel operations management systems — what they do, how they differ from a PMS, and when a property needs one.",
+    date: "2026-06-10",
+    readMins: 6,
+    keyword: "hotel operations management software",
+    content: `A **hotel operations management system** is the software that coordinates the work *behind* the guest experience — maintenance, housekeeping, and the daily hand-offs between front desk, cleaning staff, and technicians. If a PMS manages the *guest* (their booking, their bill, their stay), an operations system manages the *property* and the *people keeping it running*.
+
+The two are often confused, so let's draw the line clearly.
+
+## Operations system vs. PMS
+
+A **property management system** (PMS) — like Opera, Cloudbeds, or RoomMaster — handles reservations, check-in and check-out, rates, and billing. It's the system of record for the guest's stay.
+
+A **hotel operations management system** handles everything that keeps the rooms *sellable*: work orders, preventive maintenance, the housekeeping board, asset tracking, and team coordination. It's the system of record for the work.
+
+You need both. The PMS sells the room; the operations system makes sure the room is ready, clean, and not broken when it's sold. The best setups have the two *talking to each other* — when housekeeping marks a room ready in operations, the PMS knows it can be assigned.
+
+## What an operations system actually coordinates
+
+- **Maintenance** — every issue from report to repair, tied to a specific room or asset.
+- **Housekeeping** — a live board showing which rooms are dirty, being cleaned, or ready to sell.
+- **Preventive upkeep** — recurring tasks so equipment is serviced before it fails.
+- **Team coordination** — the hand-offs between the person who *sees* a problem and the person who *fixes* it.
+- **Visibility** — a shared, real-time view so no one has to make phone calls to find out a room's status.
+
+## The problem it solves
+
+In most hotels, the people who spot problems (housekeepers, front desk) are not the people who fix them (maintenance). That hand-off — across roles, across shifts — is where time and money leak out. A guest finds the issue you missed, you comp the room, and a bad review follows.
+
+A hotel operations management system closes that gap. The housekeeper flags a leak, it instantly becomes a work order, maintenance sees it, and the front desk knows the room is down before selling it. Nothing depends on someone remembering to pass a message along.
+
+## When a property needs one
+
+You've outgrown manual coordination when:
+
+- Issues get reported twice, or not at all
+- Nobody can answer "is Room 214 ready?" without a phone call
+- Preventive maintenance only happens after something breaks
+- Knowledge doesn't survive shift changes
+
+If two or more sound familiar, you're paying the cost of *not* having a system — you just don't see it on an invoice.
+
+## How Roomward fits
+
+[Roomward](/) is a hotel operations management system that connects maintenance, housekeeping, and the front desk in one live view. Rooms appear on a real floor plan, issues become tracked work orders the moment they're spotted, and a real-time housekeeping board keeps the front desk in sync. It syncs with your PMS rather than replacing it — adding the operations layer on top of the system you already use.
+
+[Start a free 14-day trial](/signup), no credit card required, and see your whole property in one place.`,
+  },
 ];
 
 export const getPost = (slug: string) => POSTS.find((p) => p.slug === slug);

@@ -10,16 +10,40 @@ import { LogoMark } from "@/components/brand/logo";
 
 const FEATURES = [
   { icon: LayoutGrid, title: "Live floor plans", body: "Map any property top-down. Every room color-coded by status, updating in real time." },
-  { icon: ClipboardList, title: "Work orders", body: "Log, assign, photo-document, and close maintenance — with full history and priorities." },
-  { icon: BedDouble, title: "Housekeeping board", body: "Dirty → cleaning → ready, live. Front desk sees which rooms are ready the moment they are." },
+  { icon: ClipboardList, title: "Work order software", body: "Log, assign, photo-document, and close hotel maintenance — with full history and priorities." },
+  { icon: BedDouble, title: "Housekeeping software", body: "Dirty → cleaning → ready, live. Front desk sees which rooms are ready the moment they are." },
   { icon: RefreshCw, title: "Syncs your PMS", body: "Two-way sync with RoomMaster and Eptura — adds a live operations layer, doesn't replace them." },
   { icon: KeyRound, title: "Roles & permissions", body: "Front desk, housekeeping, maintenance, GM — each role sees exactly what it needs. Fully configurable." },
   { icon: MessageSquare, title: "Team chat", body: "Coordinate in real time, organized by channel, encrypted in transit and at rest." },
 ];
 
+const SOFTWARE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Roomward",
+  applicationCategory: "BusinessApplication",
+  applicationSubCategory: "Hotel Maintenance & Operations Management Software",
+  operatingSystem: "Web",
+  url: "https://roomward.app",
+  description:
+    "Roomward is hotel operations management software — work orders, housekeeping, maintenance tracking, team chat, and PMS sync in one place.",
+  offers: {
+    "@type": "Offer",
+    price: "149",
+    priceCurrency: "USD",
+    description: "Roomward Standard — per property, per month. 14-day free trial, no credit card required.",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Howard Resource Group LLC",
+    url: "https://howardresourcegroup.com",
+  },
+};
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#080811] text-zinc-100">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_SCHEMA) }} />
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[1000px] rounded-full bg-indigo-600/10 blur-[140px]" />
