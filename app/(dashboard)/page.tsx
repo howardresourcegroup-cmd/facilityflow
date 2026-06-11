@@ -7,7 +7,7 @@ import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { WorkOrderCard } from "@/components/work-orders/work-order-card";
 import { GettingStarted } from "@/components/dashboard/getting-started";
 import { MOCK_STATS } from "@/lib/mock-data";
-import { useWorkOrders, useDashboardStats, useCurrentProfile, usePermissions, useRecentActivity, useOrganization } from "@/lib/data/hooks";
+import { useWorkOrders, useDashboardStats, useCurrentProfile, usePermissions, useRecentActivity, useOrganization, useBuildings } from "@/lib/data/hooks";
 
 const MetricsChart    = dynamic(() => import("@/components/dashboard/metrics-chart").then(m => ({ default: m.MetricsChart })), { ssr: false });
 const ActivityFeed    = dynamic(() => import("@/components/dashboard/activity-feed").then(m => ({ default: m.ActivityFeed })), { ssr: false });
@@ -21,6 +21,7 @@ const FrontDeskDashboard = dynamic(() => import("@/components/dashboard/role-das
 
 export default function DashboardPage() {
   const { workOrders } = useWorkOrders();
+  const { buildings } = useBuildings();
   const stats = useDashboardStats();
   const profile = useCurrentProfile();
   const { can } = usePermissions();
@@ -96,7 +97,7 @@ export default function DashboardPage() {
           <div className="h-[320px]">
             <ActivityFeed items={activity.slice(0, 6)} />
           </div>
-          <BuildingHealth />
+          <BuildingHealth buildings={buildings} />
           {showIntegrations && <IntegrationsPanel />}
         </div>
       </div>
