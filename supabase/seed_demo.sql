@@ -127,7 +127,7 @@ begin
     (v_f1, 'Laundry Room',       'mechanical', 'operational',       10,4, 4, 2, 'ready',         'vacant');
 
   -- ── Guest rooms (floors 2–4, 12 rooms each) ─────────────────────────────────
-  for fl in select * from (values (v_f2, 200), (v_f3, 300), (v_f4, 400)) as t(fid uuid, base int)
+  for fl in select * from (values (v_f2, 200), (v_f3, 300), (v_f4, 400)) as t(fid, base)
   loop
     insert into spaces (floor_id, name, type, status, position_x, position_y, width, height, housekeeping_status, occupancy)
     select
