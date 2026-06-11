@@ -2,12 +2,21 @@
 
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { useBuildings } from "@/lib/data/hooks";
 import { LogoMark } from "@/components/brand/logo";
 import { BuildingSetupForm } from "./building-setup-form";
 
+// Pages that must stay reachable even before a building exists — account-level
+// settings, profile, appearance, billing, and help don't depend on a property.
+const ALWAYS_ALLOWED = ["/settings", "/help"];
+
 export function BuildingSetupGuard({ children }: { children: React.ReactNode }) {
   const { buildings, loading, reload } = useBuildings();
+  const pathname = usePathname();
+  const bypass = ALWAYS_ALLOWED.some((p) => pathname.startsWith(p));
+
+  if (bypass) return <>{children}</>;
 
   if (loading) {
     return (
