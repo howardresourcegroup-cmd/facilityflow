@@ -56,14 +56,14 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
             <Link key={href} href={href} onClick={onNav}
               className={cn(
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
-                active ? "bg-indigo-500/15 text-indigo-300" : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.05]"
+                active ? "bg-accent-500/15 text-accent-300" : "text-muted-foreground hover:text-foreground hover:bg-white/[0.05]"
               )}>
               {active && (
                 <motion.div layoutId="sidebar-active"
-                  className="absolute inset-0 rounded-lg bg-indigo-500/15"
+                  className="absolute inset-0 rounded-lg bg-accent-500/15"
                   transition={{ type: "spring", bounce: 0.15, duration: 0.4 }} />
               )}
-              <Icon className={cn("h-4 w-4 shrink-0 relative z-10", active && "text-indigo-400")} />
+              <Icon className={cn("h-4 w-4 shrink-0 relative z-10", active && "text-accent-400")} />
               <AnimatePresence>
                 {!collapsed && (
                   <motion.span initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -6 }}
@@ -86,11 +86,11 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
         })}
       </nav>
 
-      <div className="border-t border-white/[0.05] px-2 py-3 space-y-0.5">
+      <div className="border-t border-border px-2 py-3 space-y-0.5">
         {BOTTOM_ITEMS.map(({ href, icon: Icon, label }) => {
           const item = (
             <Link key={href} href={href} onClick={onNav}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.05] transition-all duration-150">
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/[0.05] transition-all duration-150">
               <Icon className="h-4 w-4 shrink-0" />
               <AnimatePresence>
                 {!collapsed && (
@@ -128,8 +128,8 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
           <AnimatePresence>
             {!collapsed && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-w-0 overflow-hidden">
-                <p className="text-xs font-medium text-zinc-300 truncate">{profile?.full_name ?? "Team Member"}</p>
-                <p className="text-[10px] text-zinc-500 capitalize truncate">{profile?.role ?? "viewer"}</p>
+                <p className="text-xs font-medium text-foreground truncate">{profile?.full_name ?? "Team Member"}</p>
+                <p className="text-[10px] text-muted-foreground capitalize truncate">{profile?.role ?? "viewer"}</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -148,15 +148,15 @@ export function Sidebar() {
       <motion.aside
         animate={{ width: sidebarCollapsed ? 64 : 232 }}
         transition={{ duration: 0.2, ease: "easeInOut" }}
-        className="relative hidden md:flex h-screen flex-col bg-[#09091a] border-r border-white/[0.05] z-20 flex-shrink-0"
+        className="relative hidden md:flex h-screen flex-col bg-card border-r border-border z-20 flex-shrink-0"
       >
-        <div className="flex h-14 items-center gap-3 px-4 border-b border-white/[0.05]">
-          <LogoMark className="h-8 w-8 shrink-0 rounded-lg shadow-lg shadow-indigo-500/25" />
+        <div className="flex h-14 items-center gap-3 px-4 border-b border-border">
+          <LogoMark className="h-8 w-8 shrink-0 rounded-lg shadow-lg shadow-accent-500/25" />
           <AnimatePresence>
             {!sidebarCollapsed && (
               <motion.span initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }}
                 transition={{ duration: 0.15 }}
-                className="text-sm font-bold text-zinc-100 tracking-tight whitespace-nowrap overflow-hidden">
+                className="text-sm font-bold text-foreground tracking-tight whitespace-nowrap overflow-hidden">
                 Roomward
               </motion.span>
             )}
@@ -166,7 +166,7 @@ export function Sidebar() {
         <NavContent collapsed={sidebarCollapsed} />
 
         <button onClick={toggleSidebar}
-          className="absolute -right-3 top-[4.5rem] flex h-6 w-6 items-center justify-center rounded-full bg-[#141428] border border-white/[0.08] text-zinc-500 hover:text-zinc-300 transition-colors shadow-lg">
+          className="absolute -right-3 top-[4.5rem] flex h-6 w-6 items-center justify-center rounded-full bg-card-hover border border-white/[0.08] text-muted-foreground hover:text-foreground transition-colors shadow-lg">
           <motion.div animate={{ rotate: sidebarCollapsed ? 180 : 0 }} transition={{ duration: 0.2 }}>
             <ChevronLeft className="h-3 w-3" />
           </motion.div>
@@ -193,15 +193,15 @@ export function MobileSidebar() {
           <motion.aside
             initial={{ x: -280 }} animate={{ x: 0 }} exit={{ x: -280 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed left-0 top-0 h-full w-64 flex flex-col bg-[#09091a] border-r border-white/[0.05] z-50 md:hidden"
+            className="fixed left-0 top-0 h-full w-64 flex flex-col bg-card border-r border-border z-50 md:hidden"
           >
-            <div className="flex h-14 items-center justify-between px-4 border-b border-white/[0.05]">
+            <div className="flex h-14 items-center justify-between px-4 border-b border-border">
               <div className="flex items-center gap-3">
-                <LogoMark className="h-8 w-8 shrink-0 rounded-lg shadow-lg shadow-indigo-500/25" />
-                <span className="text-sm font-bold text-zinc-100 tracking-tight">Roomward</span>
+                <LogoMark className="h-8 w-8 shrink-0 rounded-lg shadow-lg shadow-accent-500/25" />
+                <span className="text-sm font-bold text-foreground tracking-tight">Roomward</span>
               </div>
               <button onClick={closeMobileSidebar}
-                className="h-8 w-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.06] transition-colors">
+                className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors">
                 <X className="h-4 w-4" />
               </button>
             </div>

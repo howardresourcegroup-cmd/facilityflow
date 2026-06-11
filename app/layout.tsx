@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider, THEME_INIT_SCRIPT } from "@/components/theme-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,7 +44,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} dark`} suppressHydrationWarning>
-      <body className="font-sans antialiased">{children}</body>
+      <head>
+        {/* Apply saved theme before paint to avoid a flash of the wrong theme */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
+      <body className="font-sans antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

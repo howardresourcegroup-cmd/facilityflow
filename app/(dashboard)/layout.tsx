@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <OnboardingGuard>
       <WelcomeModal />
-      <div className="flex h-screen overflow-hidden bg-[#080811]">
+      <div className="flex h-screen overflow-hidden bg-background">
         {/* Desktop sidebar — hidden on mobile */}
         <Sidebar />
         {/* Mobile slide-out drawer */}

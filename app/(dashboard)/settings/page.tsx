@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check, CreditCard, Sparkles, Loader2 } from "lucide-react";
+import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check, CreditCard, Sparkles, Loader2, Palette, Sun, Moon } from "lucide-react";
+import { useTheme, ACCENTS, type AccentKey } from "@/components/theme-provider";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import { UpgradeModal } from "@/components/billing/upgrade-modal";
 const SECTIONS = [
   { id: "org",      label: "Organization",     icon: Building2 },
   { id: "billing",  label: "Billing & Plan",   icon: CreditCard },
+  { id: "appearance", label: "Appearance",     icon: Palette },
   { id: "roles",    label: "Roles & Permissions", icon: KeyRound },
   { id: "team",     label: "Team",             icon: Users },
   { id: "notifs",   label: "Notifications",    icon: Bell },
@@ -152,6 +154,8 @@ export default function SettingsPage() {
             </div>
           )}
 
+          {activeSection === "appearance" && <AppearancePanel />}
+
           {activeSection === "roles" && <RolesManager />}
 
           {activeSection === "integrations" && (
@@ -211,6 +215,68 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function AppearancePanel() {
+  const { mode, accent, setMode, setAccent } = useTheme();
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-base font-semibold text-zinc-200">Appearance</h2>
+        <p className="text-xs text-zinc-500 mt-0.5">Personalize how Roomward looks. Saved to this device.</p>
+      </div>
+
+      {/* Mode */}
+      <div className="space-y-2.5">
+        <Label className="text-xs text-zinc-400">Theme</Label>
+        <div className="grid grid-cols-2 gap-3 max-w-sm">
+          {([
+            { key: "dark",  label: "Dark",  icon: Moon, preview: "bg-[#0f0f1a]" },
+            { key: "light", label: "Light (beta)", icon: Sun,  preview: "bg-slate-100" },
+          ] as const).map(({ key, label, icon: Icon, preview }) => (
+            <button
+              key={key}
+              onClick={() => setMode(key)}
+              className={cn(
+                "flex items-center gap-3 rounded-xl border p-3 transition-all",
+                mode === key
+                  ? "border-accent-500 bg-accent-500/10"
+                  : "border-white/[0.08] hover:border-white/[0.16]"
+              )}
+            >
+              <span className={cn("h-8 w-8 rounded-lg border border-white/10 flex items-center justify-center", preview)}>
+                <Icon className={cn("h-4 w-4", key === "light" ? "text-slate-600" : "text-zinc-400")} />
+              </span>
+              <span className="text-sm font-medium text-zinc-200">{label}</span>
+              {mode === key && <Check className="h-4 w-4 text-accent-400 ml-auto" />}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Accent */}
+      <div className="space-y-2.5">
+        <Label className="text-xs text-zinc-400">Accent color</Label>
+        <div className="flex flex-wrap gap-2.5">
+          {(Object.keys(ACCENTS) as AccentKey[]).map((key) => (
+            <button
+              key={key}
+              onClick={() => setAccent(key)}
+              title={ACCENTS[key].label}
+              className={cn(
+                "h-9 w-9 rounded-full border-2 transition-all flex items-center justify-center",
+                accent === key ? "border-white/80 scale-110" : "border-transparent hover:scale-105"
+              )}
+              style={{ backgroundColor: ACCENTS[key].swatch }}
+            >
+              {accent === key && <Check className="h-4 w-4 text-white drop-shadow" />}
+            </button>
+          ))}
+        </div>
+        <p className="text-[11px] text-zinc-600">Buttons, links, and highlights use this color.</p>
       </div>
     </div>
   );

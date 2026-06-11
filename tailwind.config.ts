@@ -14,6 +14,28 @@ const config: Config = {
         mono: ["var(--font-mono)", "monospace"],
       },
       colors: {
+        // Semantic, theme-aware tokens (driven by CSS vars in globals.css).
+        // Use these for converted UI so it follows light/dark + accent.
+        background: "rgb(var(--background) / <alpha-value>)",
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        card: {
+          DEFAULT: "rgb(var(--card) / <alpha-value>)",
+          hover: "rgb(var(--card-hover) / <alpha-value>)",
+          foreground: "rgb(var(--card-foreground) / <alpha-value>)",
+        },
+        "muted-foreground": "rgb(var(--muted-foreground) / <alpha-value>)",
+        primary: {
+          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
+          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
+        },
+        ring: "rgb(var(--ring) / <alpha-value>)",
+        // Accent ramp — follows the user's chosen accent color
+        accent: {
+          300: "rgb(var(--accent-300) / <alpha-value>)",
+          400: "rgb(var(--accent-400) / <alpha-value>)",
+          500: "rgb(var(--accent-500) / <alpha-value>)",
+          600: "rgb(var(--accent-600) / <alpha-value>)",
+        },
         brand: {
           50: "#eef2ff",
           100: "#e0e7ff",
