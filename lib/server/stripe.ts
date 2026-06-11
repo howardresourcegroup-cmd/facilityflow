@@ -82,6 +82,21 @@ export async function createIncompleteSubscription(customerId: string, orgId: st
   return { subscriptionId: data.id, clientSecret };
 }
 
+// Fetch a price's real amount (in cents) and recurring interval from Stripe.
+// Used to guard against the displayed price drifting from what's actually charged.
+export async function fetchPrice(priceId: string): Promise<{ unitAmount: number; currency: string; interval: string | null }> {
+  const res = await fetch(`${STRIPE_API}/prices/${priceId}`, {
+    headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message ?? "Price fetch failed");
+  return {
+    unitAmount: data.unit_amount as number,
+    currency: data.currency as string,
+    interval: data.recurring?.interval ?? null,
+  };
+}
+
 // Open the Stripe customer billing portal for an existing customer.
 export async function createPortalSession(customerId: string, returnUrl: string): Promise<string> {
   const res = await fetch(`${STRIPE_API}/billing_portal/sessions`, {
