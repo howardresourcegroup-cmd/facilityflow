@@ -56,14 +56,14 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
             <Link key={href} href={href} onClick={onNav}
               className={cn(
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
-                active ? "bg-accent-500/15 text-accent-300" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
+                active ? "bg-accent-500/15 text-accent-text" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
               )}>
               {active && (
                 <motion.div layoutId="sidebar-active"
                   className="absolute inset-0 rounded-lg bg-accent-500/15"
                   transition={{ type: "spring", bounce: 0.15, duration: 0.4 }} />
               )}
-              <Icon className={cn("h-4 w-4 shrink-0 relative z-10", active && "text-accent-400")} />
+              <Icon className={cn("h-4 w-4 shrink-0 relative z-10", active && "text-accent-text")} />
               <AnimatePresence>
                 {!collapsed && (
                   <motion.span initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -6 }}

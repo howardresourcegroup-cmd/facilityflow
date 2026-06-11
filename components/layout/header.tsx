@@ -180,7 +180,7 @@ export function Header() {
           )}
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/work-orders" className="justify-center text-xs text-accent-400">View all work orders</Link>
+            <Link href="/work-orders" className="justify-center text-xs text-accent-text">View all work orders</Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

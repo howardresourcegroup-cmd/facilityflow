@@ -251,7 +251,7 @@ function AppearancePanel() {
                 <Icon className={cn("h-4 w-4", key === "light" ? "text-slate-600" : "text-muted-foreground")} />
               </span>
               <span className="text-sm font-medium text-foreground">{label}</span>
-              {mode === key && <Check className="h-4 w-4 text-accent-400 ml-auto" />}
+              {mode === key && <Check className="h-4 w-4 text-accent-text ml-auto" />}
             </button>
           ))}
         </div>
