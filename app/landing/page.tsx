@@ -41,14 +41,14 @@ export default function LandingPage() {
       <section className="relative z-10 max-w-4xl mx-auto px-6 pt-16 pb-20 text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-3 py-1 mb-6">
-            <Building2 className="h-3 w-3" /> For hotels, lodges, parks & facilities
+            <Building2 className="h-3 w-3" /> Operations management for hotels, lodges &amp; facilities
           </span>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
-            The operations layer<br />for your spaces.
+            Your property&apos;s operations<br />command center.
           </h1>
           <p className="text-lg text-zinc-400 mt-5 max-w-2xl mx-auto leading-relaxed">
-            Roomward keeps your team and your property in sync — live floor plans, work orders,
-            housekeeping, and your PMS, all in one place. Where things get seen, assigned, and done.
+            Roomward is your operations management assistant — live floor plans, work orders,
+            housekeeping, team chat, and PMS sync in one place. Every issue seen, assigned, and resolved faster.
           </p>
           <div className="flex items-center justify-center gap-3 mt-8">
             <Link href="/signup" className="btn-primary text-base h-11 px-6">
