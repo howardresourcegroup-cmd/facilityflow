@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: ["/", "/login", "/signup", "/blog"],
-      disallow: ["/api/", "/buildings", "/work-orders", "/housekeeping", "/settings", "/reports", "/assets", "/messages", "/technicians", "/help"],
+      allow: ["/", "/landing", "/login", "/signup", "/blog", "/privacy", "/terms"],
+      disallow: ["/api/", "/buildings", "/work-orders", "/housekeeping", "/settings", "/reports", "/assets", "/messages", "/technicians", "/help", "/front-desk", "/property", "/auth/"],
     },
     sitemap: "https://roomward.app/sitemap.xml",
     host: "https://roomward.app",
