@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Building2, Layers, DoorClosed, Filter, LayoutGrid, Rows3 } from "lucide-react";
-import { useBuildings, useBuildingDetail } from "@/lib/data/hooks";
+import { useBuildings, useBuildingDetail, useAssets, useWorkOrders } from "@/lib/data/hooks";
 import { OccupancyBadge } from "@/components/rooms/occupancy-badge";
 import { PageLoader } from "@/components/shared/loading-spinner";
 import { SPACE_STATUS_CONFIG, cn } from "@/lib/utils";
@@ -20,6 +20,14 @@ const OCC_COLOR: Record<Occupancy, string> = {
   occupied: "bg-red-400", vacant: "bg-emerald-400", arriving: "bg-amber-400", departing: "bg-blue-400",
 };
 const GUEST_TYPES = ["guest_room", "suite", "cabin"];
+
+// Asset status → label + badge classes (mirrors the Assets page)
+const ASSET_STATUS: Record<string, { label: string; badge: string }> = {
+  operational: { label: "Operational",    badge: "bg-emerald-500/15 text-emerald-400" },
+  maintenance: { label: "In Maintenance", badge: "bg-amber-500/15 text-amber-400" },
+  degraded:    { label: "Degraded",       badge: "bg-amber-500/15 text-amber-400" },
+  failed:      { label: "Failed",         badge: "bg-red-500/15 text-red-400" },
+};
 
 function dotFor(mode: Mode, s: Space): string {
   if (mode === "occupancy") return OCC_COLOR[s.occupancy ?? "vacant"];
@@ -109,6 +117,8 @@ export default function PropertyPage() {
   useEffect(() => { if (!bId && buildings.length) setBId(buildings[0].id); }, [buildings, bId]);
 
   const { floors, spaces, loading: dLoading } = useBuildingDetail(bId);
+  const { assets } = useAssets();
+  const { workOrders } = useWorkOrders();
   const [fId, setFId] = useState("");
   useEffect(() => { setFId(floors[0]?.id ?? ""); }, [floors, bId]);
 
@@ -122,6 +132,15 @@ export default function PropertyPage() {
     if (guestOnly) list = list.filter((s) => GUEST_TYPES.includes(s.type));
     return [...list].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
   }, [spaces, fId, guestOnly]);
+
+  const roomAssets = useMemo(
+    () => (selected ? assets.filter((a) => a.space_id === selected.id) : []),
+    [assets, selected]
+  );
+  const roomOrders = useMemo(
+    () => (selected ? workOrders.filter((o) => o.space_id === selected.id && o.status !== "completed" && o.status !== "cancelled") : []),
+    [workOrders, selected]
+  );
 
   const counts = useMemo(() => ({
     occupied: spaces.filter((r) => r.occupancy === "occupied").length,
@@ -279,6 +298,37 @@ export default function PropertyPage() {
                       <Row label="Housekeeping"><span className="capitalize text-foreground">{(selected.housekeeping_status ?? "ready").replace(/_/g, " ")}</span></Row>
                       <Row label="Condition"><span className={SPACE_STATUS_CONFIG[selected.status]?.color}>{SPACE_STATUS_CONFIG[selected.status]?.label}</span></Row>
                     </div>
+                    {/* Assets in this room */}
+                    <div className="space-y-1.5 pt-2 border-t border-border">
+                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Assets ({roomAssets.length})</p>
+                      {roomAssets.length === 0 ? (
+                        <p className="text-[11px] text-muted-foreground">No assets tracked in this room.</p>
+                      ) : (
+                        <div className="space-y-1.5">
+                          {roomAssets.map((a) => (
+                            <div key={a.id} className="flex items-center justify-between gap-2">
+                              <span className="text-xs text-foreground truncate" title={a.name}>{a.name}</span>
+                              <span className={cn("text-[10px] px-1.5 py-0.5 rounded-md shrink-0", (ASSET_STATUS[a.status] ?? ASSET_STATUS.operational).badge)}>
+                                {(ASSET_STATUS[a.status] ?? { label: a.status }).label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Open work orders in this room */}
+                    {roomOrders.length > 0 && (
+                      <div className="space-y-1.5 pt-2 border-t border-border">
+                        <p className="text-[11px] text-muted-foreground uppercase tracking-wider">Open issues ({roomOrders.length})</p>
+                        {roomOrders.map((o) => (
+                          <Link key={o.id} href={`/work-orders/${o.id}`} className="block text-xs text-foreground truncate hover:text-accent-text transition-colors" title={o.title}>
+                            {o.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+
                     <Link href="/work-orders/new" className="btn-secondary w-full justify-center text-xs h-8">
                       <DoorClosed className="h-3.5 w-3.5" /> Log an issue here
                     </Link>
