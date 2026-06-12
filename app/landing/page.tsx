@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   LayoutGrid, ClipboardList, BedDouble, KeyRound, MessageSquare,
   ArrowRight, Check, Building2, RefreshCw,
@@ -52,9 +51,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#080811] text-zinc-100">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_SCHEMA) }} />
-      {/* Background glow */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[1000px] rounded-full bg-indigo-600/10 blur-[140px]" />
+      {/* Background glow — desktop only; absolute (not fixed) so it doesn't repaint on scroll */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[700px] overflow-hidden hidden md:block">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[1000px] rounded-full bg-indigo-600/10 blur-[120px]" />
       </div>
 
       {/* Header */}
@@ -71,7 +70,7 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="relative z-10 max-w-4xl mx-auto px-6 pt-16 pb-20 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <div className="animate-fade-in">
           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-3 py-1 mb-6">
             <Building2 className="h-3 w-3" /> Hotel maintenance &amp; operations management software
           </span>
@@ -91,12 +90,12 @@ export default function LandingPage() {
             </Link>
           </div>
           <p className="text-xs text-zinc-600 mt-4">14 days free · no credit card required</p>
-        </motion.div>
+        </div>
       </section>
 
       {/* Hero product shot */}
       <section className="relative z-10 max-w-5xl mx-auto px-6 pb-20">
-        <motion.img
+        <img
           src="/screenshots/00-property-map.webp"
           alt="Roomward hotel property map showing color-coded room status across four floors"
           width={1300}
@@ -104,21 +103,14 @@ export default function LandingPage() {
           decoding="async"
           fetchPriority="high"
           className="w-full h-auto"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
         />
       </section>
 
       {/* Feature showcase — alternating screenshots */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pb-20 space-y-14 sm:space-y-20">
         {SHOWCASE.map((s, i) => (
-          <motion.div
+          <div
             key={s.img}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5 }}
             className={cn("flex flex-col items-center gap-6 md:gap-10 md:flex-row", i % 2 === 1 && "md:flex-row-reverse")}
           >
             <div className="md:w-2/5">
@@ -128,28 +120,21 @@ export default function LandingPage() {
             <div className="md:w-3/5">
               <img src={`/screenshots/${s.img}.webp`} alt={s.alt} width={1300} height={877} loading="lazy" decoding="async" className="w-full h-auto" />
             </div>
-          </motion.div>
+          </div>
         ))}
       </section>
 
       {/* Features */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FEATURES.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
-              className="glass-card p-5"
-            >
+          {FEATURES.map((f) => (
+            <div key={f.title} className="glass-card p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/15 border border-indigo-500/20 mb-3">
                 <f.icon className="h-5 w-5 text-indigo-400" />
               </div>
               <h3 className="text-sm font-semibold text-zinc-100">{f.title}</h3>
               <p className="text-sm text-zinc-500 mt-1 leading-relaxed">{f.body}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
