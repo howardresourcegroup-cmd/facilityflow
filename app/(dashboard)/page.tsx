@@ -64,7 +64,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <StatsGrid stats={stats ?? MOCK_STATS} />
+      <div data-tour="stats">
+        <StatsGrid stats={stats ?? MOCK_STATS} />
+      </div>
 
       {/* Main grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

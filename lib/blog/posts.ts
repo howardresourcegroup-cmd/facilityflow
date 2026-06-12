@@ -314,6 +314,150 @@ If two or more sound familiar, you're paying the cost of *not* having a system �
 
 [Start a free 14-day trial](/signup), no credit card required, and see your whole property in one place.`,
   },
+  {
+    slug: "hotel-maintenance-checklist",
+    title: "The Complete Hotel Maintenance Checklist (Daily, Weekly, Monthly)",
+    description: "A practical hotel maintenance checklist covering daily walkthroughs, weekly equipment checks, and monthly deep inspections — plus how to actually keep up with it.",
+    date: "2026-06-12",
+    readMins: 7,
+    keyword: "hotel maintenance checklist",
+    content: `Most hotel maintenance problems don't start as problems. They start as a drip nobody logged, a filter nobody changed, a strange noise everybody heard and nobody owned. A maintenance checklist works because it catches those things on a schedule — before a guest does.
+
+Here's a working checklist you can adapt to your property, organized by how often each item needs eyes on it.
+
+## Daily
+
+These take one walkthrough and prevent the issues guests notice most:
+
+- **Public areas** — lobby, hallways, and entrances: lighting out? Trip hazards? Doors closing properly?
+- **Pool readings** — chlorine and pH, logged with a timestamp (your health inspector will ask).
+- **Elevator function** — a ride, not a glance. Listen for new sounds.
+- **Laundry equipment** — lint traps cleared, no error codes, no burning smells.
+- **Boiler / water temperature** — hot water at the tap within a safe, comfortable range.
+- **Any room flagged by housekeeping** — the cleaning crew sees every room daily; they're your best inspectors. Make it effortless for them to report what they find.
+
+## Weekly
+
+- **HVAC filters in high-traffic areas** — check, don't assume. Dirty filters are the quiet killer of both air quality and energy bills.
+- **Kitchen equipment** — door gaskets on refrigeration, drain lines, hood filters.
+- **Exterior walk** — signage lit, lot lights working, walkways clear, irrigation not watering the sidewalk.
+- **A floor of guest rooms on rotation** — at 7 floors, every room gets a real look about every two months without it ever being a project.
+
+## Monthly
+
+- **Deep room inspections on the rotation** — run every faucet, flush every toilet, test every lamp and outlet, check caulking, look under sinks.
+- **Roof and gutters** — especially after storms. Water finds the cheapest path into your building.
+- **Emergency systems** — exit lighting, extinguisher tags, smoke detector test buttons.
+- **Generator load test** — run it under load, log the readings.
+- **PTAC/HVAC unit service on rotation** — coils cleaned, condensate lines clear. A seized PTAC in July is a comped room.
+
+## Quarterly and seasonal
+
+- **Water heater / boiler service** — flush sediment, check anodes and relief valves.
+- **Seasonal switchovers** — heating before the first cold night, cooling before the first hot week, pool open/close procedures.
+- **Pest control review** — even with a contractor, walk the property with their report in hand.
+
+## The checklist isn't the hard part
+
+Every GM has seen a beautiful checklist die in a binder. The failure mode isn't the list — it's the *system around the list*: who does each item, when it was last done, and what happened when something failed the check.
+
+That's the case for tracking this in [hotel maintenance software](/blog/best-hotel-maintenance-software-2026) instead of paper: recurring tasks assign themselves, every check leaves a record, and a failed item becomes a work order on the spot instead of a note that may or may not survive the shift.
+
+[Roomward](/) handles exactly that — recurring maintenance tasks, work orders tied to specific rooms on a live floor plan, and a history for every space and asset. [Start a free 14-day trial](/signup) and put the checklist somewhere it can't be lost.`,
+  },
+  {
+    slug: "hotel-asset-management-guide",
+    title: "Hotel Asset Management: Track Every HVAC, Boiler, and Pump Before It Fails",
+    description: "How to set up hotel asset management — what to track, what data each asset needs, and how maintenance history turns surprise failures into scheduled service.",
+    date: "2026-06-12",
+    readMins: 6,
+    keyword: "hotel asset management",
+    content: `Ask a hotel engineer what the property's most expensive equipment is and they'll answer instantly. Ask when each unit was last serviced, and the answer usually lives in someone's memory, a binder, or an invoice folder from a vendor. That gap — between *knowing what you own* and *knowing its condition* — is what asset management closes.
+
+## What counts as an asset
+
+Anything that costs real money to replace and fails on its own schedule:
+
+- **HVAC** — rooftop units, PTACs, chillers, air handlers
+- **Plumbing** — boilers, water heaters, circulation and sump pumps
+- **Kitchen** — refrigeration, dishwashers, ice machines, hoods
+- **Vertical transport** — elevators
+- **Power & safety** — generators, fire panels, pool pumps
+- **Laundry** — commercial washers and dryers
+
+A 100-room property typically lands on 30–60 trackable assets. Don't inventory every lamp — track what's expensive, regulated, or guest-impacting.
+
+## The data each asset needs
+
+You need surprisingly little for the system to start paying off:
+
+1. **Identity** — name, model, serial number
+2. **Location** — which room, roof, or mechanical space it lives in
+3. **Status** — operational, degraded, in maintenance, failed
+4. **Service dates** — last serviced, next due
+5. **History** — every work order ever attached to it
+
+That last one is the compounding payoff. Three repairs on the same ice machine in six months is a *replace-it* signal — but only if those three repairs are recorded in one place, attached to that machine.
+
+## Reactive vs. scheduled
+
+Without asset tracking, equipment work is reactive: it breaks, a guest complains, you pay emergency rates. With it, the unit has a service date that arrives like an appointment, on a slow Tuesday instead of a sold-out Saturday.
+
+The economics aren't subtle. An emergency boiler call costs multiples of a scheduled service — plus the comped rooms while hot water is out.
+
+## Tie assets to places
+
+In a hotel, the question is never just "is the HVAC fine?" It's "is the HVAC *serving floors 3–4* fine?" Asset management gets dramatically more useful when each asset is attached to a location, so a work order on Room 304's cooling links straight to the rooftop unit that serves it — with that unit's full history one tap away.
+
+## Start simple
+
+List your big equipment, give each a status and a next-service date, and route every repair through a work order attached to the asset. That's it — the histories build themselves from there.
+
+[Roomward](/) includes asset tracking tied to your live floor plan: every asset has a location, a status, a service schedule, and its complete work-order history. [Start a free 14-day trial](/signup) and get your equipment out of the binder.`,
+  },
+  {
+    slug: "reduce-hotel-maintenance-costs",
+    title: "7 Ways to Reduce Hotel Maintenance Costs (Without Deferring the Work)",
+    description: "Practical ways hotels cut maintenance spend — preventive scheduling, faster reporting, asset histories, and the hidden cost of deferred maintenance.",
+    date: "2026-06-12",
+    readMins: 6,
+    keyword: "reduce hotel maintenance costs",
+    content: `There are two ways to spend less on maintenance. One is deferring work — which isn't savings, it's a loan against the building at a terrible interest rate. The other is taking waste out of how the work happens. This post is about the second kind.
+
+## 1. Catch issues at housekeeping, not at check-in
+
+Your cleaning crew enters every room every day. If reporting an issue takes them 15 seconds on a phone, you hear about the dripping tub *before* it becomes water damage — and before a guest finds it and you comp the night. Most of the worst maintenance bills started as something a housekeeper noticed and had no easy way to report.
+
+## 2. Schedule the cheap visit so you skip the expensive one
+
+A serviced HVAC unit and a seized one differ by an order of magnitude in cost. Preventive maintenance feels like spending because the unit "was fine" — but it's the discount price for the same work that's brutal at emergency rates. ([Here's a full preventive program](/blog/preventive-maintenance-for-hotels).)
+
+## 3. Stop diagnosing the same asset from scratch
+
+When a tech opens a work order that shows the equipment's full history — *compressor replaced in March, same error in May* — they skip an hour of rediscovery and make better repair-or-replace calls. Three repairs on one machine in a quarter is a decision, not a coincidence; you just have to be able to *see* it.
+
+## 4. Kill the double-dispatch
+
+No shared system means two people report the same issue, two techs get sent, or — worse — each shift assumes the other handled it. One source of truth for open work means each problem is fixed once, by one person, with no wasted trips.
+
+## 5. Batch by location
+
+A tech who fixes the faucet in 204, then the lamp in 207, then the door in 210 in one trip beats three separate elevator rides on three days. That's only possible when open work is visible *on a floor plan* instead of buried in a list.
+
+## 6. Make the room-status loop instant
+
+Every hour a fixed room sits "down" because nobody told the front desk is revenue lost to a communication gap, not to maintenance. When maintenance closes the order and the room's status updates everywhere instantly, that gap is zero.
+
+## 7. Measure resolution time
+
+You can't fix what you don't see. Average time-to-close, open orders by priority, repeat issues by room or asset — a property that watches these numbers monthly gets faster, because slow points (parts delays, assignment lag, one chronically broken machine) become visible and fixable.
+
+## The pattern
+
+None of these cut corners — they cut friction: faster reporting, scheduled prevention, visible history, one source of truth. The work still happens; it just happens once, earlier, and cheaper.
+
+[Roomward](/) is built around exactly this loop — housekeeping reports in seconds, work orders live on a real floor plan, assets carry their histories, and reports show resolution time without spreadsheet work. [Start a free 14-day trial](/signup), no credit card required.`,
+  },
 ];
 
 export const getPost = (slug: string) => POSTS.find((p) => p.slug === slug);

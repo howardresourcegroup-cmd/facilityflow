@@ -72,7 +72,7 @@ export default function WorkOrdersPage() {
         </div>
         <div className="flex items-center gap-2">
           {can("work_orders.create") && (
-            <Button asChild>
+            <Button asChild data-tour="new-work-order">
               <Link href="/work-orders/new">
                 <Plus className="h-4 w-4" />
                 New Work Order

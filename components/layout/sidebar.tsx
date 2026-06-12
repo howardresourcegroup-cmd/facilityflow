@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -55,6 +56,7 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
           const active = isActive(href);
           const item = (
             <Link key={href} href={href} onClick={onNav}
+              data-tour={href === "/property" ? "nav-property" : href === "/work-orders" ? "nav-work-orders" : undefined}
               className={cn(
                 "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
                 active ? "bg-accent-500/15 text-accent-text" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
@@ -180,14 +182,21 @@ export function Sidebar() {
 // ── Mobile drawer (slide-in overlay) ─────────────────────────────────────────
 export function MobileSidebar() {
   const { mobileSidebarOpen, closeMobileSidebar } = useAppStore();
+  const pathname = usePathname();
+
+  // Always close the drawer when the route changes — covers any path that
+  // navigates without going through a nav link's onNav handler.
+  useEffect(() => { closeMobileSidebar(); }, [pathname, closeMobileSidebar]);
 
   return (
     <AnimatePresence>
       {mobileSidebarOpen && (
         <TooltipProvider delayDuration={0}>
-          {/* Backdrop */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 z-40 md:hidden"
+          {/* Backdrop — plain div (no exit animation): an interrupted framer-motion
+              exit during route change could leave it invisibly mounted, eating all
+              taps on the header/hamburger. Unmounting instantly avoids that. */}
+          <div
+            className="fixed inset-0 bg-black/60 z-40 md:hidden animate-fade-in"
             onClick={closeMobileSidebar} />
 
           {/* Drawer */}

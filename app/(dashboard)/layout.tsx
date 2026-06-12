@@ -5,12 +5,14 @@ import { BuildingSetupGuard } from "@/components/buildings/building-setup-guard"
 import { WelcomeModal } from "@/components/welcome-modal";
 import { TrialBanner } from "@/components/billing/trial-banner";
 import { DemoCleanup } from "@/components/demo-cleanup";
+import { ProductTour } from "@/components/product-tour";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <OnboardingGuard>
       <WelcomeModal />
       <DemoCleanup />
+      <ProductTour />
       <div className="flex h-screen overflow-hidden bg-background">
         {/* Desktop sidebar — hidden on mobile */}
         <Sidebar />

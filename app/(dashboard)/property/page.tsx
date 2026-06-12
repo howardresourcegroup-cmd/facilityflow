@@ -176,7 +176,7 @@ export default function PropertyPage() {
           {/* Controls bar */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Mode */}
-            <div className="inline-flex rounded-lg border border-border p-0.5">
+            <div data-tour="map-modes" className="inline-flex rounded-lg border border-border p-0.5">
               {(["occupancy", "housekeeping", "status"] as Mode[]).map((m) => (
                 <button key={m} onClick={() => setMode(m)}
                   className={cn("text-xs px-3 py-1.5 rounded-md capitalize transition-colors",
@@ -229,7 +229,7 @@ export default function PropertyPage() {
 
           {/* ── OVERVIEW: all floors at once ── */}
           {viewMode === "overview" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div data-tour="map-grid" className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {floors.map((f) => (
                 <FloorMapTile
                   key={f.id}

@@ -42,6 +42,12 @@ export default function HelpPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input placeholder="Search the guides…" value={query} onChange={(e) => setQuery(e.target.value)} className="pl-9" />
         </div>
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent("rw:start-tour"))}
+          className="btn-secondary text-xs h-8 mt-4"
+        >
+          Take the interactive tour
+        </button>
       </div>
 
       {/* Tutorials */}

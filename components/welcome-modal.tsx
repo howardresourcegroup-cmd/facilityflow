@@ -3,17 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, LayoutGrid, ClipboardList, KeyRound, ArrowRight, X } from "lucide-react";
+import { Zap, ArrowRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { startProductTour } from "@/components/product-tour";
 
 const STORE_KEY = "ff-welcome-seen";
 
 const SLIDES = [
-  { icon: Zap, color: "text-indigo-400", bg: "bg-indigo-500/15", title: "Welcome to Roomward", body: "Your operational command center for physical spaces. Here's a 30-second tour of what you can do." },
-  { icon: LayoutGrid, color: "text-cyan-400", bg: "bg-cyan-500/15", title: "Map your buildings", body: "Draw top-down floor plans, color-code every room's status, and see your whole portfolio's health at a glance." },
-  { icon: ClipboardList, color: "text-amber-400", bg: "bg-amber-500/15", title: "Track every issue", body: "Create work orders, assign technicians, attach photos, and move jobs from open to done — all in real time." },
-  { icon: KeyRound, color: "text-violet-400", bg: "bg-violet-500/15", title: "Control who does what", body: "Configurable roles and permissions mean front desk, housekeeping, and maintenance each see exactly what they need." },
+  { icon: Zap, color: "text-indigo-400", bg: "bg-indigo-500/15", title: "Welcome to Roomward", body: "Your operational command center for physical spaces. Take a 60-second hands-on tour — we'll walk you through the real app, page by page." },
 ];
 
 export function WelcomeModal() {
@@ -78,9 +76,14 @@ export function WelcomeModal() {
             ) : (
               <button onClick={close} className="text-xs text-muted-foreground hover:text-foreground transition-colors">Skip</button>
             )}
-            <Button size="sm" onClick={() => (isLast ? close() : setStep(step + 1))}>
-              {isLast ? "Get started" : "Next"}
-              {!isLast && <ArrowRight className="h-3.5 w-3.5" />}
+            <Button size="sm" onClick={() => {
+              if (isLast) {
+                close();
+                startProductTour(); // hands off to the interactive, in-app tour
+              } else setStep(step + 1);
+            }}>
+              {isLast ? "Show me around" : "Next"}
+              <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </motion.div>
