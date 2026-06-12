@@ -11,6 +11,27 @@
 --   2. Database → Extensions → enable "pg_cron" (for the TTL sweep).
 -- Run this whole file in the SQL Editor.
 
+-- ── Make profile auto-creation safe for anonymous users (no email) ────────────
+-- Anonymous sign-ins have no email, so the original handle_new_user() derived a
+-- NULL full_name and hit the NOT NULL constraint → "Database error creating anon
+-- user". Fall back to a non-null name.
+create or replace function handle_new_user()
+returns trigger language plpgsql security definer as $$
+begin
+  insert into public.profiles (id, full_name, avatar_url)
+  values (
+    new.id,
+    coalesce(
+      nullif(new.raw_user_meta_data->>'full_name', ''),
+      nullif(split_part(coalesce(new.email, ''), '@', 1), ''),
+      'Guest'
+    ),
+    new.raw_user_meta_data->>'avatar_url'
+  );
+  return new;
+end;
+$$;
+
 -- ── Demo tagging on organizations ─────────────────────────────────────────────
 alter table organizations add column if not exists is_demo boolean not null default false;
 alter table organizations add column if not exists demo_expires_at timestamptz;
@@ -105,7 +126,7 @@ begin
   values ('Grandview Demo Hotel', 'demo-' || replace(v_uid::text, '-', ''), 'pro', true, now() + interval '24 hours')
   returning id into v_org;
 
-  update profiles set organization_id = v_org, role = 'admin' where id = v_uid;
+  update profiles set organization_id = v_org, role = 'admin', full_name = 'Demo Manager' where id = v_uid;
 
   -- Seed system roles for this org (mirrors onboarding), then the property.
   insert into roles (organization_id, name, slug, description, color, is_system) values
