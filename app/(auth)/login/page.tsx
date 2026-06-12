@@ -44,40 +44,20 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    if (SUPABASE_CONFIGURED) {
-      const supabase = createClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-      if (authError) {
-        setError(authError.message);
-        setLoading(false);
-        return;
-      }
-      router.push("/");
-      router.refresh();
+    if (!SUPABASE_CONFIGURED) {
+      setError("Authentication isn't configured. Set the Supabase environment variables.");
+      setLoading(false);
       return;
     }
-
-    // Demo fallback
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ email, password }),
-      });
-      if (res.status === 429) {
-        setError(`Too many attempts. Try again in ${res.headers.get("Retry-After") ?? "15"}s.`);
-        setLoading(false);
-        return;
-      }
-      const data = await res.json();
-      if (!res.ok) { setError(data.error ?? "Invalid credentials"); setLoading(false); return; }
-      router.push("/");
-      router.refresh();
-    } catch {
-      setError("Connection error. Please try again.");
+    const supabase = createClient();
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    if (authError) {
+      setError(authError.message);
       setLoading(false);
+      return;
     }
+    router.push("/");
+    router.refresh();
   };
 
   const handleGoogle = async () => {

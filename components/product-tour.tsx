@@ -73,9 +73,13 @@ export function ProductTour() {
 
   const current = STEPS[step];
 
-  // Start listener
+  // Start listener. The tour spotlights the desktop sidebar, so it needs md+ —
+  // on phones the targets are hidden inside the drawer and rects come back 0×0.
   useEffect(() => {
-    const start = () => { setStep(0); setActive(true); };
+    const start = () => {
+      if (window.innerWidth < 768) return;
+      setStep(0); setActive(true);
+    };
     window.addEventListener("rw:start-tour", start);
     return () => window.removeEventListener("rw:start-tour", start);
   }, []);
