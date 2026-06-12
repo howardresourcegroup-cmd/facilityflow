@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check, CreditCard, Sparkles, Loader2, Palette, Sun, Moon } from "lucide-react";
+import { Building2, Users, Bell, Zap, Shield, ChevronRight, KeyRound, Check, CreditCard, Sparkles, Loader2, Palette, Sun, Moon, Plus } from "lucide-react";
 import { useTheme, ACCENTS, type AccentKey } from "@/components/theme-provider";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -221,7 +221,7 @@ export default function SettingsPage() {
 }
 
 function AppearancePanel() {
-  const { mode, accent, setMode, setAccent } = useTheme();
+  const { mode, accent, setMode, setAccent, customHex, setCustom } = useTheme();
   return (
     <div className="space-y-6">
       <div>
@@ -275,8 +275,36 @@ function AppearancePanel() {
               {accent === key && <Check className="h-4 w-4 text-white drop-shadow" />}
             </button>
           ))}
+
+          {/* Custom color — opens the native color picker */}
+          <label
+            title="Custom color"
+            className={cn(
+              "relative h-9 w-9 rounded-full border-2 transition-all flex items-center justify-center cursor-pointer overflow-hidden",
+              accent === "custom" ? "border-white/80 scale-110" : "border-transparent hover:scale-105"
+            )}
+            style={{
+              background:
+                accent === "custom"
+                  ? customHex
+                  : "conic-gradient(from 0deg, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6, #ef4444)",
+            }}
+          >
+            <input
+              type="color"
+              value={customHex}
+              onChange={(e) => setCustom(e.target.value)}
+              className="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
+              aria-label="Pick a custom accent color"
+            />
+            {accent === "custom"
+              ? <Check className="h-4 w-4 text-white drop-shadow pointer-events-none" />
+              : <Plus className="h-4 w-4 text-white drop-shadow pointer-events-none" />}
+          </label>
         </div>
-        <p className="text-[11px] text-muted-foreground">Buttons, links, and highlights use this color.</p>
+        <p className="text-[11px] text-muted-foreground">
+          Buttons, links, and highlights use this color. Pick any color with the rainbow swatch — Roomward auto-tunes the shades and keeps text readable.
+        </p>
       </div>
     </div>
   );
