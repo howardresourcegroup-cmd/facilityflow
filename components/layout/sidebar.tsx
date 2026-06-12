@@ -42,6 +42,7 @@ function NavContent({ collapsed, onNav }: { collapsed: boolean; onNav?: () => vo
   const signOut = async () => {
     const { createClient } = await import("@/lib/supabase/client");
     const supabase = createClient();
+    try { await supabase.rpc("end_demo"); } catch { /* tears down demo sandbox; no-op for real accounts */ }
     await supabase.auth.signOut().catch(() => {});
     await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" }).catch(() => {});
     window.location.href = "/login";

@@ -62,6 +62,7 @@ export function Header() {
 
   const signOut = async () => {
     const supabase = createClient();
+    try { await supabase.rpc("end_demo"); } catch { /* tears down demo sandbox; no-op for real accounts */ }
     await supabase.auth.signOut().catch(() => {});
     await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" }).catch(() => {});
     // Hard navigation so the middleware re-runs with the cleared cookies (router.push kept the session)

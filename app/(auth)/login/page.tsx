@@ -103,9 +103,23 @@ export default function LoginPage() {
     setResetLoading(false);
   };
 
-  const fillDemo = () => {
-    setEmail("manager@grandviewdemo.com");
-    setPassword("RoomwardDemo2026");
+  const [demoLoading, setDemoLoading] = useState(false);
+  const startDemo = async () => {
+    if (demoLoading) return;
+    setDemoLoading(true);
+    setError("");
+    try {
+      const supabase = createClient();
+      const { error: anonErr } = await supabase.auth.signInAnonymously();
+      if (anonErr) throw anonErr;
+      const { error: rpcErr } = await supabase.rpc("start_demo");
+      if (rpcErr) throw rpcErr;
+      // Hard nav so the middleware re-runs with the new session cookies.
+      window.location.href = "/";
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't start the demo — please try again.");
+      setDemoLoading(false);
+    }
   };
 
   if (forgotMode) {
@@ -154,10 +168,12 @@ export default function LoginPage() {
 
   return (
     <div className="space-y-4">
-      {/* Demo banner */}
-      <div
-        className="glass-card p-4 border-indigo-500/20 bg-indigo-500/5 cursor-pointer hover:bg-indigo-500/10 transition-colors group"
-        onClick={fillDemo}
+      {/* Demo banner — spins up a private throwaway sandbox */}
+      <button
+        type="button"
+        onClick={startDemo}
+        disabled={demoLoading}
+        className="w-full text-left glass-card p-4 border-indigo-500/20 bg-indigo-500/5 cursor-pointer hover:bg-indigo-500/10 transition-colors group disabled:opacity-70 disabled:cursor-wait"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -165,13 +181,19 @@ export default function LoginPage() {
               <Zap className="h-4 w-4 text-indigo-400" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-indigo-300">Live Demo — Grandview Lodge</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">Demo Resort Group · Lake Haven, GA</p>
+              <p className="text-xs font-semibold text-indigo-300">
+                {demoLoading ? "Spinning up your demo…" : "Try the live demo"}
+              </p>
+              <p className="text-[11px] text-zinc-500 mt-0.5">
+                A private sample hotel — no sign-up, nothing to clean up.
+              </p>
             </div>
           </div>
-          <ArrowRight className="h-4 w-4 text-indigo-500 group-hover:translate-x-1 transition-transform" />
+          {demoLoading
+            ? <Loader2 className="h-4 w-4 text-indigo-400 animate-spin" />
+            : <ArrowRight className="h-4 w-4 text-indigo-500 group-hover:translate-x-1 transition-transform" />}
         </div>
-      </div>
+      </button>
 
       {/* Login card */}
       <div className="glass-card p-7">
