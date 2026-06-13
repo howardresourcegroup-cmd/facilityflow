@@ -80,6 +80,7 @@ export interface Floor {
   level: number;
   grid_cols: number;
   grid_rows: number;
+  scale_ft_per_cell?: number | null;  // feet per grid cell; null = no scale set
   created_at: string;
   spaces?: Space[];
 }
@@ -96,6 +97,7 @@ export interface Space {
   height: number;
   qr_code: string | null;
   notes: string | null;
+  sq_ft?: number | null;              // manual override; null = computed from cells × floor scale
   housekeeping_status?: HousekeepingStatus;
   occupancy?: Occupancy;
   created_at: string;

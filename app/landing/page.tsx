@@ -85,7 +85,7 @@ export default function LandingPage() {
             <Link href="/signup" className="btn-primary text-base h-11 px-6">
               Start free trial <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/login" className="btn-secondary text-base h-11 px-6">
+            <Link href="/demo" className="btn-secondary text-base h-11 px-6">
               View live demo
             </Link>
           </div>

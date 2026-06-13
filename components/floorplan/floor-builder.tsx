@@ -4,10 +4,10 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Trash2, X, Check, MousePointer2, Stamp, Sparkles, FileText,
-  Maximize2, Plus, Minus,
+  Maximize2, Plus, Minus, Ruler,
 } from "lucide-react";
 import type { Floor, Space } from "@/types";
-import { cn, SPACE_STATUS_CONFIG } from "@/lib/utils";
+import { cn, SPACE_STATUS_CONFIG, spaceSqFt, formatSqFt } from "@/lib/utils";
 import { createSpace, deleteSpace, updateSpace, updateFloorGrid, bulkCreateSpaces } from "@/lib/data/queries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -200,9 +200,15 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
   const [rowsInput, setRowsInput] = useState(String(rows));
   useEffect(()=>{setColsInput(String(cols));setRowsInput(String(rows));},[cols,rows]);
 
+  // Real-world scale (feet per grid cell) — drives computed sq ft + the scale bar
+  const scale = floor.scale_ft_per_cell ?? null;
+  const [scaleInput, setScaleInput] = useState(scale ? String(scale) : "");
+  useEffect(()=>{setScaleInput(scale ? String(scale) : "");},[scale]);
+  const [editSqFt, setEditSqFt] = useState("");
+
   useEffect(()=>{
     const s=spaces.find(s=>s.id===selectedId);
-    if(s){setEditName(s.name);setEditType(s.type);}
+    if(s){setEditName(s.name);setEditType(s.type);setEditSqFt(s.sq_ft != null ? String(s.sq_ft) : "");}
   },[selectedId,spaces]);
 
   const evCell = useCallback((e:React.MouseEvent)=>{
@@ -298,8 +304,15 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
   };
   const saveEdit=async()=>{
     if(!selectedId||!editName.trim())return;
-    const patch={name:editName.trim(),type:editType};onPatch(selectedId,patch);
+    const sqft=editSqFt.trim()===""?null:Math.max(0,parseFloat(editSqFt)||0)||null;
+    const patch={name:editName.trim(),type:editType,sq_ft:sqft};onPatch(selectedId,patch);
     await updateSpace(selectedId,patch).catch(()=>{});
+  };
+  const applyScale=async()=>{
+    const v=scaleInput.trim()===""?null:Math.max(0.5,Math.min(100,parseFloat(scaleInput)||0))||null;
+    if(v===scale)return;
+    onPatchFloor({scale_ft_per_cell:v});
+    await updateFloorGrid(floor.id,{scale_ft_per_cell:v}).catch(()=>{});
   };
   const deleteSelected=async()=>{
     if(!selectedId)return;onRemove(selectedId);setSelectedId(null);
@@ -380,8 +393,16 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
           </button>
         </div>
 
-        {/* Grid size + done */}
+        {/* Scale + grid size + done */}
         <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground" title="Feet per grid cell — sets the real-world scale of this floor plan">
+            <Ruler className="h-3.5 w-3.5"/>
+            <input type="number" min={0.5} max={100} step={0.5} value={scaleInput} placeholder="ft"
+              onChange={e=>setScaleInput(e.target.value)} onBlur={applyScale}
+              onKeyDown={e=>e.key==="Enter"&&applyScale()}
+              className="w-14 h-7 rounded-md bg-foreground/[0.04] border border-border text-foreground text-center text-xs px-1"/>
+            <span>ft/cell</span>
+          </div>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Maximize2 className="h-3.5 w-3.5"/>
             <input type="number" min={4} max={40} value={colsInput}
@@ -546,7 +567,9 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
             {drag.current.type==="create"&&liveRect&&(
               <div className="absolute rounded-md border-2 border-dashed border-indigo-400 bg-indigo-500/20 pointer-events-none flex items-center justify-center"
                 style={r2px(liveRect)}>
-                <span className="text-[10px] text-indigo-300 font-medium">{liveRect.w}×{liveRect.h}</span>
+                <span className="text-[10px] text-indigo-300 font-medium">
+                  {scale ? `${Math.round(liveRect.w*scale)}×${Math.round(liveRect.h*scale)} ft` : `${liveRect.w}×${liveRect.h}`}
+                </span>
               </div>
             )}
 
@@ -557,6 +580,26 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
                 style={{...r2px(liveRect),zIndex:50}}>
                 {clash&&<span className="text-[10px] text-red-300">Overlaps</span>}
               </div>
+            )}
+          </div>
+
+          {/* Scale bar + floor total (architectural-drawing style) */}
+          <div className="flex items-center justify-between mt-2 px-1">
+            {scale ? (
+              <div className="flex items-center gap-2 text-[10px] text-muted-foreground select-none">
+                {/* exactly 2 grid cells wide (2·CELL + GAP px), so the bar is honest */}
+                <div className="h-1.5 border-x border-b border-muted-foreground/60 flex" style={{ width: CELL * 2 + GAP }}>
+                  <div className="w-1/2 h-full bg-muted-foreground/40" />
+                </div>
+                <span>{Math.round(scale * 2)} ft</span>
+              </div>
+            ) : (
+              <span className="text-[10px] text-muted-foreground select-none">Set ft/cell above to make this plan to-scale</span>
+            )}
+            {scale && (
+              <span className="text-[10px] text-muted-foreground select-none">
+                Floor total ≈ {formatSqFt(spaces.reduce((sum, s) => sum + (spaceSqFt(s, scale) ?? 0), 0))}
+              </span>
             )}
           </div>
         </div>
@@ -572,7 +615,10 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
                     <p className="text-sm font-semibold text-foreground">New Room</p>
                     <button onClick={()=>setPending(null)} className="h-6 w-6 flex items-center justify-center rounded-lg text-muted-foreground hover:text-muted-foreground"><X className="h-3.5 w-3.5"/></button>
                   </div>
-                  <p className="text-[11px] text-muted-foreground">{pending.w}×{pending.h} cells at ({pending.x},{pending.y})</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {pending.w}×{pending.h} cells at ({pending.x},{pending.y})
+                    {scale ? <> · {Math.round(pending.w*scale)}×{Math.round(pending.h*scale)} ft ≈ <span className="text-foreground">{formatSqFt(Math.round(pending.w*scale*pending.h*scale))}</span></> : null}
+                  </p>
                   <div className="space-y-1"><Label className="text-xs">Name</Label>
                     <Input autoFocus value={newName} onChange={e=>setNewName(e.target.value)} placeholder="Room 215" onKeyDown={e=>e.key==="Enter"&&saveNew()}/>
                   </div>
@@ -590,7 +636,10 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
                     <p className="text-sm font-semibold text-foreground">Edit Room</p>
                     <button onClick={()=>setSelectedId(null)} className="h-6 w-6 flex items-center justify-center rounded-lg text-muted-foreground hover:text-muted-foreground"><X className="h-3.5 w-3.5"/></button>
                   </div>
-                  <p className="text-[11px] text-muted-foreground">{selectedSpace.width}×{selectedSpace.height} cells · ({selectedSpace.position_x},{selectedSpace.position_y})</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {selectedSpace.width}×{selectedSpace.height} cells · ({selectedSpace.position_x},{selectedSpace.position_y})
+                    {scale ? <> · {Math.round(selectedSpace.width*scale)}×{Math.round(selectedSpace.height*scale)} ft</> : null}
+                  </p>
                   <div className="space-y-1"><Label className="text-xs">Name</Label>
                     <Input value={editName} onChange={e=>setEditName(e.target.value)} onKeyDown={e=>e.key==="Enter"&&saveEdit()}/>
                   </div>
@@ -599,6 +648,16 @@ export function FloorBuilder({ floor, spaces, onAdd, onAddMany, onRemove, onPatc
                       <SelectTrigger><SelectValue/></SelectTrigger>
                       <SelectContent>{ROOM_TYPES.map(t=><SelectItem key={t} value={t}>{TYPE_LABEL[t]}</SelectItem>)}</SelectContent>
                     </Select>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Square footage</Label>
+                    <Input type="number" min={0} step={1} value={editSqFt}
+                      onChange={e=>setEditSqFt(e.target.value)}
+                      onKeyDown={e=>e.key==="Enter"&&saveEdit()}
+                      placeholder={scale ? `auto: ${spaceSqFt({...selectedSpace, sq_ft: null}, scale) ?? ""}` : "e.g. 320"}/>
+                    <p className="text-[10px] text-muted-foreground">
+                      {scale ? "Leave blank to compute from the floor scale." : "Or set ft/cell in the toolbar to auto-compute."}
+                    </p>
                   </div>
                   <Button size="sm" className="w-full" onClick={saveEdit} disabled={!editName.trim()}>Save Changes</Button>
                   <button onClick={deleteSelected}

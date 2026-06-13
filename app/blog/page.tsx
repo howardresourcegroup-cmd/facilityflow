@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo";
+import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { POSTS } from "@/lib/blog/posts";
 
 export const metadata: Metadata = {
@@ -42,6 +43,10 @@ export default function BlogIndex() {
               <span className="inline-flex items-center gap-1 text-xs text-indigo-400 mt-3">Read <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" /></span>
             </Link>
           ))}
+        </div>
+
+        <div className="mt-10">
+          <NewsletterForm source="blog:index" />
         </div>
       </main>
     </div>

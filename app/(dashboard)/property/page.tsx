@@ -7,7 +7,7 @@ import { Building2, Layers, DoorClosed, Filter, LayoutGrid, Rows3 } from "lucide
 import { useBuildings, useBuildingDetail, useAssets, useWorkOrders } from "@/lib/data/hooks";
 import { OccupancyBadge } from "@/components/rooms/occupancy-badge";
 import { PageLoader } from "@/components/shared/loading-spinner";
-import { SPACE_STATUS_CONFIG, cn } from "@/lib/utils";
+import { SPACE_STATUS_CONFIG, cn, spaceSqFt, formatSqFt } from "@/lib/utils";
 import type { Space, Occupancy, HousekeepingStatus, Floor } from "@/types";
 
 type Mode = "status" | "housekeeping" | "occupancy";
@@ -297,6 +297,10 @@ export default function PropertyPage() {
                       <Row label="Occupancy"><OccupancyBadge occupancy={selected.occupancy} /></Row>
                       <Row label="Housekeeping"><span className="capitalize text-foreground">{(selected.housekeeping_status ?? "ready").replace(/_/g, " ")}</span></Row>
                       <Row label="Condition"><span className={SPACE_STATUS_CONFIG[selected.status]?.color}>{SPACE_STATUS_CONFIG[selected.status]?.label}</span></Row>
+                      {(() => {
+                        const sqft = spaceSqFt(selected, floors.find((f) => f.id === selected.floor_id)?.scale_ft_per_cell);
+                        return sqft != null ? <Row label="Size"><span className="text-foreground">{formatSqFt(sqft)}</span></Row> : null;
+                      })()}
                     </div>
                     {/* Assets in this room */}
                     <div className="space-y-1.5 pt-2 border-t border-border">

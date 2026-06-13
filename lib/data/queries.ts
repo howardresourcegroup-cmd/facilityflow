@@ -222,12 +222,13 @@ export async function bulkCreateSpaces(rooms: {
 export async function updateSpace(spaceId: string, patch: {
   name?: string; type?: string;
   position_x?: number; position_y?: number; width?: number; height?: number;
+  sq_ft?: number | null;
 }): Promise<void> {
   const { error } = await sb().from("spaces").update(patch).eq("id", spaceId);
   if (error) throw error;
 }
 
-export async function updateFloorGrid(floorId: string, patch: { grid_cols?: number; grid_rows?: number; name?: string }): Promise<void> {
+export async function updateFloorGrid(floorId: string, patch: { grid_cols?: number; grid_rows?: number; name?: string; scale_ft_per_cell?: number | null }): Promise<void> {
   const { error } = await sb().from("floors").update(patch).eq("id", floorId);
   if (error) throw error;
 }

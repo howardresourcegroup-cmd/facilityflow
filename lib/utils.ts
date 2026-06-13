@@ -163,3 +163,19 @@ export function getInitials(name: string): string {
 export function pluralize(count: number, word: string, plural?: string): string {
   return `${count} ${count === 1 ? word : plural ?? word + "s"}`;
 }
+
+// ─── Floor-plan scale ──────────────────────────────────────────────────────────
+// A space's real area: explicit sq_ft override wins; otherwise computed from its
+// grid footprint × the floor's feet-per-cell scale. Null when no scale is set.
+export function spaceSqFt(
+  space: { width: number; height: number; sq_ft?: number | null },
+  scaleFtPerCell?: number | null
+): number | null {
+  if (space.sq_ft != null) return Number(space.sq_ft);
+  if (!scaleFtPerCell) return null;
+  return Math.round(space.width * scaleFtPerCell * space.height * scaleFtPerCell);
+}
+
+export function formatSqFt(sqft: number | null): string {
+  return sqft == null ? "—" : `${sqft.toLocaleString()} sq ft`;
+}

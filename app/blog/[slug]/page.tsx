@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { marked } from "marked";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo";
+import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { POSTS, getPost } from "@/lib/blog/posts";
 
 export function generateStaticParams() {
@@ -62,8 +63,13 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           dangerouslySetInnerHTML={{ __html: html }}
         />
 
+        {/* Newsletter */}
+        <div className="mt-10">
+          <NewsletterForm source={`blog:${post.slug}`} />
+        </div>
+
         {/* CTA */}
-        <div className="mt-12 glass-card p-6 text-center border-indigo-500/20">
+        <div className="mt-6 glass-card p-6 text-center border-indigo-500/20">
           <p className="text-sm font-semibold text-zinc-100">See Roomward in action</p>
           <p className="text-sm text-zinc-500 mt-1">Live floor plans, work orders, and a real-time housekeeping board — set up in minutes.</p>
           <Link href="/signup" className="btn-primary mt-4 inline-flex">Start free trial <ArrowRight className="h-4 w-4" /></Link>
